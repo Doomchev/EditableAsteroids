@@ -19,6 +19,10 @@ class Window(): JPanel() {
     }
     if(currentShape != null) {
       currentShape!!.drawSelection(g2d)
+    } else {
+      for(shape in selectedShapes) {
+        shape.drawSelection(g2d)
+      }
     }
   }
 }
@@ -31,6 +35,9 @@ object updatePanel: ActionListener {
   }
 }
 
+val windowWidth = 450
+val windowHeight = 800
+
 fun main() {
   val timer = Timer(15, updatePanel)
   timer.start()
@@ -39,6 +46,6 @@ fun main() {
   panel.addMouseListener(listener)
   panel.addMouseMotionListener(listener)
   frame.add(panel)
-  frame.setSize(1200, 675)
+  frame.setSize(windowWidth, windowHeight)
   frame.isVisible = true
 }
