@@ -1,9 +1,7 @@
-package modules
+package mod.dragging
 
 import DraggingAction
-import selectedShapes
 import shapeUnderCursor
-import shapes
 import xFromScreen
 import yFromScreen
 import java.awt.Graphics2D

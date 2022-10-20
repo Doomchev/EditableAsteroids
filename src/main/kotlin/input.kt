@@ -7,14 +7,8 @@ import java.util.LinkedList
 import kotlin.math.abs
 import kotlin.math.min
 
-val shapes = LinkedList<Shape>()
-val selectedShapes = LinkedList<Shape>()
-
 abstract class DraggingAction {
   abstract fun conditions(x: Int, y: Int, button: Int): Boolean
-
-  fun paint() {
-  }
   abstract fun mousePressed(x: Int, y: Int, button: Int)
   abstract fun mouseDragged(x: Int, y: Int)
   abstract fun mouseReleased(x: Int, y: Int)

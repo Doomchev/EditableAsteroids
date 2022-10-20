@@ -10,7 +10,6 @@ private val whiteStroke = BasicStroke(1f, BasicStroke.CAP_BUTT
 
 open class Shape(var centerX: Double, var centerY: Double, var halfWidth: Double
                  , var halfHeight: Double) {
-
   var width: Double
     inline get() = halfWidth * 2.0
     inline set(value) {

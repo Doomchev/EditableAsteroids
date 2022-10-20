@@ -1,6 +1,4 @@
-import modules.createSprite
-import modules.moveSprites
-import modules.selectSprites
+import mod.dragging.*
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.event.ActionEvent
@@ -17,11 +15,8 @@ class Window(): JPanel() {
   override fun paintComponent(g: Graphics) {
     val g2d = g as Graphics2D
     g.clearRect(0, 0, width, height)
-    for(shape in shapes) {
-      shape.draw(g, image)
-    }
-    for(shape in selectedShapes) {
-      shape.drawSelection(g2d)
+    for(module in allModules) {
+      module.draw(g2d)
     }
     if(currentDraggingAction != null) {
       currentDraggingAction!!.draw(g2d)
@@ -45,8 +40,12 @@ fun main() {
   draggingActions.add(moveSprites)
   draggingActions.add(selectSprites)
 
+  allModules.add(shapesModule)
+  allModules.add(selectedShapesModule)
+
   val timer = Timer(15, updatePanel)
   timer.start()
+
   val frame = JFrame("Elasmotherium")
   frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
   panel.addMouseListener(listener)

@@ -1,7 +1,6 @@
-package modules
+package mod.dragging
 
 import Shape
-import shapes
 import xFromScreen
 import yFromScreen
 import java.awt.event.MouseEvent.BUTTON3
@@ -16,6 +15,8 @@ object createSprite: createRectangle() {
     startingY = yFromScreen(y)
     shape = Shape(0.0, 0.0, 0.0, 0.0)
     shapes.add(shape!!)
+    selectedShapes.clear()
+    selectedShapes.add(shape!!)
     super.mousePressed(x, y, button)
   }
 

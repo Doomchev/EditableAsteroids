@@ -1,8 +1,6 @@
-package modules
+package mod.dragging
 
 import Shape
-import selectedShapes
-import shapes
 import java.awt.event.MouseEvent
 
 object selectSprites: createRectangle() {

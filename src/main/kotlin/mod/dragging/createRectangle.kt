@@ -1,4 +1,4 @@
-package modules
+package mod.dragging
 
 import DraggingAction
 import Shape
