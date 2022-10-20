@@ -51,27 +51,6 @@ open class Shape(var centerX: Double, var centerY: Double, var halfWidth: Double
     drawDashedRectangle(g, leftX, topY, width, height)
   }
 
-  private fun drawDashedRectangle(g: Graphics2D, fx: Double, fy: Double
-                                  , fwidth: Double, fheight: Double) {
-    val width = distToScreen(fwidth).toInt()
-    val height = distToScreen(fheight).toInt()
-    val x = xToScreen(fx).toInt()
-    val y = yToScreen(fy).toInt()
-
-    val phase = (Date().time % 1000) / 125f
-    val dash = floatArrayOf(4f)
-
-    g.color = Color.BLACK
-    g.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND
-      ,1.0f, dash, phase)
-    g.drawRect(x, y, width, height)
-
-    g.color = Color.WHITE
-    g.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT
-      , BasicStroke.JOIN_ROUND,1.0f, dash, 4f + phase)
-    g.drawRect(x, y, width, height)
-  }
-
   fun collidesWithPoint(x: Double, y: Double): Boolean {
     return x >= leftX && x < rightX && y >= topY && y < bottomY
   }
@@ -80,4 +59,34 @@ open class Shape(var centerX: Double, var centerY: Double, var halfWidth: Double
     return shape.leftX >= leftX && shape.topY >= topY
         && shape.rightX < rightX && shape.bottomY < bottomY
   }
+}
+
+fun shapeUnderCursor(shapes: LinkedList<Shape>, x: Int, y: Int): Shape? {
+  val fx = xFromScreen(x)
+  val fy = yFromScreen(y)
+  for(shape in shapes.descendingIterator()) {
+    if(shape.collidesWithPoint(fx, fy)) return shape
+  }
+  return null
+}
+
+fun drawDashedRectangle(g: Graphics2D, fx: Double, fy: Double
+                                , fwidth: Double, fheight: Double) {
+  val width = distToScreen(fwidth).toInt()
+  val height = distToScreen(fheight).toInt()
+  val x = xToScreen(fx).toInt()
+  val y = yToScreen(fy).toInt()
+
+  val phase = (Date().time % 1000) / 125f
+  val dash = floatArrayOf(4f)
+
+  g.color = Color.BLACK
+  g.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND
+    ,1.0f, dash, phase)
+  g.drawRect(x, y, width, height)
+
+  g.color = Color.WHITE
+  g.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT
+    , BasicStroke.JOIN_ROUND,1.0f, dash, 4f + phase)
+  g.drawRect(x, y, width, height)
 }

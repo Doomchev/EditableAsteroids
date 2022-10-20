@@ -1,3 +1,6 @@
+import modules.createSprite
+import modules.moveSprites
+import modules.selectSprites
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.event.ActionEvent
@@ -17,12 +20,11 @@ class Window(): JPanel() {
     for(shape in shapes) {
       shape.draw(g, image)
     }
-    if(currentShape != null) {
-      currentShape!!.drawSelection(g2d)
-    } else {
-      for(shape in selectedShapes) {
-        shape.drawSelection(g2d)
-      }
+    for(shape in selectedShapes) {
+      shape.drawSelection(g2d)
+    }
+    if(currentDraggingAction != null) {
+      currentDraggingAction!!.draw(g2d)
     }
   }
 }
@@ -39,6 +41,10 @@ val windowWidth = 450
 val windowHeight = 800
 
 fun main() {
+  draggingActions.add(createSprite)
+  draggingActions.add(moveSprites)
+  draggingActions.add(selectSprites)
+
   val timer = Timer(15, updatePanel)
   timer.start()
   val frame = JFrame("Elasmotherium")
