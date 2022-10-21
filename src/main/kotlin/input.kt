@@ -7,12 +7,12 @@ import java.util.LinkedList
 import kotlin.math.abs
 import kotlin.math.min
 
-abstract class DraggingAction {
-  abstract fun conditions(x: Int, y: Int, button: Int): Boolean
-  abstract fun mousePressed(x: Int, y: Int, button: Int)
-  abstract fun mouseDragged(x: Int, y: Int)
-  abstract fun mouseReleased(x: Int, y: Int)
-  abstract fun draw(g2d: Graphics2D)
+interface DraggingAction {
+  fun conditions(x: Int, y: Int, button: Int): Boolean
+  fun mousePressed(x: Int, y: Int, button: Int)
+  fun mouseDragged(x: Int, y: Int)
+  fun mouseReleased(x: Int, y: Int)
+  fun drawWhileDragging(g2d: Graphics2D)
 }
 
 val draggingActions = LinkedList<DraggingAction>()

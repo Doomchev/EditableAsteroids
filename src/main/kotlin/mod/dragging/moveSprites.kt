@@ -7,7 +7,7 @@ import yFromScreen
 import java.awt.Graphics2D
 import java.awt.event.MouseEvent
 
-object moveSprites: DraggingAction() {
+object moveSprites: DraggingAction {
   var oldx: Double = 0.0
   var oldy: Double = 0.0
 
@@ -44,6 +44,6 @@ object moveSprites: DraggingAction() {
   override fun mouseReleased(x: Int, y: Int) {
   }
 
-  override fun draw(g2d: Graphics2D) {
+  override fun drawWhileDragging(g2d: Graphics2D) {
   }
 }

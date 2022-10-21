@@ -8,15 +8,8 @@ import java.awt.Graphics2D
 import kotlin.math.abs
 import kotlin.math.min
 
-abstract class createRectangle: DraggingAction() {
+abstract class createRectangle: StartingPosition(), Drawing {
   var shape: Shape? = null
-  var startingX:Double = 0.0
-  var startingY:Double = 0.0
-
-  override fun mousePressed(x: Int, y: Int, button: Int) {
-    startingX = xFromScreen(x)
-    startingY = yFromScreen(y)
-  }
 
   override fun mouseDragged(x: Int, y: Int) {
     val fx = xFromScreen(x)
@@ -27,9 +20,12 @@ abstract class createRectangle: DraggingAction() {
     shape!!.topY = min(startingY, fy)
   }
 
-  override fun draw(g2d: Graphics2D) {
+  override fun drawWhileDragging(g2d: Graphics2D) {
     if(shape != null) {
       shape!!.drawSelection(g2d)
     }
+  }
+
+  override fun draw(g2d: Graphics2D) {
   }
 }

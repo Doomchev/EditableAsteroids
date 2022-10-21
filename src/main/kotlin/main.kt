@@ -1,25 +1,22 @@
+import mod.drawing.shapesDrawing
 import mod.dragging.*
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.io.File
-import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.Timer
-
-val image = ImageIO.read(File("img.png"))
 
 class Window(): JPanel() {
   override fun paintComponent(g: Graphics) {
     val g2d = g as Graphics2D
     g.clearRect(0, 0, width, height)
-    for(module in allModules) {
+    for(module in displayingModules) {
       module.draw(g2d)
     }
     if(currentDraggingAction != null) {
-      currentDraggingAction!!.draw(g2d)
+      currentDraggingAction!!.drawWhileDragging(g2d)
     }
   }
 }
@@ -37,12 +34,13 @@ val windowHeight = 800
 
 fun main() {
   draggingActions.add(createSprite)
+  draggingActions.add(resizeShape)
   draggingActions.add(moveSprites)
   draggingActions.add(selectSprites)
 
-  allModules.add(shapesDrawing)
-  allModules.add(selectedShapesDrawing)
-  allModules.add(shapeResizerDrawing)
+  displayingModules.add(shapesDrawing)
+  displayingModules.add(selectSprites)
+  displayingModules.add(resizeShape)
 
   val timer = Timer(15, updatePanel)
   timer.start()
