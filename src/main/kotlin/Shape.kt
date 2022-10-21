@@ -79,7 +79,6 @@ fun drawDashedRectangle(g: Graphics2D, fx: Double, fy: Double
   val phase = (Date().time % 1000) / 125f
   val dash = floatArrayOf(4f)
 
-  g.color = Color.BLACK
   g.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND
     ,1.0f, dash, phase)
   g.drawRect(x, y, width, height)
@@ -88,4 +87,6 @@ fun drawDashedRectangle(g: Graphics2D, fx: Double, fy: Double
   g.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT
     , BasicStroke.JOIN_ROUND,1.0f, dash, 4f + phase)
   g.drawRect(x, y, width, height)
+
+  g.color = Color.BLACK
 }

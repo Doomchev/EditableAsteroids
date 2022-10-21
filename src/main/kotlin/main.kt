@@ -40,8 +40,9 @@ fun main() {
   draggingActions.add(moveSprites)
   draggingActions.add(selectSprites)
 
-  allModules.add(shapesModule)
-  allModules.add(selectedShapesModule)
+  allModules.add(shapesDrawing)
+  allModules.add(selectedShapesDrawing)
+  allModules.add(shapeResizerDrawing)
 
   val timer = Timer(15, updatePanel)
   timer.start()
