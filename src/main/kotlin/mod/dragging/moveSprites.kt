@@ -1,6 +1,7 @@
 package mod.dragging
 
 import DraggingAction
+import Pushable
 import shapeUnderCursor
 import xFromScreen
 import yFromScreen
@@ -11,8 +12,7 @@ object moveSprites: DraggingAction {
   var oldx: Double = 0.0
   var oldy: Double = 0.0
 
-  override fun conditions(x: Int, y: Int, button: Int): Boolean {
-    if(button != MouseEvent.BUTTON1) return false
+  override fun conditions(x: Int, y: Int): Boolean {
     if(shapeUnderCursor(selectedShapes, x, y) != null) return true
     selectedShapes.clear()
     val shape = shapeUnderCursor(shapes, x, y)
@@ -23,12 +23,12 @@ object moveSprites: DraggingAction {
     return false
   }
 
-  override fun mousePressed(x: Int, y: Int, button: Int) {
+  override fun pressed(x: Int, y: Int) {
     oldx = xFromScreen(x)
     oldy = yFromScreen(y)
   }
 
-  override fun mouseDragged(x: Int, y: Int) {
+  override fun dragged(x: Int, y: Int) {
     val fx = xFromScreen(x)
     val fy = yFromScreen(y)
     val dx = fx - oldx
@@ -41,7 +41,7 @@ object moveSprites: DraggingAction {
     oldy = fy
   }
 
-  override fun mouseReleased(x: Int, y: Int) {
+  override fun released(x: Int, y: Int) {
   }
 
   override fun drawWhileDragging(g2d: Graphics2D) {

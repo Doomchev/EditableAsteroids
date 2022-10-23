@@ -11,7 +11,7 @@ import kotlin.math.min
 abstract class createRectangle: StartingPosition(), Drawing {
   var shape: Shape? = null
 
-  override fun mouseDragged(x: Int, y: Int) {
+  override fun dragged(x: Int, y: Int) {
     val fx = xFromScreen(x)
     val fy = yFromScreen(y)
     shape!!.width = abs(startingX - fx)

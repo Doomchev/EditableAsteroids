@@ -4,6 +4,8 @@ import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.MouseEvent.BUTTON1
+import java.awt.event.MouseEvent.BUTTON3
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.Timer
@@ -33,14 +35,18 @@ val windowWidth = 450
 val windowHeight = 800
 
 fun main() {
-  draggingActions.add(createSprite)
-  draggingActions.add(resizeShape)
-  draggingActions.add(moveSprites)
-  draggingActions.add(selectSprites)
+
+  val button1 = MouseButton(BUTTON1)
+  val button3 = MouseButton(BUTTON3)
+  val ctrl = Key(14)
+  button3.add(createSprite)
+  button1.add(resizeSprite)
+  button1.add(moveSprites)
+  button1.add(selectSprites)
 
   displayingModules.add(shapesDrawing)
   displayingModules.add(selectSprites)
-  displayingModules.add(resizeShape)
+  displayingModules.add(resizeSprite)
 
   val timer = Timer(15, updatePanel)
   timer.start()

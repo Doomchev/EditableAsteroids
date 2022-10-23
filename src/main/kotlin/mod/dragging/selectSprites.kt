@@ -7,18 +7,18 @@ import java.awt.event.MouseEvent
 object selectSprites: createRectangle(), Drawing {
   private val selection = Shape(0.0, 0.0, 0.0, 0.0)
 
-  override fun conditions(x: Int, y: Int, button: Int): Boolean {
-    return button == MouseEvent.BUTTON1
+  override fun conditions(x: Int, y: Int): Boolean {
+    return true
   }
 
-  override fun mousePressed(x: Int, y: Int, button: Int) {
+  override fun pressed(x: Int, y: Int) {
     shape = selection
     selection.width = 0.0
     selection.height = 0.0
-    super.mousePressed(x, y, button)
+    super.pressed(x, y)
   }
 
-  override fun mouseReleased(x: Int, y: Int) {
+  override fun released(x: Int, y: Int) {
     for(shape in shapes) {
       if(selection.overlaps(shape)) selectedShapes.add(shape)
     }
