@@ -26,7 +26,6 @@ class Window(): JPanel() {
 val panel = Window()
 object updatePanel: ActionListener {
   override fun actionPerformed(e: ActionEvent) {
-    canvas.update()
     panel.repaint()
   }
 }
@@ -35,15 +34,16 @@ val windowWidth = 450
 val windowHeight = 800
 
 fun main() {
-
   val button1 = MouseButton(BUTTON1)
   val button3 = MouseButton(BUTTON3)
-  val ctrl = Key(14)
+  val ctrl = Key(17)
   button3.add(createSprite)
   button1.add(resizeSprite)
   button1.add(moveSprites)
   button1.add(selectSprites)
+  ctrl.add(pan)
 
+  displayingModules.add(grid)
   displayingModules.add(shapesDrawing)
   displayingModules.add(selectSprites)
   displayingModules.add(resizeSprite)
@@ -51,8 +51,13 @@ fun main() {
   val timer = Timer(15, updatePanel)
   timer.start()
 
+  canvas.update()
+
   val frame = JFrame("Elasmotherium")
   frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+  panel.isFocusable = true
+  panel.requestFocus()
+  panel.addKeyListener(listener)
   panel.addMouseListener(listener)
   panel.addMouseMotionListener(listener)
   frame.add(panel)

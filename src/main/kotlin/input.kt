@@ -70,14 +70,14 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   }
 
   override fun mouseMoved(e: MouseEvent) {
-    currentDraggingAction?.dragged(e.x, e.y)
+    val point = MouseInfo.getPointerInfo().location
+    currentDraggingAction?.dragged(point.x, point.y)
   }
 
   override fun mouseWheelMoved(e: MouseWheelEvent) {
   }
 
   override fun keyTyped(e: KeyEvent) {
-
   }
 
   override fun keyPressed(e: KeyEvent) {

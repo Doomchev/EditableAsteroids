@@ -8,7 +8,7 @@ class Canvas(
   var vdy: Double = 1.0
   var k: Double = 1.0
 
-  val viewport: Shape = Shape(600.0, 337.5,600.0, 337.5)
+  val viewport: Shape = Shape(225.0, 600.0,225.0, 600.0)
 
   fun update() {
     k = viewport.width / width
@@ -24,5 +24,6 @@ fun distToScreen(fieldDist: Double): Double = fieldDist * canvas.k
 
 fun xFromScreen(screenX: Int): Double = (screenX - canvas.vdx) / canvas.k
 fun yFromScreen(screenY: Int): Double = (screenY - canvas.vdy) / canvas.k
+fun distFromScreen(screenDist: Int): Double = screenDist / canvas.k
 
-var canvas = Canvas(0.0, 0.0, 16.0, 9.0)
+var canvas = Canvas(0.0, 0.0, 8.0, 4.5)
