@@ -15,10 +15,6 @@ object pan: DraggingAction {
   var startingCanvasX = 0.0
   var startingCanvasY = 0.0
 
-  override fun conditions(x: Int, y: Int): Boolean {
-    return true
-  }
-
   override fun pressed(x: Int, y: Int) {
     startingX = x
     startingY = y

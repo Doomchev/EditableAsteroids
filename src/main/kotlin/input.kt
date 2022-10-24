@@ -4,46 +4,70 @@ import java.util.*
 
 abstract class Pushable {
   val draggingActions = LinkedList<DraggingAction>()
-  fun pressed(e: MouseListener): Boolean = false
-  fun pressed(e: MouseWheelListener): Boolean = false
-  fun pressed(e: KeyListener): Boolean = false
+  val actions = LinkedList<Action>()
+
+  init {
+    buttons.add(this)
+  }
+
+  open fun correspondsTo(e: MouseEvent): Boolean = false
+  open fun correspondsTo(e: MouseWheelEvent): Boolean = false
+  open fun correspondsTo(e: KeyEvent): Boolean = false
+
+  fun add(action: DraggingAction) {
+    draggingActions.add(action)
+  }
+
+  fun add(action: Action) {
+    actions.add(action)
+  }
 }
 
-val keys = LinkedList<Key>()
+val buttons = LinkedList<Pushable>()
 class Key(var code: Int): Pushable() {
-  init {
-    keys.add(this)
-  }
-  fun pressed(e: KeyEvent): Boolean {
+
+  override fun correspondsTo(e: KeyEvent): Boolean {
     return e.keyCode == code
   }
+}
 
-  fun add(action: DraggingAction) {
-    draggingActions.add(action)
+class MouseButton(var button: Int): Pushable() {
+  override fun correspondsTo(e: MouseEvent): Boolean {
+    return e.button == button
   }
 }
 
-val mouseButtons = LinkedList<MouseButton>()
-class MouseButton(var button: Int): Pushable() {
-  init {
-    mouseButtons.add(this)
-  }
-  fun pressed(e: MouseEvent): Boolean {
-    return e.button == button
-  }
+object mouseWheelUp: Pushable() {
+  var oldAmount = 0
 
-  fun add(action: DraggingAction) {
-    draggingActions.add(action)
+  override fun correspondsTo(e: MouseWheelEvent): Boolean {
+    return e.scrollAmount < oldAmount
+  }
+}
+
+object mouseWheelDown: Pushable() {
+  var oldAmount = 0
+
+  override fun correspondsTo(e: MouseWheelEvent): Boolean {
+    return e.scrollAmount > oldAmount
   }
 }
 
 object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
-  override fun mouseClicked(e: MouseEvent?) {
+  override fun mouseClicked(e: MouseEvent) {
+    for(button in buttons) {
+      if(!button.correspondsTo(e)) continue
+      for(action in button.actions) {
+        if(action.conditions(e.x, e.y)) {
+          action.execute()
+        }
+      }
+    }
   }
 
   override fun mousePressed(e: MouseEvent) {
-    for(button in mouseButtons) {
-      if(!button.pressed(e)) continue
+    for(button in buttons) {
+      if(!button.correspondsTo(e)) continue
       for(action in button.draggingActions) {
         if(action.conditions(e.x, e.y)) {
           currentDraggingAction = action
@@ -75,15 +99,32 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   }
 
   override fun mouseWheelMoved(e: MouseWheelEvent) {
+    for(wheel in buttons) {
+      if(!wheel.correspondsTo(e)) continue
+      for(action in wheel.actions) {
+        if(action.conditions(e.x, e.y)) {
+          action.execute()
+        }
+      }
+    }
   }
 
   override fun keyTyped(e: KeyEvent) {
+    val point = MouseInfo.getPointerInfo().location
+    for(key in buttons) {
+      if(!key.correspondsTo(e)) continue
+      for(action in key.actions) {
+        if(action.conditions(point.x, point.y)) {
+          action.execute()
+        }
+      }
+    }
   }
 
   override fun keyPressed(e: KeyEvent) {
     val point = MouseInfo.getPointerInfo().location
-    for(key in keys) {
-      if(!key.pressed(e)) continue
+    for(key in buttons) {
+      if(!key.correspondsTo(e)) continue
       for(action in key.draggingActions) {
         if(action.conditions(point.x, point.y)) {
           currentDraggingAction = action

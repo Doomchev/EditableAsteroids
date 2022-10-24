@@ -7,10 +7,6 @@ import java.awt.event.MouseEvent
 object selectSprites: createRectangle(), Drawing {
   private val selection = Shape(0.0, 0.0, 0.0, 0.0)
 
-  override fun conditions(x: Int, y: Int): Boolean {
-    return true
-  }
-
   override fun pressed(x: Int, y: Int) {
     shape = selection
     selection.width = 0.0

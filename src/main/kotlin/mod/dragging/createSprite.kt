@@ -6,10 +6,6 @@ import yFromScreen
 import java.awt.event.MouseEvent.BUTTON3
 
 object createSprite: createRectangle() {
-  override fun conditions(x: Int, y: Int): Boolean {
-    return true
-  }
-
   override fun pressed(x: Int, y: Int) {
     startingX = xFromScreen(x)
     startingY = yFromScreen(y)

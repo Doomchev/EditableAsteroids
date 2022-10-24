@@ -1,4 +1,4 @@
-import mod.drawing.shapesDrawing
+import mod.drawing.drawShapes
 import mod.dragging.*
 import java.awt.Graphics
 import java.awt.Graphics2D
@@ -43,8 +43,11 @@ fun main() {
   button1.add(selectSprites)
   ctrl.add(pan)
 
+  //mouseWheelUp.add(zoom)
+  //mouseWheelDown.add(zoom)
+
   displayingModules.add(grid)
-  displayingModules.add(shapesDrawing)
+  displayingModules.add(drawShapes)
   displayingModules.add(selectSprites)
   displayingModules.add(resizeSprite)
 
@@ -60,6 +63,7 @@ fun main() {
   panel.addKeyListener(listener)
   panel.addMouseListener(listener)
   panel.addMouseMotionListener(listener)
+  panel.addMouseWheelListener(listener)
   frame.add(panel)
   frame.setSize(windowWidth, windowHeight)
   frame.isVisible = true

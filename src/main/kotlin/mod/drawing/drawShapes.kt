@@ -6,7 +6,7 @@ import java.awt.Graphics2D
 import java.io.File
 import javax.imageio.ImageIO
 
-object shapesDrawing: Drawing {
+object drawShapes: Drawing {
   val image = ImageIO.read(File("img.png"))
 
   override fun draw(g2d: Graphics2D) {
