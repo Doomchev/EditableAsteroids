@@ -1,3 +1,6 @@
+import mod.dragging.zk
+import java.lang.Math.pow
+
 class Canvas(
   centerX: Double,
   centerY: Double,
@@ -13,8 +16,24 @@ class Canvas(
   fun update() {
     k = viewport.width / width
     height = viewport.height / k
-    vdx = viewport.centerX / k - centerX
-    vdy = viewport.centerY / k - centerY
+    vdx = centerX * k - viewport.centerX
+    vdy = centerY * k - viewport.centerY
+  }
+
+  fun setZoom(zoom: Int) {
+    width = viewport.width * pow(zk, zoom.toDouble())
+    update()
+  }
+
+  fun setZoom(zoom: Int, x: Int, y: Int) {
+    val fx1 = xFromScreen(x)
+    val fy1 = yFromScreen(y)
+    setZoom(zoom)
+    val fx2 = xFromScreen(x)
+    val fy2 = yFromScreen(y)
+    centerX += fx2 - fx1
+    centerY += fy2 - fy1
+    update()
   }
 }
 

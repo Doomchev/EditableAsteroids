@@ -10,14 +10,14 @@ import yToScreen
 import java.awt.Graphics2D
 
 object pan: DraggingAction {
-  var startingX = 0
-  var startingY = 0
+  var startingX = 0.0
+  var startingY = 0.0
   var startingCanvasX = 0.0
   var startingCanvasY = 0.0
 
   override fun pressed(x: Int, y: Int) {
-    startingX = x
-    startingY = y
+    startingX = xFromScreen(x)
+    startingY = yFromScreen(y)
     startingCanvasX = canvas.centerX
     startingCanvasY = canvas.centerY
   }
@@ -27,8 +27,8 @@ object pan: DraggingAction {
     canvas.centerY = startingCanvasY
     canvas.update()
 
-    val xx = startingCanvasX + startingX - x
-    val yy = startingCanvasY + startingY - y
+    val xx = startingCanvasX + xFromScreen(x) - startingX
+    val yy = startingCanvasY + yFromScreen(y) - startingY
 
     canvas.centerX = xx
     canvas.centerY = yy

@@ -43,8 +43,8 @@ fun main() {
   button1.add(selectSprites)
   ctrl.add(pan)
 
-  //mouseWheelUp.add(zoom)
-  //mouseWheelDown.add(zoom)
+  mouseWheelUp.add(zoomIn)
+  mouseWheelDown.add(zoomOut)
 
   displayingModules.add(grid)
   displayingModules.add(drawShapes)
@@ -54,6 +54,7 @@ fun main() {
   val timer = Timer(15, updatePanel)
   timer.start()
 
+  canvas.setZoom(zoom)
   canvas.update()
 
   val frame = JFrame("Elasmotherium")

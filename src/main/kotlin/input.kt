@@ -38,18 +38,14 @@ class MouseButton(var button: Int): Pushable() {
 }
 
 object mouseWheelUp: Pushable() {
-  var oldAmount = 0
-
   override fun correspondsTo(e: MouseWheelEvent): Boolean {
-    return e.scrollAmount < oldAmount
+    return e.wheelRotation < 0
   }
 }
 
 object mouseWheelDown: Pushable() {
-  var oldAmount = 0
-
   override fun correspondsTo(e: MouseWheelEvent): Boolean {
-    return e.scrollAmount > oldAmount
+    return e.wheelRotation > 0
   }
 }
 
