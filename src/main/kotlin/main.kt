@@ -1,3 +1,4 @@
+import mod.actions.deleteShapes
 import mod.drawing.drawShapes
 import mod.dragging.*
 import java.awt.Graphics
@@ -35,13 +36,13 @@ val windowHeight = 800
 
 fun main() {
   val button1 = MouseButton(BUTTON1)
-  val button3 = MouseButton(BUTTON3)
-  val ctrl = Key(17)
-  button3.add(createSprite)
   button1.add(resizeSprite)
   button1.add(moveSprites)
   button1.add(selectSprites)
-  ctrl.add(pan)
+
+  MouseButton(BUTTON3).add(createSprite)
+  Key(17).add(pan)
+  Key(127).add(deleteShapes)
 
   mouseWheelUp.add(zoomIn)
   mouseWheelDown.add(zoomOut)

@@ -1,6 +1,8 @@
 package mod.dragging
 
 import Shape
+import snapX
+import snapY
 import xFromScreen
 import xToScreen
 import yFromScreen
@@ -41,12 +43,12 @@ object resizeSprite: StartingPosition(), Drawing {
     mdx = currentBlock!!.x - xToScreen(currentShape!!.centerX)
     mdy = currentBlock!!.y - yToScreen(currentShape!!.centerY)
 
-    leftX = currentShape!!.leftX
-    topY = currentShape!!.topY
-    rightX = currentShape!!.rightX
-    bottomY = currentShape!!.bottomY
+    leftX = snapX(currentShape!!.leftX)
+    topY = snapY(currentShape!!.topY)
+    rightX = snapX(currentShape!!.rightX)
+    bottomY = snapY(currentShape!!.bottomY)
 
-    super.pressed(x, y)
+    pressed(x, y, true)
   }
 
   override fun dragged(x: Int, y: Int) {
@@ -69,7 +71,7 @@ object resizeSprite: StartingPosition(), Drawing {
   private fun resizeHorizontally(dx: Double) {
     if(mdx < 0) {
       //Editor.Grid.SnapWidth(DX, LeftX, RightX)
-      val width = rightX - leftX - dx
+      val width = snapX(rightX - leftX - dx)
       currentShape!!.width = abs(width)
       if(width < 0) {
         currentShape!!.leftX = rightX
@@ -78,7 +80,7 @@ object resizeSprite: StartingPosition(), Drawing {
       }
     } else {
       //Editor.Grid.SnapWidth(DX, RightX, LeftX)
-      var width = rightX - leftX + dx
+      val width = snapX(rightX - leftX + dx)
       currentShape!!.width = abs(width)
       if(width < 0) {
         currentShape!!.rightX = leftX
@@ -91,7 +93,7 @@ object resizeSprite: StartingPosition(), Drawing {
   private fun resizeVertically(dy: Double) {
     if(mdy < 0) {
       //Editor.Grid.SnapHeight(DY, TopY, BottomY)
-      val height = bottomY - topY - dy
+      val height = snapY(bottomY - topY - dy)
       currentShape!!.height = abs(height)
       if(height < 0) {
         currentShape!!.topY = bottomY
@@ -100,7 +102,7 @@ object resizeSprite: StartingPosition(), Drawing {
       }
     } else {
       //Editor.Grid.SnapHeight(DY, BottomY, TopY)
-      val height = bottomY - topY + dy
+      val height = snapY(bottomY - topY + dy)
       currentShape!!.height = abs(height)
       if(height < 0) {
         currentShape!!.bottomY = topY

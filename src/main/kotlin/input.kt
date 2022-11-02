@@ -121,6 +121,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     val point = MouseInfo.getPointerInfo().location
     for(key in buttons) {
       if(!key.correspondsTo(e)) continue
+      for(action in key.actions) action.execute()
       for(action in key.draggingActions) {
         if(action.conditions(point.x, point.y)) {
           currentDraggingAction = action

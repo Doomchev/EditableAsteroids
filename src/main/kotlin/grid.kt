@@ -3,6 +3,7 @@ import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
 import kotlin.math.floor
+import kotlin.math.round
 
 object grid: Drawing {
   var cellWidth = 1.0
@@ -12,7 +13,6 @@ object grid: Drawing {
 
   override fun draw(g2d: Graphics2D) {
     g2d.color = Color.MAGENTA
-    g2d.stroke = BasicStroke()
 
     val viewport = canvas.viewport
     val leftX = viewport.leftX.toInt()
@@ -43,3 +43,9 @@ object grid: Drawing {
     g2d.color = Color.BLACK
   }
 }
+
+private fun snap(x: Double, step: Double) = round(x / step) * step
+fun snapX(x: Double): Double = snap(x, grid.cellWidth / grid.xDivider)
+fun snapY(y: Double): Double = snap(y, grid.cellHeight / grid.yDivider)
+fun snapX(x: Double, snap: Boolean): Double = if(snap) snapX(x) else x
+fun snapY(y: Double, snap: Boolean): Double = if(snap) snapY(y) else y

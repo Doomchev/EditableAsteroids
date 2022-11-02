@@ -3,6 +3,8 @@ package mod.dragging
 import DraggingAction
 import Pushable
 import shapeUnderCursor
+import snapX
+import snapY
 import xFromScreen
 import yFromScreen
 import java.awt.Graphics2D
@@ -24,13 +26,13 @@ object moveSprites: DraggingAction {
   }
 
   override fun pressed(x: Int, y: Int) {
-    oldx = xFromScreen(x)
-    oldy = yFromScreen(y)
+    oldx = snapX(xFromScreen(x))
+    oldy = snapY(yFromScreen(y))
   }
 
   override fun dragged(x: Int, y: Int) {
-    val fx = xFromScreen(x)
-    val fy = yFromScreen(y)
+    val fx = snapX(xFromScreen(x))
+    val fy = snapY(yFromScreen(y))
     val dx = fx - oldx
     val dy = fy - oldy
     for(shape in selectedShapes) {

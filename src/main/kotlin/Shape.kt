@@ -88,5 +88,6 @@ fun drawDashedRectangle(g: Graphics2D, fx: Double, fy: Double
     , BasicStroke.JOIN_ROUND,1.0f, dash, 4f + phase)
   g.drawRect(x, y, width, height)
 
+  g.stroke = BasicStroke()
   g.color = Color.BLACK
 }

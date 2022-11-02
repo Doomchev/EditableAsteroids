@@ -11,7 +11,11 @@ object selectSprites: createRectangle(), Drawing {
     shape = selection
     selection.width = 0.0
     selection.height = 0.0
-    super.pressed(x, y)
+    pressed(x, y, false)
+  }
+
+  override fun dragged(x: Int, y: Int) {
+    dragged(x, y, false)
   }
 
   override fun released(x: Int, y: Int) {
