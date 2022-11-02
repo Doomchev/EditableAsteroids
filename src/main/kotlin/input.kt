@@ -3,9 +3,6 @@ import java.awt.event.*
 import java.util.*
 
 abstract class Pushable {
-  val draggingActions = LinkedList<DraggingAction>()
-  val actions = LinkedList<Action>()
-
   init {
     buttons.add(this)
   }
@@ -14,20 +11,23 @@ abstract class Pushable {
   open fun correspondsTo(e: MouseWheelEvent): Boolean = false
   open fun correspondsTo(e: KeyEvent): Boolean = false
 
-  fun add(action: DraggingAction) {
-    draggingActions.add(action)
+  class DraggingEntry(val canvas: Canvas, val action: DraggingAction)
+  val draggingActions = LinkedList<DraggingEntry>()
+  fun add(canvas: Canvas, action: DraggingAction) {
+    draggingActions.add(DraggingEntry(canvas, action))
   }
 
-  fun add(action: Action) {
-    actions.add(action)
+  class ActionEntry(val canvas: Canvas, val action: Action)
+  val actions = LinkedList<ActionEntry>()
+  fun add(canvas: Canvas, action: Action) {
+    actions.add(ActionEntry(canvas, action))
   }
 }
 
 val buttons = LinkedList<Pushable>()
 class Key(var code: Int): Pushable() {
-
   override fun correspondsTo(e: KeyEvent): Boolean {
-    return e.keyCode == code
+    return e.keyCode == code || e.keyChar.code == code
   }
 }
 
@@ -53,10 +53,11 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   override fun mouseClicked(e: MouseEvent) {
     for(button in buttons) {
       if(!button.correspondsTo(e)) continue
-      for(action in button.actions) {
-        if(action.conditions(e.x, e.y)) {
-          action.execute()
-        }
+      for(entry in button.actions) {
+        if(!entry.canvas.hasPoint(e.x, e.y)) continue
+        if(!entry.action.conditions(e.x, e.y)) continue
+        canvas = entry.canvas
+        entry.action.execute()
       }
     }
   }
@@ -64,12 +65,13 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   override fun mousePressed(e: MouseEvent) {
     for(button in buttons) {
       if(!button.correspondsTo(e)) continue
-      for(action in button.draggingActions) {
-        if(action.conditions(e.x, e.y)) {
-          currentDraggingAction = action
-          action.pressed(e.x, e.y)
-          return
-        }
+      for(entry in button.draggingActions) {
+        if(!entry.canvas.hasPoint(e.x, e.y)) continue
+        if(!entry.action.conditions(e.x, e.y)) continue
+        canvas = entry.canvas
+        currentDraggingAction = entry.action
+        entry.action.pressed(e.x, e.y)
+        return
       }
     }
   }
@@ -97,10 +99,11 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   override fun mouseWheelMoved(e: MouseWheelEvent) {
     for(wheel in buttons) {
       if(!wheel.correspondsTo(e)) continue
-      for(action in wheel.actions) {
-        if(action.conditions(e.x, e.y)) {
-          action.execute()
-        }
+      for(entry in wheel.actions) {
+        if(!entry.canvas.hasPoint(e.x, e.y)) continue
+        if(!entry.action.conditions(e.x, e.y)) continue
+        canvas = entry.canvas
+        entry.action.execute()
       }
     }
   }
@@ -109,10 +112,11 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     val point = MouseInfo.getPointerInfo().location
     for(key in buttons) {
       if(!key.correspondsTo(e)) continue
-      for(action in key.actions) {
-        if(action.conditions(point.x, point.y)) {
-          action.execute()
-        }
+      for(entry in key.actions) {
+        if(!entry.canvas.hasPoint(point.x, point.y)) continue
+        if(!entry.action.conditions(point.x, point.y)) continue
+        canvas = entry.canvas
+        entry.action.execute()
       }
     }
   }
@@ -121,13 +125,12 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     val point = MouseInfo.getPointerInfo().location
     for(key in buttons) {
       if(!key.correspondsTo(e)) continue
-      for(action in key.actions) action.execute()
-      for(action in key.draggingActions) {
-        if(action.conditions(point.x, point.y)) {
-          currentDraggingAction = action
-          action.pressed(point.x, point.y)
-          return
-        }
+      for(entry in key.draggingActions) {
+        canvas = entry.canvas
+        if(!entry.canvas.hasPoint(point.x, point.y)) continue
+        if(!entry.action.conditions(point.x, point.y)) continue
+        currentDraggingAction = entry.action
+        entry.action.pressed(point.x, point.y)
       }
     }
 

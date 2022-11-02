@@ -8,7 +8,6 @@ interface Drawing {
   fun draw(g2d: Graphics2D)
 }
 
-val displayingModules = LinkedList<Drawing>()
 val selectedShapes = LinkedList<Shape>()
 val shapes = LinkedList<Shape>()
 

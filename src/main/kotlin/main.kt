@@ -7,16 +7,18 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent.BUTTON1
 import java.awt.event.MouseEvent.BUTTON3
+import java.util.*
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.Timer
 
+val canvases = LinkedList<Canvas>()
+
 class Window(): JPanel() {
   override fun paintComponent(g: Graphics) {
     val g2d = g as Graphics2D
-    g.clearRect(0, 0, width, height)
-    for(module in displayingModules) {
-      module.draw(g2d)
+    for(cnv in canvases) {
+      cnv.draw(g2d)
     }
     if(currentDraggingAction != null) {
       currentDraggingAction!!.drawWhileDragging(g2d)
@@ -35,28 +37,33 @@ val windowWidth = 450
 val windowHeight = 800
 
 fun main() {
+  val world = Canvas(0, 0, windowWidth, windowHeight - 100)
+  world.setZoom(zoom)
+  world.update()
+  canvases.add(world)
+
+  //val assets = Canvas(0, windowHeight - 100, windowWidth, 100 )
+  //canvases.add(assets)
+
   val button1 = MouseButton(BUTTON1)
-  button1.add(resizeSprite)
-  button1.add(moveSprites)
-  button1.add(selectSprites)
+  button1.add(world, resizeSprite)
+  button1.add(world, moveSprites)
+  button1.add(world, selectSprites)
 
-  MouseButton(BUTTON3).add(createSprite)
-  Key(17).add(pan)
-  Key(127).add(deleteShapes)
+  MouseButton(BUTTON3).add(world, createSprite)
+  Key(17).add(world, pan)
+  Key(127).add(world, deleteShapes)
 
-  mouseWheelUp.add(zoomIn)
-  mouseWheelDown.add(zoomOut)
+  mouseWheelUp.add(world, zoomIn)
+  mouseWheelDown.add(world, zoomOut)
 
-  displayingModules.add(grid)
-  displayingModules.add(drawShapes)
-  displayingModules.add(selectSprites)
-  displayingModules.add(resizeSprite)
+  world.add(grid)
+  world.add(drawShapes)
+  world.add(selectSprites)
+  world.add(resizeSprite)
 
   val timer = Timer(15, updatePanel)
   timer.start()
-
-  canvas.setZoom(zoom)
-  canvas.update()
 
   val frame = JFrame("Elasmotherium")
   frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
