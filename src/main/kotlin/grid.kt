@@ -1,5 +1,4 @@
 import mod.dragging.Drawing
-import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
 import kotlin.math.floor
@@ -14,7 +13,7 @@ object grid: Drawing {
   override fun draw(g2d: Graphics2D) {
     g2d.color = Color.MAGENTA
 
-    val viewport = canvas.viewport
+    val viewport = currentCanvas.viewport
     val leftX = viewport.leftX.toInt()
     val rightX = viewport.rightX.toInt()
     val topY = viewport.topY.toInt()

@@ -10,6 +10,8 @@ private val whiteStroke = BasicStroke(1f, BasicStroke.CAP_BUTT
 
 open class Shape(var centerX: Double, var centerY: Double, var halfWidth: Double
                  , var halfHeight: Double) {
+  var image: BufferedImage? = null
+
   var width: Double
     inline get() = halfWidth * 2.0
     inline set(value) {
@@ -41,7 +43,7 @@ open class Shape(var centerX: Double, var centerY: Double, var halfWidth: Double
       centerY = value - halfHeight
     }
 
-  fun draw(g: Graphics, image: BufferedImage) {
+  fun draw(g: Graphics) {
     g.drawImage(image, xToScreen(leftX).toInt(), yToScreen(topY).toInt()
       , distToScreen(width).toInt(), distToScreen(height).toInt(), null)
   }

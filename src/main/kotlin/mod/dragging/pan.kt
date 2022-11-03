@@ -1,12 +1,9 @@
 package mod.dragging
 
 import DraggingAction
-import canvas
-import distFromScreen
+import currentCanvas
 import xFromScreen
-import xToScreen
 import yFromScreen
-import yToScreen
 import java.awt.Graphics2D
 
 object pan: DraggingAction {
@@ -18,21 +15,21 @@ object pan: DraggingAction {
   override fun pressed(x: Int, y: Int) {
     startingX = xFromScreen(x)
     startingY = yFromScreen(y)
-    startingCanvasX = canvas.centerX
-    startingCanvasY = canvas.centerY
+    startingCanvasX = currentCanvas.centerX
+    startingCanvasY = currentCanvas.centerY
   }
 
   override fun dragged(x: Int, y: Int) {
-    canvas.centerX = startingCanvasX
-    canvas.centerY = startingCanvasY
-    canvas.update()
+    currentCanvas.centerX = startingCanvasX
+    currentCanvas.centerY = startingCanvasY
+    currentCanvas.update()
 
     val xx = startingCanvasX + xFromScreen(x) - startingX
     val yy = startingCanvasY + yFromScreen(y) - startingY
 
-    canvas.centerX = xx
-    canvas.centerY = yy
-    canvas.update()
+    currentCanvas.centerX = xx
+    currentCanvas.centerY = yy
+    currentCanvas.update()
   }
 
   override fun released(x: Int, y: Int) {

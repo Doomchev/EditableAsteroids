@@ -1,28 +1,34 @@
 import mod.actions.deleteShapes
+import mod.actions.selectImage
 import mod.drawing.drawShapes
 import mod.dragging.*
+import mod.drawing.drawImages
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent.BUTTON1
 import java.awt.event.MouseEvent.BUTTON3
+import java.awt.image.BufferedImage
+import java.io.File
 import java.util.*
+import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.Timer
 
 val canvases = LinkedList<Canvas>()
+val imags = LinkedList<BufferedImage>()
+var currentCanvas: Canvas = Canvas(0, 0, 0, 0)
 
 class Window(): JPanel() {
   override fun paintComponent(g: Graphics) {
+    val oldCanvas = currentCanvas
     val g2d = g as Graphics2D
     for(cnv in canvases) {
       cnv.draw(g2d)
     }
-    if(currentDraggingAction != null) {
-      currentDraggingAction!!.drawWhileDragging(g2d)
-    }
+    currentCanvas = oldCanvas
   }
 }
 
@@ -41,9 +47,7 @@ fun main() {
   world.setZoom(zoom)
   world.update()
   canvases.add(world)
-
-  //val assets = Canvas(0, windowHeight - 100, windowWidth, 100 )
-  //canvases.add(assets)
+  currentCanvas = world
 
   val button1 = MouseButton(BUTTON1)
   button1.add(world, resizeSprite)
@@ -62,6 +66,17 @@ fun main() {
   world.add(selectSprites)
   world.add(resizeSprite)
 
+  for(imageFile in File("./").listFiles()) {
+    if(!imageFile.name.endsWith(".png")) continue
+    imags.add(ImageIO.read(imageFile))
+  }
+
+  val assets = Canvas(0, windowHeight - 100, windowWidth, 100 )
+  canvases.add(assets)
+
+  assets.add(drawImages)
+  button1.add(assets, selectImage)
+
   val timer = Timer(15, updatePanel)
   timer.start()
 
@@ -73,7 +88,8 @@ fun main() {
   panel.addMouseListener(listener)
   panel.addMouseMotionListener(listener)
   panel.addMouseWheelListener(listener)
-  frame.add(panel)
+  panel.setSize(windowWidth, windowHeight)
+  frame.setContentPane(panel)
   frame.setSize(windowWidth, windowHeight)
   frame.isVisible = true
 }

@@ -2,6 +2,8 @@ package mod.dragging
 
 import DraggingAction
 import Shape
+import currentCanvas
+import currentDraggingCanvas
 import snapX
 import snapY
 import xFromScreen
@@ -23,9 +25,9 @@ abstract class createRectangle: StartingPosition(), Drawing {
   }
 
   override fun drawWhileDragging(g2d: Graphics2D) {
-    if(shape != null) {
-      shape!!.drawSelection(g2d)
-    }
+    if(shape == null) return
+    currentCanvas = currentDraggingCanvas!!
+    shape!!.drawSelection(g2d)
   }
 
   override fun draw(g2d: Graphics2D) {

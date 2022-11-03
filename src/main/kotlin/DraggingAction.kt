@@ -9,3 +9,4 @@ interface DraggingAction {
 }
 
 var currentDraggingAction: DraggingAction? = null
+var currentDraggingCanvas: Canvas? = null

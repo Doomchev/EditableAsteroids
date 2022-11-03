@@ -1,6 +1,7 @@
 package mod.dragging
 
 import Shape
+import imags
 import snapX
 import snapY
 import xFromScreen
@@ -12,6 +13,7 @@ object createSprite: createRectangle() {
     startingX = snapX(xFromScreen(x))
     startingY = snapY(yFromScreen(y))
     shape = Shape(0.0, 0.0, 0.0, 0.0)
+    shape!!.image = if(selectedShapes.size > 0) selectedShapes.first.image else imags.first
     shapes.add(shape!!)
     selectedShapes.clear()
     selectedShapes.add(shape!!)
