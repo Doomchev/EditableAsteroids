@@ -29,7 +29,7 @@ class Window(): JPanel() {
     val oldCanvas = currentCanvas
     val g2d = g as Graphics2D
     for(cnv in canvases) {
-      cnv.draw(g)
+      cnv.draw(g2d)
     }
     currentCanvas = oldCanvas
   }

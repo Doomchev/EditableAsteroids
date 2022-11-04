@@ -1,6 +1,5 @@
 import java.awt.BasicStroke
 import java.awt.Color
-import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import java.util.*
@@ -79,17 +78,15 @@ fun drawDashedRectangle(g: Graphics2D, fx: Double, fy: Double
   val phase = (Date().time % 1000) / 125f
   val dash = floatArrayOf(4f)
 
-  val g2d = g as Graphics2D
-
-  g2d.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND
+  g.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND
     ,1.0f, dash, phase)
-  g2d.drawRect(x, y, width, height)
+  g.drawRect(x, y, width, height)
 
-  g2d.color = Color.WHITE
-  g2d.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT
+  g.color = Color.WHITE
+  g.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT
     , BasicStroke.JOIN_ROUND,1.0f, dash, 4f + phase)
-  g2d.drawRect(x, y, width, height)
+  g.drawRect(x, y, width, height)
 
-  g2d.stroke = BasicStroke()
-  g2d.color = Color.BLACK
+  g.stroke = BasicStroke()
+  g.color = Color.BLACK
 }
