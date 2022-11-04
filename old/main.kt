@@ -11,7 +11,7 @@ import javax.swing.JPanel
 class Window(obj: Element) : JPanel() {
 	var block: Block = obj.toBlock()
 
-	override fun paintComponent(g: Graphics) {
+	override fun paintComponent(g: Graphics2D) {
 		block.draw(g as Graphics2D, 0, 0)
 	}
 }

@@ -27,7 +27,7 @@ class Style(
   val verticalMargin: Int = 0,
   val separator: Int = 0,
 ) {
-  fun draw(g: Graphics2D, x: Int, y: Int, width: Int, height: Int) {
+  fun draw(g: Graphics2D2D, x: Int, y: Int, width: Int, height: Int) {
     background.draw(g, x, y, width, height)
     g.color = Color(0, 0, 0)
   }

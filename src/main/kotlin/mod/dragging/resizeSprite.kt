@@ -3,10 +3,9 @@ package mod.dragging
 import Shape
 import snapX
 import snapY
-import xFromScreen
 import xToScreen
-import yFromScreen
 import yToScreen
+import java.awt.Graphics
 import java.awt.Graphics2D
 import kotlin.math.abs
 
@@ -22,10 +21,10 @@ object resizeSprite: StartingPosition(), Drawing {
     ResizerBlock(0, 0, BlockType.nothing)
   }
 
-  override fun conditions(x: Int, y: Int): Boolean {
+  override fun conditions(x: Double, y: Double): Boolean {
     if(selectedShapes.size != 1) return false
     currentShape = selectedShapes.first
-    currentBlock = underCursor(x, y)
+    currentBlock = underCursor(xToScreen(x).toInt(), yToScreen(y).toInt())
     return currentBlock != null
   }
 
@@ -37,7 +36,7 @@ object resizeSprite: StartingPosition(), Drawing {
   private var rightX = 0.0
   private var bottomY = 0.0
 
-  override fun pressed(x: Int, y: Int) {
+  override fun pressed(x: Double, y: Double) {
     if(currentBlock == null) return
 
     mdx = currentBlock!!.x - xToScreen(currentShape!!.centerX)
@@ -51,11 +50,11 @@ object resizeSprite: StartingPosition(), Drawing {
     pressed(x, y, true)
   }
 
-  override fun dragged(x: Int, y: Int) {
+  override fun dragged(x: Double, y: Double) {
     if(currentBlock == null) return
 
-    val dx = xFromScreen(x) - startingX
-    val dy = yFromScreen(y) - startingY
+    val dx = x - startingX
+    val dy = y - startingY
 
     when(currentBlock!!.type) {
       BlockType.nothing -> {}
@@ -112,20 +111,20 @@ object resizeSprite: StartingPosition(), Drawing {
     }
   }
 
-  override fun released(x: Int, y: Int) {
+  override fun released(x: Double, y: Double) {
     currentBlock = null
   }
 
-  override fun drawWhileDragging(g2d: Graphics2D) {
-    draw(g2d)
+  override fun drawWhileDragging(g: Graphics2D) {
+    draw(g)
   }
 
-  override fun draw(g2d: Graphics2D) {
+  override fun draw(g: Graphics2D) {
     if(selectedShapes.size != 1) return
     setBlocks(selectedShapes.first)
     for(block in blocks) {
       if(block.type == BlockType.nothing) continue
-      g2d.fillRect(block.x, block.y, cursorSize, cursorSize)
+      g.fillRect(block.x, block.y, cursorSize, cursorSize)
     }
   }
 

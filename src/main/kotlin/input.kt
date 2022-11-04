@@ -55,11 +55,11 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
       if(!button.correspondsTo(e)) continue
       for(entry in button.actions) {
         if(!entry.canvas.hasPoint(e.x, e.y)) continue
-        val sx = e.x - entry.canvas.viewport.leftX
-        val sy = e.y - entry.canvas.viewport.topY
-        if(!entry.action.conditions(sx, sy)) continue
+        val fx = xFromScreen(e.x)
+        val fy = yFromScreen(e.y)
+        if(!entry.action.conditions(fx, fy)) continue
         currentCanvas = entry.canvas
-        entry.action.execute(sx, sy)
+        entry.action.execute(fx, fy)
       }
     }
   }
@@ -69,28 +69,32 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
       if(!button.correspondsTo(e)) continue
       for(entry in button.draggingActions) {
         if(!entry.canvas.hasPoint(e.x, e.y)) continue
-        val sx = e.x - entry.canvas.viewport.leftX
-        val sy = e.y - entry.canvas.viewport.topY
-        if(!entry.action.conditions(sx, sy)) continue
+        val fx = xFromScreen(e.x)
+        val fy = yFromScreen(e.y)
+        if(!entry.action.conditions(fx, fy)) continue
         currentCanvas = entry.canvas
         currentDraggingCanvas = entry.canvas
         currentDraggingAction = entry.action
-        entry.action.pressed(sx, sy)
+        entry.action.pressed(fx, fy)
         return
       }
     }
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val sx = e.x - currentCanvas.viewport.leftX
-    val sy = e.y - currentCanvas.viewport.topY
-    currentDraggingAction?.dragged(sx, sy)
+    if(currentDraggingCanvas == null) return
+    currentCanvas = currentDraggingCanvas!!
+    val fx = xFromScreen(e.x)
+    val fy = yFromScreen(e.y)
+    currentDraggingAction?.dragged(fx, fy)
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    val sx = e.x - currentCanvas.viewport.leftX
-    val sy = e.y - currentCanvas.viewport.topY
-    currentDraggingAction?.released(sx, sy)
+    if(currentDraggingCanvas == null) return
+    currentCanvas = currentDraggingCanvas!!
+    val fx = xFromScreen(e.x)
+    val fy = yFromScreen(e.y)
+    currentDraggingAction?.released(fx, fy)
     currentDraggingAction = null
   }
 
@@ -101,8 +105,10 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   }
 
   override fun mouseMoved(e: MouseEvent) {
-    val point = MouseInfo.getPointerInfo().location
-    currentDraggingAction?.dragged(point.x, point.y)
+    if(currentDraggingCanvas == null) return
+    val fx = xFromScreen(e.x)
+    val fy = yFromScreen(e.y)
+    currentDraggingAction?.dragged(fx, fy)
   }
 
   override fun mouseWheelMoved(e: MouseWheelEvent) {
@@ -110,11 +116,11 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
       if(!wheel.correspondsTo(e)) continue
       for(entry in wheel.actions) {
         if(!entry.canvas.hasPoint(e.x, e.y)) continue
-        val sx = e.x - entry.canvas.viewport.leftX
-        val sy = e.y - entry.canvas.viewport.topY
-        if(!entry.action.conditions(sx, sy)) continue
         currentCanvas = entry.canvas
-        entry.action.execute(sx, sy)
+        val fx = xFromScreen(e.x)
+        val fy = yFromScreen(e.y)
+        if(!entry.action.conditions(fx, fy)) continue
+        entry.action.execute(fx, fy)
       }
     }
   }
@@ -125,11 +131,11 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
       if(!key.correspondsTo(e)) continue
       for(entry in key.actions) {
         if(!entry.canvas.hasPoint(point.x, point.y)) continue
-        val sx = point.x - entry.canvas.viewport.leftX
-        val sy = point.y - entry.canvas.viewport.topY
-        if(!entry.action.conditions(sx, sy)) continue
         currentCanvas = entry.canvas
-        entry.action.execute(sx, sy)
+        val fx = xFromScreen(point.x)
+        val fy = yFromScreen(point.y)
+        if(!entry.action.conditions(fx, fy)) continue
+        entry.action.execute(fx, fy)
       }
     }
   }
@@ -140,13 +146,13 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
       if(!key.correspondsTo(e)) continue
       for(entry in key.draggingActions) {
         if(!entry.canvas.hasPoint(point.x, point.y)) continue
-        val sx = point.x - entry.canvas.viewport.leftX
-        val sy = point.y - entry.canvas.viewport.topY
-        if(!entry.action.conditions(sx, sy)) continue
         currentCanvas = entry.canvas
+        val fx = xFromScreen(point.x)
+        val fy = yFromScreen(point.y)
+        if(!entry.action.conditions(fx, fy)) continue
         currentDraggingAction = entry.action
         currentDraggingCanvas = entry.canvas
-        entry.action.pressed(sx, sy)
+        entry.action.pressed(fx, fy)
       }
     }
 
@@ -154,9 +160,9 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
 
   override fun keyReleased(e: KeyEvent) {
     val point = MouseInfo.getPointerInfo().location
-    val sx = point.x - currentDraggingCanvas!!.viewport.leftX
-    val sy = point.y - currentDraggingCanvas!!.viewport.topY
-    currentDraggingAction?.released(sx, sy)
+    val fx = xFromScreen(point.x)
+    val fy = yFromScreen(point.y)
+    currentDraggingAction?.released(fx, fy)
     currentDraggingAction = null
   }
 }

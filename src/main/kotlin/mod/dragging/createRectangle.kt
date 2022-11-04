@@ -1,13 +1,11 @@
 package mod.dragging
 
-import DraggingAction
 import Shape
 import currentCanvas
 import currentDraggingCanvas
 import snapX
 import snapY
-import xFromScreen
-import yFromScreen
+import java.awt.Graphics
 import java.awt.Graphics2D
 import kotlin.math.abs
 import kotlin.math.min
@@ -15,21 +13,19 @@ import kotlin.math.min
 abstract class createRectangle: StartingPosition(), Drawing {
   var shape: Shape? = null
 
-  fun dragged(x: Int, y: Int, snapToGrid: Boolean) {
-    var fx = xFromScreen(x)
-    var fy = yFromScreen(y)
-    shape!!.width = snapX(abs(startingX - fx), snapToGrid)
-    shape!!.height = snapY(abs(startingY - fy), snapToGrid)
-    shape!!.leftX = snapX(min(startingX, fx), snapToGrid)
-    shape!!.topY = snapY(min(startingY, fy), snapToGrid)
+  fun dragged(x: Double, y: Double, snapToGrid: Boolean) {
+    shape!!.width = snapX(abs(startingX - x), snapToGrid)
+    shape!!.height = snapY(abs(startingY - y), snapToGrid)
+    shape!!.leftX = snapX(min(startingX, x), snapToGrid)
+    shape!!.topY = snapY(min(startingY, y), snapToGrid)
   }
 
-  override fun drawWhileDragging(g2d: Graphics2D) {
+  override fun drawWhileDragging(g: Graphics2D) {
     if(shape == null) return
     currentCanvas = currentDraggingCanvas!!
-    shape!!.drawSelection(g2d)
+    shape!!.drawSelection(g)
   }
 
-  override fun draw(g2d: Graphics2D) {
+  override fun draw(g: Graphics2D) {
   }
 }

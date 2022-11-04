@@ -1,11 +1,12 @@
 import mod.dragging.Drawing
 import mod.dragging.zk
+import java.awt.Graphics
 import java.awt.Graphics2D
 import java.util.LinkedList
 import kotlin.math.pow
 
-class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int)
-  : Shape(0.0, 0.0, fwidth.toDouble() * 0.05, fheight.toDouble() * 0.05) {
+class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
+  : Shape(0.0, 0.0, fwidth.toDouble() / 2.0 / scale, fheight.toDouble() / 2.0 / scale) {
   var vdx: Double = 1.0
   var vdy: Double = 1.0
   var k: Double = 1.0
@@ -29,6 +30,7 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int)
   val viewport: Area
   init {
     viewport = Area(fx, fy, fwidth, fheight)
+    update()
   }
 
   val drawingModules = LinkedList<Drawing>()
@@ -36,17 +38,19 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int)
     drawingModules.add(obj)
   }
 
-  fun draw(g2d: Graphics2D) {
+  override fun draw(g: Graphics2D) {
+    val oldCanvas = currentCanvas
     currentCanvas = this
     update()
-    g2d.setClip(viewport.leftX, viewport.topY, viewport.width, viewport.height)
-    g2d.clearRect(viewport.leftX, viewport.topY, viewport.width, viewport.height)
+    g.setClip(viewport.leftX, viewport.topY, viewport.width, viewport.height)
+    g.clearRect(viewport.leftX, viewport.topY, viewport.width, viewport.height)
     for(module in drawingModules) {
-      module.draw(g2d)
+      module.draw(g)
     }
     if(currentDraggingCanvas == this && currentDraggingAction != null) {
-      currentDraggingAction!!.drawWhileDragging(g2d)
+      currentDraggingAction!!.drawWhileDragging(g)
     }
+    currentCanvas = oldCanvas
   }
 
   fun update() {
@@ -67,8 +71,8 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int)
     setZoom(zoom)
     val fx2 = xFromScreen(x)
     val fy2 = yFromScreen(y)
-    centerX += fx2 - fx1
-    centerY += fy2 - fy1
+    centerX += fx1 - fx2
+    centerY += fy1 - fy2
     update()
   }
 
@@ -76,10 +80,10 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int)
     return viewport.hasPoint(x, y)
   }
 }
-fun xToScreen(fieldX: Double): Double = fieldX * currentCanvas.k + currentCanvas.vdx
-fun yToScreen(fieldY: Double): Double = fieldY * currentCanvas.k + currentCanvas.vdy
+fun xToScreen(fieldX: Double): Double = fieldX * currentCanvas.k - currentCanvas.vdx
+fun yToScreen(fieldY: Double): Double = fieldY * currentCanvas.k - currentCanvas.vdy
 fun distToScreen(fieldDist: Double): Double = fieldDist * currentCanvas.k
 
-fun xFromScreen(screenX: Int): Double = (screenX - currentCanvas.vdx) / currentCanvas.k
-fun yFromScreen(screenY: Int): Double = (screenY - currentCanvas.vdy) / currentCanvas.k
+fun xFromScreen(screenX: Int): Double = (screenX + currentCanvas.vdx) / currentCanvas.k
+fun yFromScreen(screenY: Int): Double = (screenY + currentCanvas.vdy) / currentCanvas.k
 fun distFromScreen(screenDist: Int): Double = screenDist / currentCanvas.k

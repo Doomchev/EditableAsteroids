@@ -1,19 +1,31 @@
 package mod.drawing
 
-import currentCanvas
+import distToScreen
+import drawDashedRectangle
 import imags
+import mod.actions.currentImage
 import mod.dragging.Drawing
+import xToScreen
+import yToScreen
+import java.awt.Graphics
 import java.awt.Graphics2D
-import java.awt.image.BufferedImage
 import java.util.*
 
 object drawImages: Drawing {
-  override fun draw(g2d: Graphics2D) {
-    var sx = currentCanvas.viewport.leftX
-    var sy = currentCanvas.viewport.topY
+  override fun draw(g: Graphics2D) {
+    var quantity = imags.size
+    var fsize = 1.0 / 1.2
+    var fx = -0.5 * fsize * quantity
+    var fy = -0.5 * 1.2
     for(image in imags) {
-      g2d.drawImage(image, sx, sy, 64, 64, null)
-      sx += 64
+      val sx = xToScreen(fx).toInt()
+      val sy = yToScreen(fy).toInt()
+      val ssize = distToScreen(fsize).toInt()
+      g.drawImage(image, sx, sy, ssize, ssize, null)
+      if(currentImage == image) {
+        drawDashedRectangle(g, fx, fy, fsize, fsize)
+      }
+      fx += fsize
     }
   }
 }

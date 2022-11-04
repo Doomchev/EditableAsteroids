@@ -1,5 +1,6 @@
 import mod.dragging.Drawing
 import java.awt.Color
+import java.awt.Graphics
 import java.awt.Graphics2D
 import kotlin.math.floor
 import kotlin.math.round
@@ -10,14 +11,14 @@ object grid: Drawing {
   var xDivider = 2.0
   var yDivider = 2.0
 
-  override fun draw(g2d: Graphics2D) {
-    g2d.color = Color.MAGENTA
+  override fun draw(g: Graphics2D) {
+    g.color = Color.MAGENTA
 
     val viewport = currentCanvas.viewport
-    val leftX = viewport.leftX.toInt()
-    val rightX = viewport.rightX.toInt()
-    val topY = viewport.topY.toInt()
-    val bottomY = viewport.bottomY.toInt()
+    val leftX = viewport.leftX
+    val rightX = viewport.rightX
+    val topY = viewport.topY
+    val bottomY = viewport.bottomY
 
     val startingX = xFromScreen(leftX)
     val endingX = xFromScreen(rightX)
@@ -25,7 +26,7 @@ object grid: Drawing {
     var x = floor(startingX / cellWidth) * cellWidth
     while(x < endingX) {
       val fx = xToScreen(x).toInt()
-      g2d.drawLine(fx, topY, fx, bottomY)
+      g.drawLine(fx, topY, fx, bottomY)
       x += cellWidth
     }
 
@@ -35,11 +36,11 @@ object grid: Drawing {
     var y = floor(startingY / cellHeight) * cellHeight
     while(y < endingY) {
       val fy = yToScreen(y).toInt()
-      g2d.drawLine(leftX, fy, rightX, fy)
+      g.drawLine(leftX, fy, rightX, fy)
       y += cellHeight
     }
 
-    g2d.color = Color.BLACK
+    g.color = Color.BLACK
   }
 }
 

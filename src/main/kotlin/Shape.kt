@@ -43,7 +43,7 @@ open class Shape(var centerX: Double, var centerY: Double, var halfWidth: Double
       centerY = value - halfHeight
     }
 
-  fun draw(g: Graphics) {
+  open fun draw(g: Graphics2D) {
     g.drawImage(image, xToScreen(leftX).toInt(), yToScreen(topY).toInt()
       , distToScreen(width).toInt(), distToScreen(height).toInt(), null)
   }
@@ -62,17 +62,15 @@ open class Shape(var centerX: Double, var centerY: Double, var halfWidth: Double
   }
 }
 
-fun shapeUnderCursor(shapes: LinkedList<Shape>, x: Int, y: Int): Shape? {
-  val fx = xFromScreen(x)
-  val fy = yFromScreen(y)
+fun shapeUnderCursor(shapes: LinkedList<Shape>, x: Double, y: Double): Shape? {
   for(shape in shapes.descendingIterator()) {
-    if(shape.collidesWithPoint(fx, fy)) return shape
+    if(shape.collidesWithPoint(x, y)) return shape
   }
   return null
 }
 
 fun drawDashedRectangle(g: Graphics2D, fx: Double, fy: Double
-                                , fwidth: Double, fheight: Double) {
+                        , fwidth: Double, fheight: Double) {
   val width = distToScreen(fwidth).toInt()
   val height = distToScreen(fheight).toInt()
   val x = xToScreen(fx).toInt()
@@ -81,15 +79,17 @@ fun drawDashedRectangle(g: Graphics2D, fx: Double, fy: Double
   val phase = (Date().time % 1000) / 125f
   val dash = floatArrayOf(4f)
 
-  g.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND
+  val g2d = g as Graphics2D
+
+  g2d.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND
     ,1.0f, dash, phase)
-  g.drawRect(x, y, width, height)
+  g2d.drawRect(x, y, width, height)
 
-  g.color = Color.WHITE
-  g.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT
+  g2d.color = Color.WHITE
+  g2d.stroke = BasicStroke(1f, BasicStroke.CAP_BUTT
     , BasicStroke.JOIN_ROUND,1.0f, dash, 4f + phase)
-  g.drawRect(x, y, width, height)
+  g2d.drawRect(x, y, width, height)
 
-  g.stroke = BasicStroke()
-  g.color = Color.BLACK
+  g2d.stroke = BasicStroke()
+  g2d.color = Color.BLACK
 }
