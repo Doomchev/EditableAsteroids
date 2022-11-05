@@ -54,6 +54,7 @@ fun main() {
 
   val button1 = MouseButton(BUTTON1)
   button1.add(world, resizeSprite)
+  button1.add(world, rotateSprite)
   button1.add(world, moveSprites)
   button1.add(world, selectSprites)
 
@@ -67,6 +68,7 @@ fun main() {
   world.add(grid)
   world.add(drawShapes)
   world.add(selectSprites)
+  world.add(rotateSprite)
   world.add(resizeSprite)
 
   for(imageFile in File("./").listFiles()) {

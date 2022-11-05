@@ -18,7 +18,7 @@ object zoomIn: Action {
   internal fun modifyZoom(dZoom: Int, x: Double, y: Double) {
     val pos = panel.mousePosition
     zoom += dZoom
-    currentCanvas.setZoom(zoom, xToScreen(x).toInt(), yToScreen(y).toInt())
+    currentCanvas.setZoom(zoom, xToScreen(x), yToScreen(y))
   }
 }
 

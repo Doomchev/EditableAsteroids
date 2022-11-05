@@ -18,9 +18,9 @@ object drawImages: Drawing {
     var fx = -0.5 * fsize * quantity
     var fy = -0.5 * 1.2
     for(image in imags) {
-      val sx = xToScreen(fx).toInt()
-      val sy = yToScreen(fy).toInt()
-      val ssize = distToScreen(fsize).toInt()
+      val sx = xToScreen(fx)
+      val sy = yToScreen(fy)
+      val ssize = distToScreen(fsize)
       g.drawImage(image, sx, sy, ssize, ssize, null)
       if(currentImage == image) {
         drawDashedRectangle(g, fx, fy, fsize, fsize)

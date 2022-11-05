@@ -25,7 +25,7 @@ object grid: Drawing {
 
     var x = floor(startingX / cellWidth) * cellWidth
     while(x < endingX) {
-      val fx = xToScreen(x).toInt()
+      val fx = xToScreen(x)
       g.drawLine(fx, topY, fx, bottomY)
       x += cellWidth
     }
@@ -35,7 +35,7 @@ object grid: Drawing {
 
     var y = floor(startingY / cellHeight) * cellHeight
     while(y < endingY) {
-      val fy = yToScreen(y).toInt()
+      val fy = yToScreen(y)
       g.drawLine(leftX, fy, rightX, fy)
       y += cellHeight
     }

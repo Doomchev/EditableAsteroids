@@ -24,7 +24,7 @@ object resizeSprite: StartingPosition(), Drawing {
   override fun conditions(x: Double, y: Double): Boolean {
     if(selectedShapes.size != 1) return false
     currentShape = selectedShapes.first
-    currentBlock = underCursor(xToScreen(x).toInt(), yToScreen(y).toInt())
+    currentBlock = underCursor(xToScreen(x), yToScreen(y))
     return currentBlock != null
   }
 
@@ -39,8 +39,8 @@ object resizeSprite: StartingPosition(), Drawing {
   override fun pressed(x: Double, y: Double) {
     if(currentBlock == null) return
 
-    mdx = currentBlock!!.x - xToScreen(currentShape!!.centerX)
-    mdy = currentBlock!!.y - yToScreen(currentShape!!.centerY)
+    mdx = currentBlock!!.x - xToScreen(currentShape!!.centerX).toDouble()
+    mdy = currentBlock!!.y - yToScreen(currentShape!!.centerY).toDouble()
 
     leftX = snapX(currentShape!!.leftX)
     topY = snapY(currentShape!!.topY)
@@ -131,16 +131,16 @@ object resizeSprite: StartingPosition(), Drawing {
   private fun setBlocks(shape: Shape) {
     for(yy in 0 .. 2) {
       val y = when(yy) {
-        0 -> yToScreen(shape.topY).toInt() - cursorDistance - resizeSprite.cursorSize
-        1 -> yToScreen(shape.centerY).toInt() - cursorSize / 2
-        else -> yToScreen(shape.bottomY).toInt() + cursorDistance
+        0 -> yToScreen(shape.topY) - cursorDistance - cursorSize
+        1 -> yToScreen(shape.centerY) - cursorSize / 2
+        else -> yToScreen(shape.bottomY) + cursorDistance
       }
       for(xx in 0 .. 2) {
         if(xx == 1 && yy == 1) continue
         val x = when(xx) {
-          0 -> xToScreen(shape.leftX).toInt() - cursorDistance - resizeSprite.cursorSize
-          1 -> xToScreen(shape.centerX).toInt() - cursorSize / 2
-          else -> xToScreen(shape.rightX).toInt() + cursorDistance
+          0 -> xToScreen(shape.leftX) - cursorDistance - cursorSize
+          1 -> xToScreen(shape.centerX) - cursorSize / 2
+          else -> xToScreen(shape.rightX) + cursorDistance
         }.toInt()
         val block = blocks[xx + yy * 3]
         block.x = x

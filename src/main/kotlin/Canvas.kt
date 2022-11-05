@@ -80,9 +80,9 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
     return viewport.hasPoint(x, y)
   }
 }
-fun xToScreen(fieldX: Double): Double = fieldX * currentCanvas.k - currentCanvas.vdx
-fun yToScreen(fieldY: Double): Double = fieldY * currentCanvas.k - currentCanvas.vdy
-fun distToScreen(fieldDist: Double): Double = fieldDist * currentCanvas.k
+fun xToScreen(fieldX: Double): Int = (fieldX * currentCanvas.k - currentCanvas.vdx).toInt()
+fun yToScreen(fieldY: Double): Int = (fieldY * currentCanvas.k - currentCanvas.vdy).toInt()
+fun distToScreen(fieldDist: Double): Int = (fieldDist * currentCanvas.k).toInt()
 
 fun xFromScreen(screenX: Int): Double = (screenX + currentCanvas.vdx) / currentCanvas.k
 fun yFromScreen(screenY: Int): Double = (screenY + currentCanvas.vdy) / currentCanvas.k
