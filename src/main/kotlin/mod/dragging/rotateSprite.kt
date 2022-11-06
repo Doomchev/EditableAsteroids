@@ -28,7 +28,7 @@ object rotateSprite: DraggingAction, Drawing {
 
   override fun dragged(x: Double, y: Double) {
     if(currentShape == null) return
-    currentShape!!.angle = snapAngle(atan2(currentShape!!.centerY - y, currentShape!!.centerX - x))
+    currentShape!!.angle = snapAngle(atan2(y - currentShape!!.centerY, x - currentShape!!.centerX))
   }
 
   override fun released(x: Double, y: Double) {
@@ -47,8 +47,8 @@ object rotateSprite: DraggingAction, Drawing {
   private fun setBlock(shape: Shape) {
     val size = 0.5 * (shape.halfWidth + shape.halfHeight) * 1.41 + distFromScreen(16)
     val csize = distFromScreen(cursorSize)
-    block.centerX = shape.centerX - size * cos(shape.angle)
-    block.centerY = shape.centerY - size * sin(shape.angle)
+    block.centerX = shape.centerX + size * cos(shape.angle)
+    block.centerY = shape.centerY + size * sin(shape.angle)
     block.width = csize
     block.height = csize
   }

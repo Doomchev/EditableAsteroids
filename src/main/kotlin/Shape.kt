@@ -1,8 +1,6 @@
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
-import java.awt.geom.AffineTransform
-import java.awt.image.BufferedImage
 import java.util.*
 
 private val whiteStroke = BasicStroke(1f, BasicStroke.CAP_BUTT
@@ -11,7 +9,7 @@ private val whiteStroke = BasicStroke(1f, BasicStroke.CAP_BUTT
 open class Shape(var centerX: Double, var centerY: Double, var halfWidth: Double
                  , var halfHeight: Double) {
   var angle: Double = 0.0
-  var image: BufferedImage? = null
+  var image: Image? = null
 
   var width: Double
     inline get() = halfWidth * 2.0
@@ -45,11 +43,7 @@ open class Shape(var centerX: Double, var centerY: Double, var halfWidth: Double
     }
 
   open fun draw(g: Graphics2D) {
-    val oldTransform = g.transform
-    g.rotate(angle, xToScreen(centerX).toDouble(), yToScreen(centerY).toDouble())
-    g.drawImage(image, xToScreen(leftX), yToScreen(topY)
-      , distToScreen(width), distToScreen(height), null)
-    g.transform = oldTransform
+    image?.draw(g, xToScreen(leftX), yToScreen(topY), distToScreen(width), distToScreen(height), angle)
   }
 
   fun drawSelection(g: Graphics2D) {

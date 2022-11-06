@@ -4,7 +4,6 @@ import mod.drawing.drawImages
 import mod.drawing.drawShapes
 import java.awt.event.MouseEvent.BUTTON1
 import java.awt.event.MouseEvent.BUTTON3
-import java.awt.image.BufferedImage
 import java.io.File
 import java.util.*
 import javax.imageio.ImageIO
@@ -13,15 +12,16 @@ import javax.swing.Timer
 
 
 val canvases = LinkedList<Canvas>()
-val imags = LinkedList<BufferedImage>()
+val imageArrays = LinkedList<Array<Image>>()
 var currentCanvas: Canvas = Canvas(0, 0, 0, 0, 1.0)
 
 val windowHeight = 800
 val windowWidth = windowHeight * 9 / 16
 val frame = JFrame("Elasmotherium")
-val objectMenu = JPopupMenu()
 
 val world = Canvas(0, 0, windowWidth, windowHeight - 100, 10.0)
+val objectMenu = JPopupMenu()
+val imageMenu = JPopupMenu()
 
 fun main() {
   world.setZoom(zoom)
@@ -53,15 +53,18 @@ fun main() {
 
   for(imageFile in File("./").listFiles()) {
     if(!imageFile.name.endsWith(".png")) continue
-    imags.add(ImageIO.read(imageFile))
+    val image = Image(ImageIO.read(imageFile))
+    val array = Array(1) { image }
+    imageArrays.add(array)
   }
-  currentImage = imags.first
+  currentImageArray = imageArrays.first
 
-  val assets = Canvas(0, windowHeight - 100, windowWidth, 100, 64.0)
+  val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
   canvases.add(assets)
 
   assets.add(drawImages)
   button1.add(assets, selectImage)
+  Key(32).add(assets, showMenu(imageMenu))
 
   val timer = Timer(10, updatePanel)
   timer.start()
@@ -81,5 +84,8 @@ fun main() {
   val behaviorMenu = JMenu("Добавить поведение")
   objectMenu.add(behaviorMenu)
   addMenuItem(behaviorMenu, "Поворот", SpriteRotation())
+
+  addMenuItem(imageMenu, "Разрезать", cutImage)
+
   frame.isVisible = true
 }

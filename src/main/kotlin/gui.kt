@@ -39,7 +39,7 @@ abstract class ShapeAction: Action {
 class AnyKeyListener(val action: ShapeAction): KeyListener {
   override fun keyTyped(e: KeyEvent) {
     childFrame.removeKeyListener(this)
-    childFrame.dispose()
+    childFrame.isVisible = false
     action.settings()
     for(shape in selectedShapes) {
       Key(e.keyChar.code).add(world, action.create(shape))
@@ -55,19 +55,35 @@ class AnyKeyListener(val action: ShapeAction): KeyListener {
 
 val childFrame: JFrame = JFrame("Key")
 
-class MenuListener(val action: ShapeAction): ActionListener {
+class ShapeMenuListener(val action: ShapeAction): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     childFrame.setSize(200, 100)
     childFrame.addKeyListener(AnyKeyListener(action))
     childFrame.add(Label("Нажмите клавишу для действия"))
     childFrame.pack()
     childFrame.isVisible = true
+  }
+}
 
-    //action.settings()
+class MenuListener(val action: Action): ActionListener {
+  override fun actionPerformed(e: ActionEvent) {
+    action.execute()
   }
 }
 
 fun addMenuItem(menu: JMenu, caption: String, action: ShapeAction) {
+  var menuItem = JMenuItem(caption)
+  menuItem.addActionListener(ShapeMenuListener(action))
+  menu.add(menuItem)
+}
+
+fun addMenuItem(menu: JPopupMenu, caption: String, action: ShapeAction) {
+  var menuItem = JMenuItem(caption)
+  menuItem.addActionListener(ShapeMenuListener(action))
+  menu.add(menuItem)
+}
+
+fun addMenuItem(menu: JPopupMenu, caption: String, action: Action) {
   var menuItem = JMenuItem(caption)
   menuItem.addActionListener(MenuListener(action))
   menu.add(menuItem)
