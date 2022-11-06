@@ -3,7 +3,6 @@ package mod.dragging
 import Action
 import currentCanvas
 import mod.dragging.zoomIn.modifyZoom
-import panel
 import xToScreen
 import yToScreen
 

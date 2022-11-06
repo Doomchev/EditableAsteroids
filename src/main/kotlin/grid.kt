@@ -2,6 +2,7 @@ import mod.dragging.Drawing
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
+import kotlin.math.PI
 import kotlin.math.floor
 import kotlin.math.round
 
@@ -10,6 +11,7 @@ object grid: Drawing {
   var cellHeight = 1.0
   var xDivider = 2.0
   var yDivider = 2.0
+  var angleDivider = PI * 15 / 180
 
   override fun draw(g: Graphics2D) {
     g.color = Color.MAGENTA
@@ -49,3 +51,4 @@ fun snapX(x: Double): Double = snap(x, grid.cellWidth / grid.xDivider)
 fun snapY(y: Double): Double = snap(y, grid.cellHeight / grid.yDivider)
 fun snapX(x: Double, snap: Boolean): Double = if(snap) snapX(x) else x
 fun snapY(y: Double, snap: Boolean): Double = if(snap) snapY(y) else y
+fun snapAngle(angle: Double) = snap(angle, grid.angleDivider)

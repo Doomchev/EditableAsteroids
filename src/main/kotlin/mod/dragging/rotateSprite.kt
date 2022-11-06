@@ -3,6 +3,7 @@ package mod.dragging
 import DraggingAction
 import Shape
 import distFromScreen
+import snapAngle
 import xToScreen
 import yToScreen
 import java.awt.Graphics2D
@@ -27,7 +28,7 @@ object rotateSprite: DraggingAction, Drawing {
 
   override fun dragged(x: Double, y: Double) {
     if(currentShape == null) return
-    currentShape!!.angle = atan2(currentShape!!.centerY - y, currentShape!!.centerX - x)
+    currentShape!!.angle = snapAngle(atan2(currentShape!!.centerY - y, currentShape!!.centerX - x))
   }
 
   override fun released(x: Double, y: Double) {

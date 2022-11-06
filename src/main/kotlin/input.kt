@@ -27,7 +27,7 @@ abstract class Pushable {
 val buttons = LinkedList<Pushable>()
 class Key(var code: Int): Pushable() {
   override fun correspondsTo(e: KeyEvent): Boolean {
-    return e.keyCode == code || e.keyChar.code == code
+    return e.keyChar.code == code
   }
 }
 
@@ -141,10 +141,13 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     }
   }
 
+  var keyPressed: Pushable? = null
+
   override fun keyPressed(e: KeyEvent) {
     val point = MouseInfo.getPointerInfo().location
     for(key in buttons) {
       if(!key.correspondsTo(e)) continue
+      keyPressed = key
       for(entry in key.draggingActions) {
         if(!entry.canvas.hasPoint(point.x, point.y)) continue
         currentCanvas = entry.canvas
@@ -158,7 +161,15 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     }
   }
 
+  fun onKeyDown() {
+    if(keyPressed == null) return
+    for(entry in keyPressed!!.actions) {
+      entry.action.onButtonDown()
+    }
+  }
+
   override fun keyReleased(e: KeyEvent) {
+    keyPressed = null
     if(currentDraggingCanvas == null) return
     currentCanvas = currentDraggingCanvas!!
     val point = MouseInfo.getPointerInfo().location

@@ -13,7 +13,7 @@ object createSprite: createRectangle() {
   override fun pressed(x: Double, y: Double) {
     startingX = snapX(x)
     startingY = snapY(y)
-    shape = Shape(0.0, 0.0, 0.0, 0.0)
+    shape = Shape(x, y, 0.0, 0.0)
     shape!!.image = if(selectedShapes.size > 0) selectedShapes.first.image else currentImage
     shapes.add(shape!!)
     selectedShapes.clear()
@@ -25,5 +25,9 @@ object createSprite: createRectangle() {
   }
 
   override fun released(x: Double, y: Double) {
+    if(shape!!.width == 0.0 && shape!!.height == 0.0) {
+      shapes.remove(shape)
+      selectedShapes.clear()
+    }
   }
 }
