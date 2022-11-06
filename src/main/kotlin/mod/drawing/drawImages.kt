@@ -16,7 +16,7 @@ object drawImages: Drawing {
     var fx = -0.5 * fsize * quantity
     val fy = -0.5 * 1.2
     for(array in imageArrays) {
-      val image = array[0]
+      val image = array.images[0]
       val sx = xToScreen(fx)
       val sy = yToScreen(fy)
       val ssize = distToScreen(fsize)

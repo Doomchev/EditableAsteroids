@@ -12,7 +12,7 @@ import javax.swing.Timer
 
 
 val canvases = LinkedList<Canvas>()
-val imageArrays = LinkedList<Array<Image>>()
+val imageArrays = LinkedList<ImageArray>()
 var currentCanvas: Canvas = Canvas(0, 0, 0, 0, 1.0)
 
 val windowHeight = 800
@@ -38,7 +38,7 @@ fun main() {
   val button2 = MouseButton(BUTTON3)
   button2.add(world, createSprite)
 
-  Key(32).add(world, showMenu(objectMenu))
+  Key(32).add(world, showMenu(objectMenu, true))
   Key(17).add(world, pan)
   Key(127).add(world, deleteShapes)
 
@@ -54,8 +54,7 @@ fun main() {
   for(imageFile in File("./").listFiles()) {
     if(!imageFile.name.endsWith(".png")) continue
     val image = Image(ImageIO.read(imageFile))
-    val array = Array(1) { image }
-    imageArrays.add(array)
+    imageArrays.add(ImageArray(Array(1) { image }))
   }
   currentImageArray = imageArrays.first
 
@@ -64,7 +63,7 @@ fun main() {
 
   assets.add(drawImages)
   button1.add(assets, selectImage)
-  Key(32).add(assets, showMenu(imageMenu))
+  Key(32).add(assets, showMenu(imageMenu, false))
 
   val timer = Timer(10, updatePanel)
   timer.start()
@@ -81,11 +80,17 @@ fun main() {
   panel.setSize(windowWidth, windowHeight)
   frame.contentPane = panel
 
-  val behaviorMenu = JMenu("Добавить поведение")
-  objectMenu.add(behaviorMenu)
-  addMenuItem(behaviorMenu, "Поворот", SpriteRotation())
+  val onButtonDownMenu = JMenu("При нажатии...")
+  objectMenu.add(onButtonDownMenu)
+  addMenuItem(onButtonDownMenu, "Вращать", ShapeKeyMenuListener(SpriteRotation()))
+  addMenuItem(onButtonDownMenu, "Анимировать", ShapeKeyMenuListener(SpriteAnimation()))
 
-  addMenuItem(imageMenu, "Разрезать", cutImage)
+  val alwaysMenu = JMenu("Всегда...")
+  objectMenu.add(alwaysMenu)
+  addMenuItem(alwaysMenu, "Вращать", ShapeMenuListener(SpriteRotation()))
+  addMenuItem(alwaysMenu, "Анимировать", ShapeMenuListener(SpriteAnimation()))
+
+  addMenuItem(imageMenu, "Разрезать", MenuListener(cutImage))
 
   frame.isVisible = true
 }

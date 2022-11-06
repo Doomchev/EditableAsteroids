@@ -10,12 +10,18 @@ import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Label
 import java.awt.event.*
+import java.util.LinkedList
 import javax.swing.*
+
+val actions = LinkedList<Action>()
 
 class Window(): JPanel() {
   override fun paintComponent(g: Graphics) {
     val oldCanvas = currentCanvas
     val g2d = g as Graphics2D
+    for(action in actions) {
+      action.execute()
+    }
     for(cnv in canvases) {
       cnv.draw(g2d)
     }
@@ -55,7 +61,7 @@ class AnyKeyListener(val action: ShapeAction): KeyListener {
 
 val childFrame: JFrame = JFrame("Key")
 
-class ShapeMenuListener(val action: ShapeAction): ActionListener {
+class ShapeKeyMenuListener(val action: ShapeAction): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     childFrame.setSize(200, 100)
     childFrame.addKeyListener(AnyKeyListener(action))
@@ -65,27 +71,30 @@ class ShapeMenuListener(val action: ShapeAction): ActionListener {
   }
 }
 
+class ShapeMenuListener(val action: ShapeAction): ActionListener {
+  override fun actionPerformed(e: ActionEvent) {
+    action.settings()
+    for(shape in selectedShapes) {
+      actions.add(action.create(shape))
+    }
+  }
+}
+
 class MenuListener(val action: Action): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     action.execute()
   }
 }
 
-fun addMenuItem(menu: JMenu, caption: String, action: ShapeAction) {
-  var menuItem = JMenuItem(caption)
-  menuItem.addActionListener(ShapeMenuListener(action))
+fun addMenuItem(menu: JMenu, caption: String, listener: ActionListener) {
+  val menuItem = JMenuItem(caption)
+  menuItem.addActionListener(listener)
   menu.add(menuItem)
 }
 
-fun addMenuItem(menu: JPopupMenu, caption: String, action: ShapeAction) {
-  var menuItem = JMenuItem(caption)
-  menuItem.addActionListener(ShapeMenuListener(action))
-  menu.add(menuItem)
-}
-
-fun addMenuItem(menu: JPopupMenu, caption: String, action: Action) {
-  var menuItem = JMenuItem(caption)
-  menuItem.addActionListener(MenuListener(action))
+fun addMenuItem(menu: JPopupMenu, caption: String, listener: ActionListener) {
+  val menuItem = JMenuItem(caption)
+  menuItem.addActionListener(listener)
   menu.add(menuItem)
 }
 

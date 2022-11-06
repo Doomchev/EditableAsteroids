@@ -8,9 +8,9 @@ import xToScreen
 import yToScreen
 import javax.swing.JPopupMenu
 
-class showMenu(val menu: JPopupMenu) : Action {
+class showMenu(val menu: JPopupMenu, val forShape: Boolean) : Action {
   override fun conditions(x: Double, y: Double): Boolean {
-    return !selectedShapes.isEmpty()
+    return !forShape || !selectedShapes.isEmpty()
   }
 
   override fun execute(x: Double, y: Double) {

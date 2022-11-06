@@ -1,6 +1,7 @@
 package mod.actions
 
 import Action
+import Image
 import ImageArray
 import imageArrays
 import mod.dragging.selectedShapes

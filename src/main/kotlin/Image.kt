@@ -1,11 +1,9 @@
  import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
-class Image(var texture: BufferedImage) {
-  var x: Int = 0
-  var y: Int = 0
-  var width: Int = texture.width
-  var height: Int = texture.height
+class Image(var texture: BufferedImage, var x: Int, var y: Int, var width: Int, var height: Int) {
+  constructor(texture: BufferedImage) : this(texture, 0, 0, texture.width, texture.height) {
+  }
 
   fun draw(g: Graphics2D, sx: Int, sy: Int, swidth: Int, sheight: Int, angle: Double) {
     val oldTransform = g.transform
@@ -14,3 +12,5 @@ class Image(var texture: BufferedImage) {
     g.transform = oldTransform
   }
 }
+
+class ImageArray(var images: Array<Image>)

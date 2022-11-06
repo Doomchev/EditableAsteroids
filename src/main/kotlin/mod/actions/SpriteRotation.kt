@@ -18,10 +18,10 @@ class SpriteRotation: ShapeAction() {
   }
 
   override fun onButtonDown(x: Double, y: Double) {
-    shape!!.angle += 0.01 * speed
+    shape!!.angle += speed
   }
 
   override fun settings() {
-    speed = enterDouble("Введите скорость (град/сек):") * PI / 180
+    speed = 0.01 * enterDouble("Введите скорость (град/сек):") * PI / 180.0
   }
 }

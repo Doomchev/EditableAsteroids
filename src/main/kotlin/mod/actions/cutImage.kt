@@ -1,14 +1,18 @@
 package mod.actions
 
 import Action
-import mod.dragging.enterDouble
+import Image
 import mod.dragging.enterInt
-import kotlin.math.PI
 
 object cutImage: Action {
   override fun execute(x: Double, y: Double) {
-    val xquantity = enterInt("Введите кол-во избображений по горизонтали:") * PI / 180
-    val yquantity = enterInt("Введите кол-во избображений по вертикали:") * PI / 180
-
+    val xquantity = enterInt("Введите кол-во изображений по горизонтали:")
+    val yquantity = enterInt("Введите кол-во изображений по вертикали:")
+    val texture = currentImageArray!!.images[0].texture
+    val width = texture.width / xquantity
+    val height = texture.height / yquantity
+    currentImageArray!!.images = Array(xquantity * yquantity) {
+      Image(texture, (it % xquantity) * width, (it / xquantity) * height, width, height)
+    }
   }
 }
