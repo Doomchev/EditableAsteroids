@@ -1,10 +1,9 @@
-package mod.actions
+package mod.actions.sprite
 
 import Action
-import Image
 import ImageArray
 import imageArrays
-import mod.dragging.selectedShapes
+import mod.dragging.selectedSprites
 import kotlin.math.floor
 
 var currentImageArray:ImageArray? = null
@@ -14,7 +13,7 @@ object selectImage: Action {
     val imageNum = floor(x / fsize + 0.5 * imageArrays.size).toInt()
     if(imageNum < 0 || imageNum >= imageArrays.size) return
     currentImageArray = imageArrays[imageNum]
-    for(shape in selectedShapes) {
+    for(shape in selectedSprites) {
       shape.image = currentImageArray!!.images[0]
     }
   }

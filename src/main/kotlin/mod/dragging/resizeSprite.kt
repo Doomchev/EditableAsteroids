@@ -1,11 +1,10 @@
 package mod.dragging
 
-import Shape
+import Sprite
 import snapX
 import snapY
 import xToScreen
 import yToScreen
-import java.awt.Graphics
 import java.awt.Graphics2D
 import kotlin.math.abs
 
@@ -13,7 +12,7 @@ object resizeSprite: StartingPosition(), Drawing {
   class ResizerBlock(var x: Int, var y: Int, var type: BlockType)
   enum class BlockType {nothing, horizontal, vertical, both}
 
-  var currentShape: Shape? = null
+  var currentSprite: Sprite? = null
   var currentBlock: ResizerBlock? = null
   private const val cursorSize = 8
   private const val cursorDistance = 2
@@ -22,8 +21,8 @@ object resizeSprite: StartingPosition(), Drawing {
   }
 
   override fun conditions(x: Double, y: Double): Boolean {
-    if(selectedShapes.size != 1) return false
-    currentShape = selectedShapes.first
+    if(selectedSprites.size != 1) return false
+    currentSprite = selectedSprites.first
     currentBlock = underCursor(xToScreen(x), yToScreen(y))
     return currentBlock != null
   }
@@ -39,13 +38,13 @@ object resizeSprite: StartingPosition(), Drawing {
   override fun pressed(x: Double, y: Double) {
     if(currentBlock == null) return
 
-    mdx = currentBlock!!.x - xToScreen(currentShape!!.centerX).toDouble()
-    mdy = currentBlock!!.y - yToScreen(currentShape!!.centerY).toDouble()
+    mdx = currentBlock!!.x - xToScreen(currentSprite!!.centerX).toDouble()
+    mdy = currentBlock!!.y - yToScreen(currentSprite!!.centerY).toDouble()
 
-    leftX = snapX(currentShape!!.leftX)
-    topY = snapY(currentShape!!.topY)
-    rightX = snapX(currentShape!!.rightX)
-    bottomY = snapY(currentShape!!.bottomY)
+    leftX = snapX(currentSprite!!.leftX)
+    topY = snapY(currentSprite!!.topY)
+    rightX = snapX(currentSprite!!.rightX)
+    bottomY = snapY(currentSprite!!.bottomY)
 
     pressed(x, y, true)
   }
@@ -71,20 +70,20 @@ object resizeSprite: StartingPosition(), Drawing {
     if(mdx < 0) {
       //Editor.Grid.SnapWidth(DX, LeftX, RightX)
       val width = snapX(rightX - leftX - dx)
-      currentShape!!.width = abs(width)
+      currentSprite!!.width = abs(width)
       if(width < 0) {
-        currentShape!!.leftX = rightX
+        currentSprite!!.leftX = rightX
       } else {
-        currentShape!!.rightX = rightX
+        currentSprite!!.rightX = rightX
       }
     } else {
       //Editor.Grid.SnapWidth(DX, RightX, LeftX)
       val width = snapX(rightX - leftX + dx)
-      currentShape!!.width = abs(width)
+      currentSprite!!.width = abs(width)
       if(width < 0) {
-        currentShape!!.rightX = leftX
+        currentSprite!!.rightX = leftX
       } else {
-        currentShape!!.leftX = leftX
+        currentSprite!!.leftX = leftX
       }
     }
   }
@@ -93,20 +92,20 @@ object resizeSprite: StartingPosition(), Drawing {
     if(mdy < 0) {
       //Editor.Grid.SnapHeight(DY, TopY, BottomY)
       val height = snapY(bottomY - topY - dy)
-      currentShape!!.height = abs(height)
+      currentSprite!!.height = abs(height)
       if(height < 0) {
-        currentShape!!.topY = bottomY
+        currentSprite!!.topY = bottomY
       } else {
-        currentShape!!.bottomY = bottomY
+        currentSprite!!.bottomY = bottomY
       }
     } else {
       //Editor.Grid.SnapHeight(DY, BottomY, TopY)
       val height = snapY(bottomY - topY + dy)
-      currentShape!!.height = abs(height)
+      currentSprite!!.height = abs(height)
       if(height < 0) {
-        currentShape!!.bottomY = topY
+        currentSprite!!.bottomY = topY
       } else {
-        currentShape!!.topY = topY
+        currentSprite!!.topY = topY
       }
     }
   }
@@ -120,27 +119,27 @@ object resizeSprite: StartingPosition(), Drawing {
   }
 
   override fun draw(g: Graphics2D) {
-    if(selectedShapes.size != 1) return
-    setBlocks(selectedShapes.first)
+    if(selectedSprites.size != 1) return
+    setBlocks(selectedSprites.first)
     for(block in blocks) {
       if(block.type == BlockType.nothing) continue
       g.fillRect(block.x, block.y, cursorSize, cursorSize)
     }
   }
 
-  private fun setBlocks(shape: Shape) {
+  private fun setBlocks(sprite: Sprite) {
     for(yy in 0 .. 2) {
       val y = when(yy) {
-        0 -> yToScreen(shape.topY) - cursorDistance - cursorSize
-        1 -> yToScreen(shape.centerY) - cursorSize / 2
-        else -> yToScreen(shape.bottomY) + cursorDistance
+        0 -> yToScreen(sprite.topY) - cursorDistance - cursorSize
+        1 -> yToScreen(sprite.centerY) - cursorSize / 2
+        else -> yToScreen(sprite.bottomY) + cursorDistance
       }
       for(xx in 0 .. 2) {
         if(xx == 1 && yy == 1) continue
         val x = when(xx) {
-          0 -> xToScreen(shape.leftX) - cursorDistance - cursorSize
-          1 -> xToScreen(shape.centerX) - cursorSize / 2
-          else -> xToScreen(shape.rightX) + cursorDistance
+          0 -> xToScreen(sprite.leftX) - cursorDistance - cursorSize
+          1 -> xToScreen(sprite.centerX) - cursorSize / 2
+          else -> xToScreen(sprite.rightX) + cursorDistance
         }.toInt()
         val block = blocks[xx + yy * 3]
         block.x = x

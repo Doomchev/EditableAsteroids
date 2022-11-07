@@ -1,7 +1,7 @@
 package mod.dragging
 
 import DraggingAction
-import Shape
+import Sprite
 import distFromScreen
 import snapAngle
 import xToScreen
@@ -9,17 +9,16 @@ import yToScreen
 import java.awt.Graphics2D
 import kotlin.math.atan2
 import kotlin.math.cos
-import kotlin.math.max
 import kotlin.math.sin
 
 object rotateSprite: DraggingAction, Drawing {
   val cursorSize = 8
-  val block = Shape(0.0, 0.0, 0.0, 0.0)
-  var currentShape: Shape? = null
+  val block = Sprite(0.0, 0.0, 0.0, 0.0)
+  var currentSprite: Sprite? = null
 
   override fun conditions(x: Double, y: Double): Boolean {
-    if(selectedShapes.size != 1) return false
-    currentShape = selectedShapes.first
+    if(selectedSprites.size != 1) return false
+    currentSprite = selectedSprites.first
     return block.collidesWithPoint(x, y)
   }
 
@@ -27,8 +26,8 @@ object rotateSprite: DraggingAction, Drawing {
   }
 
   override fun dragged(x: Double, y: Double) {
-    if(currentShape == null) return
-    currentShape!!.angle = snapAngle(atan2(y - currentShape!!.centerY, x - currentShape!!.centerX))
+    if(currentSprite == null) return
+    currentSprite!!.angle = snapAngle(atan2(y - currentSprite!!.centerY, x - currentSprite!!.centerX))
   }
 
   override fun released(x: Double, y: Double) {
@@ -39,16 +38,16 @@ object rotateSprite: DraggingAction, Drawing {
   }
 
   override fun draw(g: Graphics2D) {
-    if(selectedShapes.size != 1) return
-    setBlock(selectedShapes.first)
+    if(selectedSprites.size != 1) return
+    setBlock(selectedSprites.first)
     g.drawOval(xToScreen(block.leftX), yToScreen(block.topY), cursorSize, cursorSize)
   }
 
-  private fun setBlock(shape: Shape) {
-    val size = 0.5 * (shape.halfWidth + shape.halfHeight) * 1.41 + distFromScreen(16)
+  private fun setBlock(sprite: Sprite) {
+    val size = 0.5 * (sprite.halfWidth + sprite.halfHeight) * 1.41 + distFromScreen(16)
     val csize = distFromScreen(cursorSize)
-    block.centerX = shape.centerX + size * cos(shape.angle)
-    block.centerY = shape.centerY + size * sin(shape.angle)
+    block.centerX = sprite.centerX + size * cos(sprite.angle)
+    block.centerY = sprite.centerY + size * sin(sprite.angle)
     block.width = csize
     block.height = csize
   }

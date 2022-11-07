@@ -141,13 +141,21 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     }
   }
 
-  var keyPressed: Pushable? = null
+  val keysPressed = LinkedList<KeyEntry>()
+  class KeyEntry(val key: Pushable, val canvas: Canvas, var remove: Boolean = false)
 
   override fun keyPressed(e: KeyEvent) {
+    for(keyEntry in keysPressed) {
+      if(keyEntry.key.correspondsTo(e)) return
+    }
+
     val point = MouseInfo.getPointerInfo().location
     for(key in buttons) {
       if(!key.correspondsTo(e)) continue
-      keyPressed = key
+      for(entry in key.actions) {
+        if(!entry.canvas.hasPoint(point.x, point.y)) continue
+        keysPressed.add(KeyEntry(key, entry.canvas))
+      }
       for(entry in key.draggingActions) {
         if(!entry.canvas.hasPoint(point.x, point.y)) continue
         currentCanvas = entry.canvas
@@ -162,14 +170,31 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   }
 
   fun onKeyDown() {
-    if(keyPressed == null) return
-    for(entry in keyPressed!!.actions) {
-      entry.action.onButtonDown()
+    val point = MouseInfo.getPointerInfo().location
+    val fx = xFromScreen(point.x)
+    val fy = yFromScreen(point.y)
+    val it = keysPressed.iterator()
+    while(it.hasNext()) {
+      val entry = it.next()
+      if(entry.remove) {
+        it.remove()
+      } else {
+        for(actionEntry in entry.key.actions) {
+          if(!actionEntry.action.conditions(fx, fy)) {
+            it.remove()
+            continue
+          }
+          actionEntry.action.execute()
+        }
+      }
     }
   }
 
   override fun keyReleased(e: KeyEvent) {
-    keyPressed = null
+    for(keyEntry in keysPressed) {
+      if(!keyEntry.key.correspondsTo(e)) continue
+      keyEntry.remove = true
+    }
     if(currentDraggingCanvas == null) return
     currentCanvas = currentDraggingCanvas!!
     val point = MouseInfo.getPointerInfo().location

@@ -1,7 +1,8 @@
 import mod.actions.*
+import mod.actions.sprite.*
 import mod.dragging.*
 import mod.drawing.drawImages
-import mod.drawing.drawShapes
+import mod.drawing.drawSprites
 import java.awt.event.MouseEvent.BUTTON1
 import java.awt.event.MouseEvent.BUTTON3
 import java.io.File
@@ -9,6 +10,7 @@ import java.util.*
 import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.Timer
+import kotlin.math.PI
 
 
 val canvases = LinkedList<Canvas>()
@@ -40,13 +42,13 @@ fun main() {
 
   Key(32).add(world, showMenu(objectMenu, true))
   Key(17).add(world, pan)
-  Key(127).add(world, deleteShapes)
+  Key(127).add(world, deleteSprites)
 
   mouseWheelUp.add(world, zoomIn)
   mouseWheelDown.add(world, zoomOut)
 
   world.add(grid)
-  world.add(drawShapes)
+  world.add(drawSprites)
   world.add(selectSprites)
   world.add(rotateSprite)
   world.add(resizeSprite)
@@ -80,17 +82,53 @@ fun main() {
   panel.setSize(windowWidth, windowHeight)
   frame.contentPane = panel
 
-  val onButtonDownMenu = JMenu("При нажатии...")
-  objectMenu.add(onButtonDownMenu)
-  addMenuItem(onButtonDownMenu, "Вращать", ShapeKeyMenuListener(SpriteRotation()))
-  addMenuItem(onButtonDownMenu, "Анимировать", ShapeKeyMenuListener(SpriteAnimation()))
+  val subMenu = Array<JMenu>(2) {
+    if(it == 0) JMenu("При нажатии...") else JMenu("Всегда...")
+  }
 
-  val alwaysMenu = JMenu("Всегда...")
-  objectMenu.add(alwaysMenu)
-  addMenuItem(alwaysMenu, "Вращать", ShapeMenuListener(SpriteRotation()))
-  addMenuItem(alwaysMenu, "Анимировать", ShapeMenuListener(SpriteAnimation()))
+  for(n in 0 .. 1) {
+    val menu = subMenu[n]
+    addMenuItem(menu, "Вращать", getListener(n, SpriteRotation()))
+    addMenuItem(menu, "Анимировать", getListener(n, SpriteAnimation()))
+    addMenuItem(menu, "Ускорять", getListener(n, SpriteAcceleration()))
+    addMenuItem(menu, "Замедлять", getListener(n, SpriteDeceleration()))
+    addMenuItem(menu, "Перемещать", getListener(n, SpriteMovement()))
+    objectMenu.add(menu)
+  }
 
   addMenuItem(imageMenu, "Разрезать", MenuListener(cutImage))
 
+  val sprite = Sprite(0.0, 0.0, 1.0, 1.0)
+  sprite.image = imageArrays.last.images[0]
+  sprites.add(sprite)
+
+  val action1 = SpriteRotation()
+  action1.sprite = sprite
+  action1.speed = -1.5 * PI
+  Key(97).actions.add(Pushable.ActionEntry(world, action1))
+
+  val action2 = SpriteRotation()
+  action2.sprite = sprite
+  action2.speed = 1.5 * PI
+  Key(100).actions.add(Pushable.ActionEntry(world, action2))
+
+  /*val action3 = SpriteAcceleration()
+  action3.sprite = sprite
+  action3.acceleration = 30.0
+  action3.limit = 10.0
+  Key(119).actions.add(Pushable.ActionEntry(world, action3))
+
+  val action4 = SpriteMovement()
+  action4.sprite = sprite
+  actions.add(action4)
+
+  val action5 = SpriteDeceleration()
+  action5.sprite = sprite
+  action5.speed = 15.0
+  actions.add(action5)*/
+
   frame.isVisible = true
 }
+
+fun getListener(n: Int, action: SpriteAction)
+= if(n == 0) ShapeKeyMenuListener(action) else ShapeMenuListener(action)

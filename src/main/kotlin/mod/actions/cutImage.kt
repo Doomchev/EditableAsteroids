@@ -2,6 +2,7 @@ package mod.actions
 
 import Action
 import Image
+import mod.actions.sprite.currentImageArray
 import mod.dragging.enterInt
 
 object cutImage: Action {

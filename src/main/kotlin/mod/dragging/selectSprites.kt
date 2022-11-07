@@ -1,14 +1,13 @@
 package mod.dragging
 
-import Shape
-import java.awt.Graphics
+import Sprite
 import java.awt.Graphics2D
 
 object selectSprites: createRectangle(), Drawing {
-  private val selection = Shape(0.0, 0.0, 0.0, 0.0)
+  private val selection = Sprite(0.0, 0.0, 0.0, 0.0)
 
   override fun pressed(x: Double, y: Double) {
-    shape = selection
+    sprite = selection
     selection.width = 0.0
     selection.height = 0.0
     pressed(x, y, false)
@@ -19,13 +18,13 @@ object selectSprites: createRectangle(), Drawing {
   }
 
   override fun released(x: Double, y: Double) {
-    for(shape in shapes) {
-      if(selection.overlaps(shape)) selectedShapes.add(shape)
+    for(shape in sprites) {
+      if(selection.overlaps(shape)) selectedSprites.add(shape)
     }
   }
 
   override fun draw(g: Graphics2D) {
-    for(shape in selectedShapes) {
+    for(shape in selectedSprites) {
       shape.drawSelection(g)
     }
   }

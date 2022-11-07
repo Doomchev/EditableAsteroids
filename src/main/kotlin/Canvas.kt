@@ -1,12 +1,11 @@
 import mod.dragging.Drawing
 import mod.dragging.zk
-import java.awt.Graphics
 import java.awt.Graphics2D
 import java.util.LinkedList
 import kotlin.math.pow
 
 class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
-  : Shape(0.0, 0.0, fwidth.toDouble() / 2.0 / scale, fheight.toDouble() / 2.0 / scale) {
+  : Sprite(0.0, 0.0, fwidth.toDouble() / 2.0 / scale, fheight.toDouble() / 2.0 / scale) {
   var vdx: Double = 1.0
   var vdy: Double = 1.0
   var k: Double = 1.0

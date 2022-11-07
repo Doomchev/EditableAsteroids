@@ -2,14 +2,23 @@ import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
 import java.util.*
+import kotlin.math.sqrt
 
 private val whiteStroke = BasicStroke(1f, BasicStroke.CAP_BUTT
   , BasicStroke.JOIN_ROUND,1.0f, floatArrayOf(2f, 0f, 0f),2f)
 
-open class Shape(var centerX: Double, var centerY: Double, var halfWidth: Double
-                 , var halfHeight: Double) {
+var fps = 100.0
+var fpsk = 1.0 / fps
+
+class Vector(var x: Double, var y: Double) {
+  val length get() = sqrt(x * x + y * y)
+}
+
+open class Sprite(var centerX: Double, var centerY: Double, var halfWidth: Double
+                  , var halfHeight: Double) {
   var angle: Double = 0.0
   var image: Image? = null
+  var movingVector = Vector(0.0, 0.0)
 
   var width: Double
     inline get() = halfWidth * 2.0
@@ -50,18 +59,23 @@ open class Shape(var centerX: Double, var centerY: Double, var halfWidth: Double
     drawDashedRectangle(g, leftX, topY, width, height)
   }
 
+  fun move() {
+    centerX += fpsk * movingVector.x
+    centerY += fpsk * movingVector.y
+  }
+
   fun collidesWithPoint(x: Double, y: Double): Boolean {
     return x >= leftX && x < rightX && y >= topY && y < bottomY
   }
 
-  fun overlaps(shape: Shape): Boolean {
-    return shape.leftX >= leftX && shape.topY >= topY
-        && shape.rightX < rightX && shape.bottomY < bottomY
+  fun overlaps(sprite: Sprite): Boolean {
+    return sprite.leftX >= leftX && sprite.topY >= topY
+        && sprite.rightX < rightX && sprite.bottomY < bottomY
   }
 }
 
-fun shapeUnderCursor(shapes: LinkedList<Shape>, x: Double, y: Double): Shape? {
-  for(shape in shapes.descendingIterator()) {
+fun shapeUnderCursor(sprites: LinkedList<Sprite>, x: Double, y: Double): Sprite? {
+  for(shape in sprites.descendingIterator()) {
     if(shape.collidesWithPoint(x, y)) return shape
   }
   return null

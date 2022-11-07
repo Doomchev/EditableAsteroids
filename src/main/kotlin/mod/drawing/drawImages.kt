@@ -3,7 +3,7 @@ package mod.drawing
 import distToScreen
 import drawDashedRectangle
 import imageArrays
-import mod.actions.currentImageArray
+import mod.actions.sprite.currentImageArray
 import mod.dragging.Drawing
 import xToScreen
 import yToScreen

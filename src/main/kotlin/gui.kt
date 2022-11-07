@@ -2,7 +2,8 @@ package mod.dragging
 
 import Action
 import Key
-import Shape
+import Sprite
+import actions
 import canvases
 import currentCanvas
 import world
@@ -12,8 +13,6 @@ import java.awt.Label
 import java.awt.event.*
 import java.util.LinkedList
 import javax.swing.*
-
-val actions = LinkedList<Action>()
 
 class Window(): JPanel() {
   override fun paintComponent(g: Graphics) {
@@ -37,17 +36,17 @@ object updatePanel: ActionListener {
   }
 }
 
-abstract class ShapeAction: Action {
-  var shape: Shape? = null
-  abstract fun create(shape: Shape): ShapeAction
+abstract class SpriteAction: Action {
+  var sprite: Sprite? = null
+  abstract fun create(sprite: Sprite): SpriteAction
 }
 
-class AnyKeyListener(val action: ShapeAction): KeyListener {
+class AnyKeyListener(val action: SpriteAction): KeyListener {
   override fun keyTyped(e: KeyEvent) {
     childFrame.removeKeyListener(this)
     childFrame.isVisible = false
     action.settings()
-    for(shape in selectedShapes) {
+    for(shape in selectedSprites) {
       Key(e.keyChar.code).add(world, action.create(shape))
     }
   }
@@ -61,7 +60,7 @@ class AnyKeyListener(val action: ShapeAction): KeyListener {
 
 val childFrame: JFrame = JFrame("Key")
 
-class ShapeKeyMenuListener(val action: ShapeAction): ActionListener {
+class ShapeKeyMenuListener(val action: SpriteAction): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     childFrame.setSize(200, 100)
     childFrame.addKeyListener(AnyKeyListener(action))
@@ -71,11 +70,11 @@ class ShapeKeyMenuListener(val action: ShapeAction): ActionListener {
   }
 }
 
-class ShapeMenuListener(val action: ShapeAction): ActionListener {
+class ShapeMenuListener(val action: SpriteAction): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     action.settings()
-    for(shape in selectedShapes) {
-      actions.add(action.create(shape))
+    for(sprite in selectedSprites) {
+      actions.add(action.create(sprite))
     }
   }
 }

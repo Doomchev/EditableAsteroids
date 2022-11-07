@@ -11,18 +11,9 @@ interface Action {
     execute(fx, fy)
   }
 
-  fun execute(x: Double, y: Double) {
-  }
-
-  fun onButtonDown() {
-    val point = MouseInfo.getPointerInfo().location
-    val fx = xFromScreen(point.x)
-    val fy = yFromScreen(point.y)
-    onButtonDown(fx, fy)
-  }
-
-  fun onButtonDown(x: Double, y: Double) {
-  }
   fun settings() {
+  }
+
+  fun execute(x: Double, y: Double) {
   }
 }
