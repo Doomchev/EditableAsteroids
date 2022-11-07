@@ -25,13 +25,10 @@ class SpriteAcceleration: SpriteAction() {
   }
 
   override fun execute() {
-    val length = sprite!!.movingVector.length
-    if(limit > 0 && length > limit) {
-      sprite!!.movingVector.x *= limit / length
-      sprite!!.movingVector.y *= limit / length
-    } else {
-      sprite!!.movingVector.x += fpsk * acceleration * cos(sprite!!.angle)
-      sprite!!.movingVector.y += fpsk * acceleration * sin(sprite!!.angle)
-    }
+    var newLength = sprite!!.movingVector.length + acceleration * fpsk
+    if(newLength < 0) newLength = 0.0
+    if(limit > 0 && newLength > limit) newLength = limit
+    sprite!!.movingVector.x = newLength * cos(sprite!!.angle)
+    sprite!!.movingVector.y = newLength * sin(sprite!!.angle)
   }
 }

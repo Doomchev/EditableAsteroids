@@ -91,7 +91,6 @@ fun main() {
     addMenuItem(menu, "Вращать", getListener(n, SpriteRotation()))
     addMenuItem(menu, "Анимировать", getListener(n, SpriteAnimation()))
     addMenuItem(menu, "Ускорять", getListener(n, SpriteAcceleration()))
-    addMenuItem(menu, "Замедлять", getListener(n, SpriteDeceleration()))
     addMenuItem(menu, "Перемещать", getListener(n, SpriteMovement()))
     objectMenu.add(menu)
   }
@@ -112,7 +111,7 @@ fun main() {
   action2.speed = 1.5 * PI
   Key(100).actions.add(Pushable.ActionEntry(world, action2))
 
-  /*val action3 = SpriteAcceleration()
+  val action3 = SpriteAcceleration()
   action3.sprite = sprite
   action3.acceleration = 30.0
   action3.limit = 10.0
@@ -122,10 +121,10 @@ fun main() {
   action4.sprite = sprite
   actions.add(action4)
 
-  val action5 = SpriteDeceleration()
+  val action5 = SpriteAcceleration()
   action5.sprite = sprite
-  action5.speed = 15.0
-  actions.add(action5)*/
+  action5.acceleration = -15.0
+  actions.add(action5)
 
   frame.isVisible = true
 }

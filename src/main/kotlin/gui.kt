@@ -44,7 +44,8 @@ abstract class SpriteAction: Action {
 class AnyKeyListener(val action: SpriteAction): KeyListener {
   override fun keyTyped(e: KeyEvent) {
     childFrame.removeKeyListener(this)
-    childFrame.isVisible = false
+    //childFrame.isVisible = false
+    childFrame.dispose()
     action.settings()
     for(shape in selectedSprites) {
       Key(e.keyChar.code).add(world, action.create(shape))
