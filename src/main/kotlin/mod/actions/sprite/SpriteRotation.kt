@@ -1,8 +1,8 @@
 package mod.actions.sprite
 
 import Sprite
+import SpriteAction
 import fpsk
-import mod.dragging.SpriteAction
 import mod.dragging.enterDouble
 import kotlin.math.PI
 

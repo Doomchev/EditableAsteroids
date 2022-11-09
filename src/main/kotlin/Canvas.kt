@@ -1,11 +1,12 @@
 import mod.dragging.Drawing
 import mod.dragging.zk
 import java.awt.Graphics2D
+import java.awt.MouseInfo
 import java.util.LinkedList
 import kotlin.math.pow
 
 class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
-  : Sprite(0.0, 0.0, fwidth.toDouble() / 2.0 / scale, fheight.toDouble() / 2.0 / scale) {
+  : Sprite(0.0, 0.0, fwidth.toDouble() / scale, fheight.toDouble() / scale) {
   var vdx: Double = 1.0
   var vdy: Double = 1.0
   var k: Double = 1.0
@@ -22,7 +23,7 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
         topY = value - height
       }
     fun hasPoint(px: Int, py: Int): Boolean {
-      return px >= leftX && px < leftX + width && py >= topY && py < topY + height
+      return px >= leftX && px < rightX && py >= topY && py < bottomY
     }
   }
 
@@ -46,9 +47,7 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
     for(module in drawingModules) {
       module.draw(g)
     }
-    if(currentDraggingCanvas == this && currentDraggingAction != null) {
-      currentDraggingAction!!.drawWhileDragging(g)
-    }
+    listener.draw(g, this)
     currentCanvas = oldCanvas
   }
 
@@ -75,8 +74,9 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
     update()
   }
 
-  fun hasPoint(x: Int, y: Int): Boolean {
-    return viewport.hasPoint(x, y)
+  fun hasMouse(): Boolean {
+    val point = MouseInfo.getPointerInfo().location
+    return viewport.hasPoint(point.x, point.y)
   }
 }
 fun xToScreen(fieldX: Double): Int = (fieldX * currentCanvas.k - currentCanvas.vdx).toInt()

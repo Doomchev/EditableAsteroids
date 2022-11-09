@@ -5,7 +5,7 @@ import mod.dragging.selectedSprites
 import mod.dragging.sprites
 
 object deleteSprites: Action {
-  override fun execute(x: Double, y: Double) {
+  override fun execute() {
     sprites.removeAll(selectedSprites)
     selectedSprites.clear()
   }

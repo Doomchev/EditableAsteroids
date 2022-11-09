@@ -3,6 +3,8 @@ package mod.dragging
 import DraggingAction
 import Sprite
 import distFromScreen
+import mousefx
+import mousefy
 import snapAngle
 import xToScreen
 import yToScreen
@@ -13,24 +15,18 @@ import kotlin.math.sin
 
 object rotateSprite: DraggingAction, Drawing {
   val cursorSize = 8
-  val block = Sprite(0.0, 0.0, 0.0, 0.0)
+  val block = Sprite()
   var currentSprite: Sprite? = null
 
-  override fun conditions(x: Double, y: Double): Boolean {
+  override fun conditions(): Boolean {
     if(selectedSprites.size != 1) return false
     currentSprite = selectedSprites.first
-    return block.collidesWithPoint(x, y)
+    return block.collidesWithPoint(mousefx, mousefy)
   }
 
-  override fun pressed(x: Double, y: Double) {
-  }
-
-  override fun dragged(x: Double, y: Double) {
+  override fun dragged() {
     if(currentSprite == null) return
-    currentSprite!!.angle = snapAngle(atan2(y - currentSprite!!.centerY, x - currentSprite!!.centerX))
-  }
-
-  override fun released(x: Double, y: Double) {
+    currentSprite!!.angle = snapAngle(atan2(mousefy - currentSprite!!.centerY, mousefx - currentSprite!!.centerX))
   }
 
   override fun drawWhileDragging(g: Graphics2D) {

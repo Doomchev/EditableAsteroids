@@ -2,8 +2,8 @@ package mod.actions.sprite
 
 import ImageArray
 import Sprite
+import SpriteAction
 import fpsk
-import mod.dragging.SpriteAction
 import mod.dragging.enterDouble
 
 class SpriteAnimation: SpriteAction() {
@@ -24,8 +24,11 @@ class SpriteAnimation: SpriteAction() {
   }
 
   override fun execute() {
-    frame += fpsk * speed
     val images = currentImageArray!!.images
+    frame += fpsk * speed
+    while(frame < 0.0) {
+      frame += images.size
+    }
     sprite!!.image = images[frame.toInt() % images.size]
   }
 }

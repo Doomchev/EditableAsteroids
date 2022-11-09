@@ -1,6 +1,10 @@
 package mod.dragging
 
 import Sprite
+import mousefx
+import mousefy
+import mousesx
+import mousesy
 import snapX
 import snapY
 import xToScreen
@@ -20,10 +24,10 @@ object resizeSprite: StartingPosition(), Drawing {
     ResizerBlock(0, 0, BlockType.nothing)
   }
 
-  override fun conditions(x: Double, y: Double): Boolean {
+  override fun conditions(): Boolean {
     if(selectedSprites.size != 1) return false
     currentSprite = selectedSprites.first
-    currentBlock = underCursor(xToScreen(x), yToScreen(y))
+    currentBlock = underCursor(mousesx, mousesy)
     return currentBlock != null
   }
 
@@ -35,7 +39,7 @@ object resizeSprite: StartingPosition(), Drawing {
   private var rightX = 0.0
   private var bottomY = 0.0
 
-  override fun pressed(x: Double, y: Double) {
+  override fun pressed() {
     if(currentBlock == null) return
 
     mdx = currentBlock!!.x - xToScreen(currentSprite!!.centerX).toDouble()
@@ -46,14 +50,14 @@ object resizeSprite: StartingPosition(), Drawing {
     rightX = snapX(currentSprite!!.rightX)
     bottomY = snapY(currentSprite!!.bottomY)
 
-    pressed(x, y, true)
+    pressed(true)
   }
 
-  override fun dragged(x: Double, y: Double) {
+  override fun dragged() {
     if(currentBlock == null) return
 
-    val dx = x - startingX
-    val dy = y - startingY
+    val dx = mousefx - startingX
+    val dy = mousefy - startingY
 
     when(currentBlock!!.type) {
       BlockType.nothing -> {}
@@ -110,7 +114,7 @@ object resizeSprite: StartingPosition(), Drawing {
     }
   }
 
-  override fun released(x: Double, y: Double) {
+  override fun released() {
     currentBlock = null
   }
 

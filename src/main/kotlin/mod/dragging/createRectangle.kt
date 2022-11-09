@@ -1,8 +1,8 @@
 package mod.dragging
 
 import Sprite
-import currentCanvas
-import currentDraggingCanvas
+import mousefx
+import mousefy
 import snapX
 import snapY
 import java.awt.Graphics2D
@@ -12,16 +12,15 @@ import kotlin.math.min
 abstract class createRectangle: StartingPosition(), Drawing {
   var sprite: Sprite? = null
 
-  fun dragged(x: Double, y: Double, snapToGrid: Boolean) {
-    sprite!!.width = snapX(abs(startingX - x), snapToGrid)
-    sprite!!.height = snapY(abs(startingY - y), snapToGrid)
-    sprite!!.leftX = snapX(min(startingX, x), snapToGrid)
-    sprite!!.topY = snapY(min(startingY, y), snapToGrid)
+  fun dragged(snapToGrid: Boolean) {
+    sprite!!.width = snapX(abs(startingX - mousefx), snapToGrid)
+    sprite!!.height = snapY(abs(startingY - mousefy), snapToGrid)
+    sprite!!.leftX = snapX(min(startingX, mousefx), snapToGrid)
+    sprite!!.topY = snapY(min(startingY, mousefy), snapToGrid)
   }
 
   override fun drawWhileDragging(g: Graphics2D) {
     if(sprite == null) return
-    currentCanvas = currentDraggingCanvas!!
     sprite!!.drawSelection(g)
   }
 

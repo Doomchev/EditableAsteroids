@@ -1,6 +1,8 @@
 package mod.dragging
 
 import DraggingAction
+import mousefx
+import mousefy
 import shapeUnderCursor
 import snapX
 import snapY
@@ -10,10 +12,12 @@ object moveSprites: DraggingAction {
   var oldx: Double = 0.0
   var oldy: Double = 0.0
 
-  override fun conditions(x: Double, y: Double): Boolean {
-    if(shapeUnderCursor(selectedSprites, x, y) != null) return true
+  override fun conditions(): Boolean {
+    if(shapeUnderCursor(selectedSprites, mousefx, mousefy) != null) {
+      return true
+    }
     selectedSprites.clear()
-    val shape = shapeUnderCursor(sprites, x, y)
+    val shape = shapeUnderCursor(sprites, mousefx, mousefy)
     if(shape != null) {
       selectedSprites.add(shape)
       return true
@@ -21,14 +25,14 @@ object moveSprites: DraggingAction {
     return false
   }
 
-  override fun pressed(x: Double, y: Double) {
-    oldx = snapX(x)
-    oldy = snapY(y)
+  override fun pressed() {
+    oldx = snapX(mousefx)
+    oldy = snapY(mousefy)
   }
 
-  override fun dragged(x: Double, y: Double) {
-    val fx = snapX(x)
-    val fy = snapY(y)
+  override fun dragged() {
+    val fx = snapX(mousefx)
+    val fy = snapY(mousefy)
     val dx = fx - oldx
     val dy = fy - oldy
     for(shape in selectedSprites) {
@@ -39,7 +43,7 @@ object moveSprites: DraggingAction {
     oldy = fy
   }
 
-  override fun released(x: Double, y: Double) {
+  override fun released() {
   }
 
   override fun drawWhileDragging(g: Graphics2D) {

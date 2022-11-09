@@ -3,6 +3,7 @@ package mod.dragging
 import Action
 import Key
 import Sprite
+import SpriteAction
 import actions
 import canvases
 import currentCanvas
@@ -34,11 +35,6 @@ object updatePanel: ActionListener {
     panel.repaint()
     listener.onKeyDown()
   }
-}
-
-abstract class SpriteAction: Action {
-  var sprite: Sprite? = null
-  abstract fun create(sprite: Sprite): SpriteAction
 }
 
 class AnyKeyListener(val action: SpriteAction): KeyListener {
@@ -77,6 +73,13 @@ class ShapeMenuListener(val action: SpriteAction): ActionListener {
     for(sprite in selectedSprites) {
       actions.add(action.create(sprite))
     }
+  }
+}
+
+class AllMenuListener(val action: Action): ActionListener {
+  override fun actionPerformed(e: ActionEvent) {
+    action.settings()
+    actions.add(action)
   }
 }
 

@@ -3,6 +3,10 @@ package mod.dragging
 import Action
 import currentCanvas
 import mod.dragging.zoomIn.modifyZoom
+import mousefx
+import mousefy
+import mousesx
+import mousesy
 import xToScreen
 import yToScreen
 
@@ -10,19 +14,18 @@ var zoom = -21
 var zk = 1.2
 
 object zoomIn: Action {
-  override fun execute(x: Double, y: Double) {
-    modifyZoom(-1, x, y)
+  override fun execute() {
+    modifyZoom(-1)
   }
 
-  internal fun modifyZoom(dZoom: Int, x: Double, y: Double) {
-    val pos = panel.mousePosition
+  internal fun modifyZoom(dZoom: Int) {
     zoom += dZoom
-    currentCanvas.setZoom(zoom, xToScreen(x), yToScreen(y))
+    currentCanvas.setZoom(zoom, mousesx, mousesy)
   }
 }
 
 object zoomOut: Action {
-  override fun execute(x: Double, y: Double) {
-    modifyZoom(1, x, y)
+  override fun execute() {
+    modifyZoom(1)
   }
 }

@@ -14,8 +14,11 @@ class Vector(var x: Double, var y: Double) {
   val length get() = sqrt(x * x + y * y)
 }
 
-open class Sprite(var centerX: Double, var centerY: Double, var halfWidth: Double
-                  , var halfHeight: Double) {
+open class Sprite() {
+  var centerX: Double = 0.0
+  var centerY: Double = 0.0
+  var halfWidth: Double = 0.0
+  var halfHeight: Double = 0.0
   var angle: Double = 0.0
   var image: Image? = null
   var movingVector = Vector(0.0, 0.0)
@@ -50,6 +53,13 @@ open class Sprite(var centerX: Double, var centerY: Double, var halfWidth: Doubl
     inline set(value) {
       centerY = value - halfHeight
     }
+
+  constructor(centerX: Double, centerY: Double, width: Double, height: Double) : this() {
+    this.centerX = centerX
+    this.centerY = centerY
+    this.width = width
+    this.height = height
+  }
 
   open fun draw(g: Graphics2D) {
     image?.draw(g, xToScreen(leftX), yToScreen(topY), distToScreen(width), distToScreen(height), angle)

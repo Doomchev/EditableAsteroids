@@ -2,6 +2,8 @@ package mod.dragging
 
 import DraggingAction
 import currentCanvas
+import mousefx
+import mousefy
 import xFromScreen
 import xToScreen
 import yFromScreen
@@ -16,30 +18,20 @@ object pan: DraggingAction {
   var startingCanvasX = 0.0
   var startingCanvasY = 0.0
 
-  override fun pressed(x: Double, y: Double) {
-    startingX = x
-    startingY = y
+  override fun pressed() {
+    startingX = mousefx
+    startingY = mousefy
     startingCanvasX = currentCanvas.centerX
     startingCanvasY = currentCanvas.centerY
   }
 
-  override fun dragged(x: Double, y: Double) {
+  override fun dragged() {
     currentCanvas.centerX = startingCanvasX
     currentCanvas.centerY = startingCanvasY
     currentCanvas.update()
 
-    val point = MouseInfo.getPointerInfo().location
-    val fx = xFromScreen(point.x)
-    val fy = yFromScreen(point.y)
-
-    currentCanvas.centerX = startingCanvasX + startingX - fx
-    currentCanvas.centerY = startingCanvasY + startingY - fy
+    currentCanvas.centerX = startingCanvasX + startingX - mousefx
+    currentCanvas.centerY = startingCanvasY + startingY - mousefy
     currentCanvas.update()
-  }
-
-  override fun released(x: Double, y: Double) {
-  }
-
-  override fun drawWhileDragging(g: Graphics2D) {
   }
 }
