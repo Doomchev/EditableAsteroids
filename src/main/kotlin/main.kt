@@ -10,7 +10,6 @@ import java.util.*
 import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.Timer
-import javax.swing.event.MenuListener
 import kotlin.math.PI
 
 
@@ -123,14 +122,33 @@ fun main() {
 val menuOnClick = 0
 val menuOnPress = 1
 val menuAlways = 2
+val menuOnCreate = 3
 
 fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
-  fillActionMenu(menu, "При клике...", spriteClass, menuOnClick)
-  fillActionMenu(menu, "При нажатии...", spriteClass, menuOnPress)
-  fillActionMenu(menu, "Всегда...", spriteClass, menuAlways)
+  menu.add(actionMenu("При клике...", spriteClass, menuOnClick))
+  menu.add(actionMenu("При нажатии...", spriteClass, menuOnPress))
+  menu.add(actionMenu("Всегда...", spriteClass, menuAlways))
+
+  val createClassItem = JMenuItem("Создать класс")
+  createClassItem.addActionListener {
+    val spriteClass = SpriteClass(enterString("Введите название класса:"))
+    classes.add(spriteClass)
+    val classMenu = JMenu(spriteClass.name)
+    fillEventMenu(classMenu, spriteClass)
+    objectMenu.add(classMenu)
+  }
+  objectMenu.add(createClassItem)
 }
-fun fillActionMenu(parentMenu: JPopupMenu, caption: String, spriteClass: SpriteClass?
-                   , eventNumber: Int) {
+
+fun fillEventMenu(menu: JMenu, spriteClass: SpriteClass?) {
+  menu.add(actionMenu("При создании...", spriteClass, menuAlways))
+  menu.add(actionMenu("При клике...", spriteClass, menuOnClick))
+  menu.add(actionMenu("При нажатии...", spriteClass, menuOnPress))
+  menu.add(actionMenu("Всегда...", spriteClass, menuAlways))
+}
+
+fun actionMenu(caption: String, spriteClass: SpriteClass?
+               , eventNumber: Int): JMenu {
   val menu = JMenu(caption)
   addMenuItem(menu, MenuListener(spriteClass, eventNumber
     , SpriteRotation()))
@@ -142,5 +160,5 @@ fun fillActionMenu(parentMenu: JPopupMenu, caption: String, spriteClass: SpriteC
     , SpriteMovement()))
 
   //addMenuItem(subMenu[1], "Ограничивать", AllMenuListener(SetBounds()))
-  parentMenu.add(menu)
+  return menu
 }
