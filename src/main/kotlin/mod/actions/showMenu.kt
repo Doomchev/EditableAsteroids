@@ -5,8 +5,7 @@ import frame
 import mod.dragging.selectedSprites
 import mousesx
 import mousesy
-import xToScreen
-import yToScreen
+import javax.swing.JMenu
 import javax.swing.JPopupMenu
 
 class showMenu(val menu: JPopupMenu, val forShape: Boolean): Action {

@@ -1,4 +1,3 @@
-import java.awt.MouseInfo
 import java.util.*
 
 val actions = LinkedList<Action>()
@@ -14,5 +13,5 @@ interface Action {
 
 abstract class SpriteAction: Action {
   var sprite: Sprite? = null
-  abstract fun create(sprite: Sprite): SpriteAction
+  abstract fun create(sprite: Sprite?): SpriteAction
 }

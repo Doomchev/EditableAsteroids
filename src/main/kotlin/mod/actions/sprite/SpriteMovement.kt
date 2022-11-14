@@ -7,7 +7,7 @@ import mod.dragging.enterDouble
 import mod.dragging.selectedSprites
 
 class SpriteMovement: SpriteAction() {
-  override fun create(sprite: Sprite): SpriteAction {
+  override fun create(sprite: Sprite?): SpriteAction {
     val action = SpriteMovement()
     action.sprite = sprite
     return action
@@ -25,5 +25,9 @@ class SpriteMovement: SpriteAction() {
   override fun execute() {
     sprite!!.centerX += fpsk * sprite!!.movingVector.x
     sprite!!.centerY += fpsk * sprite!!.movingVector.y
+  }
+
+  override fun toString(): String {
+    return "Перемещать"
   }
 }

@@ -1,12 +1,12 @@
-package mod.actions
+package mod.actions.sprite
 
-import Action
 import Sprite
+import SpriteAction
 import currentCanvas
 import mod.dragging.enterDouble
 import mod.dragging.sprites
 
-object setBounds: Action {
+class SetBounds: SpriteAction() {
   val bounds: Sprite = Sprite()
 
   override fun settings() {
@@ -15,6 +15,10 @@ object setBounds: Action {
     bounds.centerY = currentCanvas.centerY
     bounds.width = currentCanvas.width + 2.0 * border
     bounds.height = currentCanvas.height + 2.0 * border
+  }
+
+  override fun create(sprite: Sprite?): SpriteAction {
+    TODO("Not yet implemented")
   }
 
   override fun execute() {

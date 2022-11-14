@@ -11,7 +11,7 @@ class SpriteAnimation: SpriteAction() {
   var frame = 0.0
   var speed: Double = 0.0
 
-  override fun create(sprite: Sprite): SpriteAction {
+  override fun create(sprite: Sprite?): SpriteAction {
     val action = SpriteAnimation()
     action.array = currentImageArray
     action.sprite = sprite
@@ -30,5 +30,9 @@ class SpriteAnimation: SpriteAction() {
       frame += images.size
     }
     sprite!!.image = images[frame.toInt() % images.size]
+  }
+
+  override fun toString(): String {
+    return "Анимировать"
   }
 }

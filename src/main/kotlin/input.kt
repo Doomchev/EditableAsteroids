@@ -19,9 +19,15 @@ abstract class Pushable {
   }
 
   class ActionEntry(val canvas: Canvas, val action: Action)
-  val actions = LinkedList<ActionEntry>()
-  fun add(canvas: Canvas, action: Action) {
-    actions.add(ActionEntry(canvas, action))
+
+  val onClickActions = LinkedList<ActionEntry>()
+  fun addOnClick(canvas: Canvas, action: Action) {
+    onClickActions.add(ActionEntry(canvas, action))
+  }
+
+  val onPressActions = LinkedList<ActionEntry>()
+  fun addOnPress(canvas: Canvas, action: Action) {
+    onPressActions.add(ActionEntry(canvas, action))
   }
 }
 
@@ -67,7 +73,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     updateMouse(e.x, e.y)
     for(button in buttons) {
       if(!button.correspondsTo(e)) continue
-      onClick(button.actions)
+      onClick(button.onClickActions)
     }
   }
 
@@ -128,7 +134,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     if(currentDraggingAction == null) {
       for(button in buttons) {
         if(!button.correspondsTo(e)) continue
-        onClick(button.actions)
+        onClick(button.onClickActions)
         break
       }
       return
@@ -149,20 +155,20 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     if(currentDraggingAction == null) return
     updateMouse(e.x, e.y)
     currentCanvas = currentDraggingCanvas!!
-    currentDraggingAction?.dragged()
+    currentDraggingAction!!.dragged()
   }
 
   override fun mouseWheelMoved(e: MouseWheelEvent) {
     for(wheel in buttons) {
       if(!wheel.correspondsTo(e)) continue
-      onClick(wheel.actions)
+      onClick(wheel.onClickActions)
     }
   }
 
   override fun keyTyped(e: KeyEvent) {
     for(key in buttons) {
       if(!key.correspondsTo(e)) continue
-      onClick(key.actions)
+      onClick(key.onClickActions)
     }
   }
 
@@ -176,7 +182,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
 
     for(key in buttons) {
       if(!key.correspondsTo(e)) continue
-      for(entry in key.actions) {
+      for(entry in key.onPressActions) {
         if(!entry.canvas.hasMouse()) continue
         keysPressed.add(KeyEntry(key, entry.canvas))
       }
@@ -191,7 +197,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
       if(entry.remove) {
         it.remove()
       } else {
-        for(actionEntry in entry.key.actions) {
+        for(actionEntry in entry.key.onPressActions) {
           if(!actionEntry.action.conditions()) {
             it.remove()
             continue
@@ -207,9 +213,9 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
       if(!keyEntry.key.correspondsTo(e)) continue
       keyEntry.remove = true
     }
-    if(currentDraggingCanvas == null) return
+    if(currentDraggingAction == null) return
     currentCanvas = currentDraggingCanvas!!
-    currentDraggingAction?.released()
+    currentDraggingAction!!.released()
     currentDraggingAction = null
   }
 

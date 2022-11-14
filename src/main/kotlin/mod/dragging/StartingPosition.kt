@@ -1,13 +1,10 @@
 package mod.dragging
 
 import DraggingAction
-import Pushable
 import mousefx
 import mousefy
 import snapX
 import snapY
-import xFromScreen
-import yFromScreen
 
 abstract class StartingPosition: DraggingAction {
   var startingX:Double = 0.0

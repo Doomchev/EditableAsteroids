@@ -1,6 +1,5 @@
 import mod.dragging.Drawing
 import java.awt.Color
-import java.awt.Graphics
 import java.awt.Graphics2D
 import kotlin.math.PI
 import kotlin.math.floor

@@ -1,18 +1,22 @@
 package mod.dragging
 
-import Action
 import Key
-import Sprite
 import SpriteAction
+import SpriteClass
 import actions
 import canvases
 import currentCanvas
+import listener
+import menuOnClick
+import menuOnPress
 import world
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Label
-import java.awt.event.*
-import java.util.LinkedList
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.awt.event.KeyEvent
+import java.awt.event.KeyListener
 import javax.swing.*
 
 class Window(): JPanel() {
@@ -37,68 +41,55 @@ object updatePanel: ActionListener {
   }
 }
 
-class AnyKeyListener(val action: SpriteAction): KeyListener {
+val childFrame: JFrame = JFrame("Key")
+class MenuListener(val spriteClass: SpriteClass?, val eventNumber: Int
+                   , val action: SpriteAction): ActionListener {
+  override fun actionPerformed(e: ActionEvent) {
+    if(eventNumber <= 1) {
+      childFrame.setSize(200, 100)
+      childFrame.addKeyListener(AnyKeyListener(spriteClass, eventNumber
+        , action))
+      childFrame.add(Label("Нажмите клавишу для действия"))
+      childFrame.pack()
+      childFrame.isVisible = true
+    } else {
+      menuItemAction(spriteClass, eventNumber, 0, action)
+    }
+  }
+
+  override fun toString(): String {
+    return action.toString()
+  }
+}
+
+class AnyKeyListener(val spriteClass: SpriteClass?, val eventNumber: Int
+, val action: SpriteAction): KeyListener {
   override fun keyTyped(e: KeyEvent) {
     childFrame.removeKeyListener(this)
-    //childFrame.isVisible = false
     childFrame.dispose()
-    action.settings()
-    for(shape in selectedSprites) {
-      Key(e.keyChar.code).add(world, action.create(shape))
-    }
+    menuItemAction(spriteClass, eventNumber, e.keyChar.code, action)
   }
-
-  override fun keyPressed(e: KeyEvent) {
-  }
-
-  override fun keyReleased(e: KeyEvent) {
-  }
+  override fun keyPressed(e: KeyEvent) {}
+  override fun keyReleased(e: KeyEvent) {}
 }
 
-val childFrame: JFrame = JFrame("Key")
-
-class ShapeKeyMenuListener(val action: SpriteAction): ActionListener {
-  override fun actionPerformed(e: ActionEvent) {
-    childFrame.setSize(200, 100)
-    childFrame.addKeyListener(AnyKeyListener(action))
-    childFrame.add(Label("Нажмите клавишу для действия"))
-    childFrame.pack()
-    childFrame.isVisible = true
-  }
-}
-
-class ShapeMenuListener(val action: SpriteAction): ActionListener {
-  override fun actionPerformed(e: ActionEvent) {
-    action.settings()
-    for(sprite in selectedSprites) {
-      actions.add(action.create(sprite))
+private fun menuItemAction(spriteClass: SpriteClass?, eventNumber: Int
+                           , keyCode: Int, action: SpriteAction) {
+  action.settings()
+  for(sprite in selectedSprites) {
+    when(eventNumber) {
+      menuOnClick -> Key(keyCode).addOnClick(world, action.create(sprite))
+      menuOnPress -> Key(keyCode).addOnPress(world, action.create(sprite))
+      else -> actions.add(action.create(sprite))
     }
   }
 }
 
-class AllMenuListener(val action: Action): ActionListener {
-  override fun actionPerformed(e: ActionEvent) {
-    action.settings()
-    actions.add(action)
-  }
-}
-
-class MenuListener(val action: Action): ActionListener {
-  override fun actionPerformed(e: ActionEvent) {
-    action.execute()
-  }
-}
-
-fun addMenuItem(menu: JMenu, caption: String, listener: ActionListener) {
-  val menuItem = JMenuItem(caption)
-  menuItem.addActionListener(listener)
-  menu.add(menuItem)
-}
-
-fun addMenuItem(menu: JPopupMenu, caption: String, listener: ActionListener) {
-  val menuItem = JMenuItem(caption)
-  menuItem.addActionListener(listener)
-  menu.add(menuItem)
+fun addMenuItem(parent: JMenu, listener: ActionListener): JMenuItem {
+  val item = JMenuItem(listener.toString())
+  item.addActionListener(listener)
+  parent.add(item)
+  return item
 }
 
 fun enterString(message: String): String {

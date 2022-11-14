@@ -28,4 +28,8 @@ object createSprite: createRectangle() {
       selectedSprites.clear()
     }
   }
+
+  override fun toString(): String {
+    return ""
+  }
 }

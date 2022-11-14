@@ -11,7 +11,7 @@ class SpriteAcceleration: SpriteAction() {
   var acceleration = 0.0
   var limit: Double = 0.0
 
-  override fun create(sprite: Sprite): SpriteAction {
+  override fun create(sprite: Sprite?): SpriteAction {
     val action = SpriteAcceleration()
     action.sprite = sprite
     action.acceleration = acceleration
@@ -30,5 +30,9 @@ class SpriteAcceleration: SpriteAction() {
     if(limit > 0 && newLength > limit) newLength = limit
     sprite!!.movingVector.x = newLength * cos(sprite!!.angle)
     sprite!!.movingVector.y = newLength * sin(sprite!!.angle)
+  }
+
+  override fun toString(): String {
+    return "Ускорять"
   }
 }

@@ -2,7 +2,7 @@ import mod.dragging.Drawing
 import mod.dragging.zk
 import java.awt.Graphics2D
 import java.awt.MouseInfo
-import java.util.LinkedList
+import java.util.*
 import kotlin.math.pow
 
 class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)

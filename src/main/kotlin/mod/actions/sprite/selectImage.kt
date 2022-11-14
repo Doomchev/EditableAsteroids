@@ -5,7 +5,6 @@ import ImageArray
 import imageArrays
 import mod.dragging.selectedSprites
 import mousefx
-import mousesx
 import kotlin.math.floor
 
 var currentImageArray:ImageArray? = null

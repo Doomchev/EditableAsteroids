@@ -9,7 +9,7 @@ import kotlin.math.PI
 class SpriteRotation: SpriteAction() {
   var speed: Double = 0.0
 
-  override fun create(sprite: Sprite): SpriteAction {
+  override fun create(sprite: Sprite?): SpriteAction {
     val action = SpriteRotation()
     action.sprite = sprite
     action.speed = speed
@@ -22,5 +22,9 @@ class SpriteRotation: SpriteAction() {
 
   override fun execute() {
     sprite!!.angle += fpsk * speed
+  }
+
+  override fun toString(): String {
+    return "Вращать"
   }
 }

@@ -10,6 +10,7 @@ import java.util.*
 import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.Timer
+import javax.swing.event.MenuListener
 import kotlin.math.PI
 
 
@@ -36,17 +37,17 @@ fun main() {
   button1.add(world, rotateSprite)
   button1.add(world, moveSprites)
   button1.add(world, selectSprites)
-  button1.add(world, selectSprite)
+  button1.addOnClick(world, selectSprite)
 
   val button2 = MouseButton(BUTTON3)
   button2.add(world, createSprite)
-  button2.add(world, showMenu(objectMenu, false))
+  button2.addOnClick(world, showMenu(objectMenu, false))
 
   Key(17).add(world, pan)
-  Key(127).add(world, deleteSprites)
+  Key(127).addOnClick(world, deleteSprites)
 
-  mouseWheelUp.add(world, zoomIn)
-  mouseWheelDown.add(world, zoomOut)
+  mouseWheelUp.addOnClick(world, zoomIn)
+  mouseWheelDown.addOnClick(world, zoomOut)
 
   world.add(grid)
   world.add(drawSprites)
@@ -66,8 +67,8 @@ fun main() {
   canvases.add(assets)
 
   assets.add(drawImages)
-  button1.add(assets, selectImage)
-  button2.add(assets, showMenu(imageMenu, false))
+  button1.addOnClick(assets, selectImage)
+  button2.addOnClick(assets, showMenu(imageMenu, false))
 
   val timer = Timer(10, updatePanel)
   timer.start()
@@ -84,26 +85,8 @@ fun main() {
   panel.setSize(windowWidth, windowHeight)
   frame.contentPane = panel
 
-  val subMenu = Array<JMenu>(3) {
-    when(it) {
-      0 -> JMenu("При клике...")
-      1 -> JMenu("При нажатии...")
-      else -> JMenu("Всегда...")
-    }
-  }
-
-  for(n in 0 .. 2) {
-    val menu = subMenu[n]
-    addMenuItem(menu, "Вращать", getListener(n, SpriteRotation()))
-    addMenuItem(menu, "Анимировать", getListener(n, SpriteAnimation()))
-    addMenuItem(menu, "Ускорять", getListener(n, SpriteAcceleration()))
-    addMenuItem(menu, "Перемещать", getListener(n, SpriteMovement()))
-    objectMenu.add(menu)
-  }
-
-  addMenuItem(subMenu[1], "Ограничивать", AllMenuListener(setBounds))
-
-  addMenuItem(imageMenu, "Разрезать", MenuListener(cutImage))
+  fillEventMenu(objectMenu, null)
+  //addMenuItem(imageMenu, "Разрезать", MenuEventListener(cutImage))
 
   val sprite = Sprite(0.0, 0.0, 2.0, 2.0)
   sprite.image = imageArrays.last.images[0]
@@ -112,18 +95,18 @@ fun main() {
   val action1 = SpriteRotation()
   action1.sprite = sprite
   action1.speed = -1.5 * PI
-  Key(97).actions.add(Pushable.ActionEntry(world, action1))
+  Key(97).onPressActions.add(Pushable.ActionEntry(world, action1))
 
   val action2 = SpriteRotation()
   action2.sprite = sprite
   action2.speed = 1.5 * PI
-  Key(100).actions.add(Pushable.ActionEntry(world, action2))
+  Key(100).onPressActions.add(Pushable.ActionEntry(world, action2))
 
   val action3 = SpriteAcceleration()
   action3.sprite = sprite
   action3.acceleration = 50.0
   action3.limit = 10.0
-  Key(119).actions.add(Pushable.ActionEntry(world, action3))
+  Key(119).onPressActions.add(Pushable.ActionEntry(world, action3))
 
   val action4 = SpriteMovement()
   action4.sprite = sprite
@@ -137,5 +120,27 @@ fun main() {
   frame.isVisible = true
 }
 
-fun getListener(n: Int, action: SpriteAction)
-= if(n == 0) ShapeKeyMenuListener(action) else ShapeMenuListener(action)
+val menuOnClick = 0
+val menuOnPress = 1
+val menuAlways = 2
+
+fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
+  fillActionMenu(menu, "При клике...", spriteClass, menuOnClick)
+  fillActionMenu(menu, "При нажатии...", spriteClass, menuOnPress)
+  fillActionMenu(menu, "Всегда...", spriteClass, menuAlways)
+}
+fun fillActionMenu(parentMenu: JPopupMenu, caption: String, spriteClass: SpriteClass?
+                   , eventNumber: Int) {
+  val menu = JMenu(caption)
+  addMenuItem(menu, MenuListener(spriteClass, eventNumber
+    , SpriteRotation()))
+  addMenuItem(menu, MenuListener(spriteClass, eventNumber
+    , SpriteAnimation()))
+  addMenuItem(menu, MenuListener(spriteClass, eventNumber
+    , SpriteAcceleration()))
+  addMenuItem(menu, MenuListener(spriteClass, eventNumber
+    , SpriteMovement()))
+
+  //addMenuItem(subMenu[1], "Ограничивать", AllMenuListener(SetBounds()))
+  parentMenu.add(menu)
+}

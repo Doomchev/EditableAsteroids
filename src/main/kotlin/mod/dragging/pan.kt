@@ -4,13 +4,6 @@ import DraggingAction
 import currentCanvas
 import mousefx
 import mousefy
-import xFromScreen
-import xToScreen
-import yFromScreen
-import yToScreen
-import java.awt.Graphics
-import java.awt.Graphics2D
-import java.awt.MouseInfo
 
 object pan: DraggingAction {
   var startingX = 0.0
