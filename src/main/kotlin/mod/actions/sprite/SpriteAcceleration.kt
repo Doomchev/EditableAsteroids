@@ -32,7 +32,5 @@ class SpriteAcceleration: SpriteAction() {
     sprite!!.movingVector.y = newLength * sin(sprite!!.angle)
   }
 
-  override fun toString(): String {
-    return "Ускорять"
-  }
+  override fun toString(): String = "Ускорять"
 }

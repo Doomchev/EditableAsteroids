@@ -27,7 +27,5 @@ class SpriteMovement: SpriteAction() {
     sprite!!.centerY += fpsk * sprite!!.movingVector.y
   }
 
-  override fun toString(): String {
-    return "Перемещать"
-  }
+  override fun toString(): String = "Перемещать"
 }

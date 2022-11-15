@@ -4,7 +4,7 @@ import Sprite
 import SpriteAction
 import mod.dragging.selectedSprites
 
-class SpriteDirectAs: SpriteAction() {
+class SpriteMoveTo: SpriteAction() {
   var speed: Double = 0.0
   var sprite2: Sprite? = null
 
@@ -20,8 +20,9 @@ class SpriteDirectAs: SpriteAction() {
   }
 
   override fun execute() {
-    sprite!!.angle = sprite2!!.angle
+    sprite!!.centerX = sprite2!!.centerX
+    sprite!!.centerY = sprite2!!.centerY
   }
 
-  override fun toString(): String = "Повернуть как выделенный"
+  override fun toString(): String = "Переместить на выделенный"
 }

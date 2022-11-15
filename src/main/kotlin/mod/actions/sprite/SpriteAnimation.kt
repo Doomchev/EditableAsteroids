@@ -32,7 +32,5 @@ class SpriteAnimation: SpriteAction() {
     sprite!!.image = images[frame.toInt() % images.size]
   }
 
-  override fun toString(): String {
-    return "Анимировать"
-  }
+  override fun toString(): String = "Анимировать"
 }

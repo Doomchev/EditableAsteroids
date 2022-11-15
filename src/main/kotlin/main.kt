@@ -1,4 +1,5 @@
-import mod.actions.*
+import mod.actions.cutSprite
+import mod.actions.showMenu
 import mod.actions.sprite.*
 import mod.dragging.*
 import mod.drawing.drawImages
@@ -125,39 +126,32 @@ enum class MenuEvent {
   always,
   onCreate
 }
-fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
-  menu.add(actionMenu("При клике...", spriteClass, MenuEvent.onClick))
-  menu.add(actionMenu("При нажатии...", spriteClass, MenuEvent.onPress))
-  menu.add(actionMenu("Всегда...", spriteClass, MenuEvent.always))
 
-  val createClassItem = JMenuItem("Создать класс")
-  createClassItem.addActionListener {
-    val spriteClass = SpriteClass(enterString("Введите название класса:"))
-    classes.add(spriteClass)
-    val classMenu = JMenu(spriteClass.name)
-    fillEventMenu(classMenu, spriteClass)
-    objectMenu.add(classMenu)
+fun fillEventMenu(menu: JPopupMenu, function: Function?) {
+  menu.add(actionMenu("При клике...", function, MenuEvent.onClick))
+  menu.add(actionMenu("При нажатии...", function, MenuEvent.onPress))
+  menu.add(actionMenu("Всегда...", function, MenuEvent.always))
+
+  val functionItem = JMenuItem("Создать функцию")
+  functionItem.addActionListener {
+    val caption = enterString("Введите название функции:")
+    val function = Function(caption)
+    functions.add(function)
+    objectMenu.add(actionMenu(caption, function, MenuEvent.always))
   }
-  objectMenu.add(createClassItem)
-}
-
-fun fillEventMenu(menu: JMenu, spriteClass: SpriteClass?) {
-  menu.add(actionMenu("При создании...", spriteClass, MenuEvent.always))
-  menu.add(actionMenu("При клике...", spriteClass, MenuEvent.onClick))
-  menu.add(actionMenu("При нажатии...", spriteClass, MenuEvent.onPress))
-  menu.add(actionMenu("Всегда...", spriteClass, MenuEvent.always))
+  objectMenu.add(functionItem)
 }
 
 fun actionMenu(
-  caption: String, spriteClass: SpriteClass?
+  caption: String, function: Function?
   , event: MenuEvent
 ): JMenu {
   val actions = listOf(SpriteRotation(), SpriteAnimation(), SpriteAcceleration()
-  , SpriteMovement(), SpriteDirectAs(), SpriteSetSpeed())
+  , SpriteMovement(), SpriteDirectAs(), SpriteSetSpeed(), SpriteMoveTo())
 
   val menu = JMenu(caption)
   for(action in actions) {
-    addMenuItem(menu, MenuListener(spriteClass, event, action))
+    addMenuItem(menu, MenuListener(function, event, action))
   }
 
   //addMenuItem(subMenu[1], "Ограничивать", AllMenuListener(SetBounds()))

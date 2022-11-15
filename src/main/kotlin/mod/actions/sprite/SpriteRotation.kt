@@ -24,7 +24,5 @@ class SpriteRotation: SpriteAction() {
     sprite!!.angle += fpsk * speed
   }
 
-  override fun toString(): String {
-    return "Вращать"
-  }
+  override fun toString(): String = "Вращать"
 }

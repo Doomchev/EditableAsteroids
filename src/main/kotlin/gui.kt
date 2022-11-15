@@ -3,7 +3,7 @@ package mod.dragging
 import Key
 import MenuEvent
 import SpriteAction
-import SpriteClass
+import Function
 import actions
 import canvases
 import currentCanvas
@@ -42,18 +42,18 @@ object updatePanel: ActionListener {
 
 val childFrame: JFrame = JFrame("Key")
 class MenuListener(
-  val spriteClass: SpriteClass?, val event: MenuEvent
+  val function: Function?, val event: MenuEvent
   , val action: SpriteAction): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     if(event == MenuEvent.onPress || event == MenuEvent.onClick) {
       childFrame.setSize(200, 100)
-      childFrame.addKeyListener(AnyKeyListener(spriteClass, event
+      childFrame.addKeyListener(AnyKeyListener(function, event
         , action))
       childFrame.add(Label("Нажмите клавишу для действия"))
       childFrame.pack()
       childFrame.isVisible = true
     } else {
-      menuItemAction(spriteClass, event, 0, action)
+      menuItemAction(function, event, 0, action)
     }
   }
 
@@ -62,21 +62,21 @@ class MenuListener(
   }
 }
 
-class AnyKeyListener(val spriteClass: SpriteClass?, val event: MenuEvent
-, val action: SpriteAction): KeyListener {
+class AnyKeyListener(val function: Function?, val event: MenuEvent
+                     , val action: SpriteAction): KeyListener {
   override fun keyTyped(e: KeyEvent) {
     childFrame.removeKeyListener(this)
     childFrame.dispose()
-    menuItemAction(spriteClass, event, e.keyChar.code, action)
+    menuItemAction(function, event, e.keyChar.code, action)
   }
   override fun keyPressed(e: KeyEvent) {}
   override fun keyReleased(e: KeyEvent) {}
 }
 
-private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent
+private fun menuItemAction(function: Function?, event: MenuEvent
                            , keyCode: Int, action: SpriteAction) {
   action.settings()
-  if(spriteClass == null) {
+  if(function == null) {
     for(sprite in selectedSprites) {
       when(event) {
         MenuEvent.onCreate -> {}
