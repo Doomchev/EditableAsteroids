@@ -2,15 +2,16 @@ package mod.actions.sprite
 
 import Sprite
 import SpriteAction
-import fpsk
 import mod.dragging.enterDouble
 import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
-class SpriteRotation: SpriteAction() {
+class SpriteSetSpeed: SpriteAction() {
   var speed: Double = 0.0
 
   override fun create(sprite: Sprite?): SpriteAction {
-    val action = SpriteRotation()
+    val action = SpriteSetSpeed()
     action.sprite = sprite
     action.speed = speed
     return action
@@ -21,10 +22,11 @@ class SpriteRotation: SpriteAction() {
   }
 
   override fun execute() {
-    sprite!!.angle += fpsk * speed
+    sprite!!.movingVector.x = speed * cos(sprite!!.angle)
+    sprite!!.movingVector.y = speed * sin(sprite!!.angle)
   }
 
   override fun toString(): String {
-    return "Вращать"
+    return "Установить скорость"
   }
 }

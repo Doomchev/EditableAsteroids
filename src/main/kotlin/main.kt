@@ -119,15 +119,16 @@ fun main() {
   frame.isVisible = true
 }
 
-val menuOnClick = 0
-val menuOnPress = 1
-val menuAlways = 2
-val menuOnCreate = 3
-
+enum class MenuEvent {
+  onClick,
+  onPress,
+  always,
+  onCreate
+}
 fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
-  menu.add(actionMenu("При клике...", spriteClass, menuOnClick))
-  menu.add(actionMenu("При нажатии...", spriteClass, menuOnPress))
-  menu.add(actionMenu("Всегда...", spriteClass, menuAlways))
+  menu.add(actionMenu("При клике...", spriteClass, MenuEvent.onClick))
+  menu.add(actionMenu("При нажатии...", spriteClass, MenuEvent.onPress))
+  menu.add(actionMenu("Всегда...", spriteClass, MenuEvent.always))
 
   val createClassItem = JMenuItem("Создать класс")
   createClassItem.addActionListener {
@@ -141,23 +142,23 @@ fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
 }
 
 fun fillEventMenu(menu: JMenu, spriteClass: SpriteClass?) {
-  menu.add(actionMenu("При создании...", spriteClass, menuAlways))
-  menu.add(actionMenu("При клике...", spriteClass, menuOnClick))
-  menu.add(actionMenu("При нажатии...", spriteClass, menuOnPress))
-  menu.add(actionMenu("Всегда...", spriteClass, menuAlways))
+  menu.add(actionMenu("При создании...", spriteClass, MenuEvent.always))
+  menu.add(actionMenu("При клике...", spriteClass, MenuEvent.onClick))
+  menu.add(actionMenu("При нажатии...", spriteClass, MenuEvent.onPress))
+  menu.add(actionMenu("Всегда...", spriteClass, MenuEvent.always))
 }
 
-fun actionMenu(caption: String, spriteClass: SpriteClass?
-               , eventNumber: Int): JMenu {
+fun actionMenu(
+  caption: String, spriteClass: SpriteClass?
+  , event: MenuEvent
+): JMenu {
+  val actions = listOf(SpriteRotation(), SpriteAnimation(), SpriteAcceleration()
+  , SpriteMovement(), SpriteDirectAs(), SpriteSetSpeed())
+
   val menu = JMenu(caption)
-  addMenuItem(menu, MenuListener(spriteClass, eventNumber
-    , SpriteRotation()))
-  addMenuItem(menu, MenuListener(spriteClass, eventNumber
-    , SpriteAnimation()))
-  addMenuItem(menu, MenuListener(spriteClass, eventNumber
-    , SpriteAcceleration()))
-  addMenuItem(menu, MenuListener(spriteClass, eventNumber
-    , SpriteMovement()))
+  for(action in actions) {
+    addMenuItem(menu, MenuListener(spriteClass, event, action))
+  }
 
   //addMenuItem(subMenu[1], "Ограничивать", AllMenuListener(SetBounds()))
   return menu
