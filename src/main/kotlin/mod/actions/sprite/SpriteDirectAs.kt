@@ -5,7 +5,6 @@ import SpriteAction
 import mod.dragging.selectedSprites
 
 class SpriteDirectAs: SpriteAction() {
-  var speed: Double = 0.0
   var sprite2: Sprite? = null
 
   override fun create(sprite: Sprite?): SpriteAction {
@@ -23,5 +22,5 @@ class SpriteDirectAs: SpriteAction() {
     sprite!!.angle = sprite2!!.angle
   }
 
-  override fun toString(): String = "Повернуть как выделенный"
+  override fun toString(): String = "Повернуть как"
 }

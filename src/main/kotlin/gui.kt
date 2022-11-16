@@ -3,7 +3,7 @@ package mod.dragging
 import Key
 import MenuEvent
 import SpriteAction
-import Function
+import SpriteClass
 import actions
 import canvases
 import currentCanvas
@@ -18,7 +18,7 @@ import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 import javax.swing.*
 
-class Window(): JPanel() {
+class Window : JPanel() {
   override fun paintComponent(g: Graphics) {
     val oldCanvas = currentCanvas
     val g2d = g as Graphics2D
@@ -42,41 +42,39 @@ object updatePanel: ActionListener {
 
 val childFrame: JFrame = JFrame("Key")
 class MenuListener(
-  val function: Function?, val event: MenuEvent
+  val spriteClass: SpriteClass?, val event: MenuEvent
   , val action: SpriteAction): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     if(event == MenuEvent.onPress || event == MenuEvent.onClick) {
       childFrame.setSize(200, 100)
-      childFrame.addKeyListener(AnyKeyListener(function, event
+      childFrame.addKeyListener(AnyKeyListener(spriteClass, event
         , action))
       childFrame.add(Label("Нажмите клавишу для действия"))
       childFrame.pack()
       childFrame.isVisible = true
     } else {
-      menuItemAction(function, event, 0, action)
+      menuItemAction(spriteClass, event, 0, action)
     }
   }
 
-  override fun toString(): String {
-    return action.toString()
-  }
+  override fun toString(): String = action.toString()
 }
 
-class AnyKeyListener(val function: Function?, val event: MenuEvent
+class AnyKeyListener(val spriteClass: SpriteClass?, val event: MenuEvent
                      , val action: SpriteAction): KeyListener {
   override fun keyTyped(e: KeyEvent) {
     childFrame.removeKeyListener(this)
     childFrame.dispose()
-    menuItemAction(function, event, e.keyChar.code, action)
+    menuItemAction(spriteClass, event, e.keyChar.code, action)
   }
   override fun keyPressed(e: KeyEvent) {}
   override fun keyReleased(e: KeyEvent) {}
 }
 
-private fun menuItemAction(function: Function?, event: MenuEvent
+private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent
                            , keyCode: Int, action: SpriteAction) {
   action.settings()
-  if(function == null) {
+  if(spriteClass == null) {
     for(sprite in selectedSprites) {
       when(event) {
         MenuEvent.onCreate -> {}
@@ -86,11 +84,12 @@ private fun menuItemAction(function: Function?, event: MenuEvent
       }
     }
   } else {
-    /*when(event) {
-      MenuEvent.onClick -> Key(keyCode).addOnClick(world, action.create(null))
-      MenuEvent.onPress -> Key(keyCode).addOnPress(world, action.create(null))
-      else -> actions.add(action.create(sprite))
-    }*/
+    when(event) {
+      MenuEvent.onCreate -> spriteClass.onCreate.add(action.create(null))
+      MenuEvent.onClick -> {}
+      MenuEvent.onPress -> {}
+      MenuEvent.always -> spriteClass.always.add(action.create(null))
+    }
   }
 }
 

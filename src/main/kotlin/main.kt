@@ -1,9 +1,11 @@
-import mod.actions.cutSprite
+import mod.actions.cutImage
 import mod.actions.showMenu
 import mod.actions.sprite.*
 import mod.dragging.*
 import mod.drawing.drawImages
 import mod.drawing.drawSprites
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 import java.awt.event.MouseEvent.BUTTON1
 import java.awt.event.MouseEvent.BUTTON3
 import java.io.File
@@ -61,7 +63,8 @@ fun main() {
     imageArrays.add(ImageArray(Array(1) { image }))
   }
   currentImageArray = imageArrays.first
-  cutSprite(currentImageArray!!, 8, 4)
+  cutImage(currentImageArray!!, 8, 4)
+  //cutSprite(imageArrays[1], 1, 16)
 
   val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
   canvases.add(assets)
@@ -86,38 +89,93 @@ fun main() {
   frame.contentPane = panel
 
   fillEventMenu(objectMenu, null)
-  //addMenuItem(imageMenu, "Разрезать", MenuEventListener(cutImage))
+  val item = JMenuItem("Разрезать")
+  item.addActionListener(object: ActionListener {
+    override fun actionPerformed(e: ActionEvent?) {
+      val xquantity = enterInt("Введите кол-во изображений по горизонтали:")
+      val yquantity = enterInt("Введите кол-во изображений по вертикали:")
+      cutImage(currentImageArray!!, xquantity, yquantity)
+    }
+  })
 
-  val sprite = Sprite(0.0, 0.0, 2.0, 2.0)
-  sprite.image = imageArrays.last.images[0]
-  sprites.add(sprite)
+  imageMenu.add(item)
+
+  val player = Sprite(-3.0, -5.0, 2.0, 2.0)
+  player.image = imageArrays.last.images[0]
+  sprites.add(player)
 
   val action1 = SpriteRotation()
-  action1.sprite = sprite
+  action1.sprite = player
   action1.speed = -1.5 * PI
   Key(97).onPressActions.add(Pushable.ActionEntry(world, action1))
 
   val action2 = SpriteRotation()
-  action2.sprite = sprite
+  action2.sprite = player
   action2.speed = 1.5 * PI
   Key(100).onPressActions.add(Pushable.ActionEntry(world, action2))
 
   val action3 = SpriteAcceleration()
-  action3.sprite = sprite
+  action3.sprite = player
   action3.acceleration = 50.0
   action3.limit = 10.0
   Key(119).onPressActions.add(Pushable.ActionEntry(world, action3))
 
   val action4 = SpriteMovement()
-  action4.sprite = sprite
+  action4.sprite = player
   actions.add(action4)
 
   val action5 = SpriteAcceleration()
-  action5.sprite = sprite
+  action5.sprite = player
   action5.acceleration = -15.0
   actions.add(action5)
 
+  val action12 = SpriteSetBounds()
+  action12.sprite = player
+  action12.settings()
+  actions.add(action12)
+
+  val bullet = addClass("Пуля")
+
+  val action6 = SpritePositionAs()
+  action6.sprite2 = player
+  bullet.onCreate.add(action6)
+
+  val action9 = SpriteSetSize()
+  action9.width = 3.5
+  action9.height = 0.5
+  bullet.onCreate.add(action9)
+
+  val action7 = SpriteDirectAs()
+  action7.sprite2 = player
+  bullet.onCreate.add(action7)
+
+  val action11 = SpriteSetSpeed()
+  action11.speed = 15.0
+  bullet.onCreate.add(action11)
+
+  bullet.always.add(SpriteMovement())
+
+  currentImageArray = imageArrays[1]
+  val action13 = SpriteAnimation()
+  action13.speed = 16.0
+  bullet.always.add(action13)
+
+  val action8 = SpriteCreate()
+  action8.spriteClass = bullet
+  action8.delay = 0.1
+  Key(32).onPressActions.add(Pushable.ActionEntry(world, action8))
+
   frame.isVisible = true
+}
+
+fun addClass(caption: String): SpriteClass {
+  val newClass = SpriteClass(caption)
+  classes.add(newClass)
+  val classMenu = JMenu(caption)
+  objectMenu.add(classMenu)
+  classMenu.add(actionMenu("При создании...", newClass, MenuEvent.onCreate))
+  classMenu.add(actionMenu("Всегда...", newClass, MenuEvent.always))
+  return newClass
 }
 
 enum class MenuEvent {
@@ -127,31 +185,24 @@ enum class MenuEvent {
   onCreate
 }
 
-fun fillEventMenu(menu: JPopupMenu, function: Function?) {
-  menu.add(actionMenu("При клике...", function, MenuEvent.onClick))
-  menu.add(actionMenu("При нажатии...", function, MenuEvent.onPress))
-  menu.add(actionMenu("Всегда...", function, MenuEvent.always))
+fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
+  menu.add(actionMenu("При клике...", spriteClass, MenuEvent.onClick))
+  menu.add(actionMenu("При нажатии...", spriteClass, MenuEvent.onPress))
+  menu.add(actionMenu("Всегда...", spriteClass, MenuEvent.always))
 
-  val functionItem = JMenuItem("Создать функцию")
-  functionItem.addActionListener {
-    val caption = enterString("Введите название функции:")
-    val function = Function(caption)
-    functions.add(function)
-    objectMenu.add(actionMenu(caption, function, MenuEvent.always))
+  val classItem = JMenuItem("Создать класс")
+  classItem.addActionListener {
+    addClass(enterString("Введите название класса:"))
   }
-  objectMenu.add(functionItem)
+  objectMenu.add(classItem)
 }
 
-fun actionMenu(
-  caption: String, function: Function?
-  , event: MenuEvent
-): JMenu {
-  val actions = listOf(SpriteRotation(), SpriteAnimation(), SpriteAcceleration()
-  , SpriteMovement(), SpriteDirectAs(), SpriteSetSpeed(), SpriteMoveTo())
+fun actionMenu(caption: String, spriteClass: SpriteClass?, event: MenuEvent): JMenu {
+  val actions = listOf(SpriteCreate(), SpritePositionAs(), SpriteSetSize(), SpriteRotation(), SpriteDirectAs(), SpriteMovement(), SpriteSetSpeed(), SpriteAcceleration(), SpriteSetImage(), SpriteAnimation())
 
   val menu = JMenu(caption)
   for(action in actions) {
-    addMenuItem(menu, MenuListener(function, event, action))
+    addMenuItem(menu, MenuListener(spriteClass, event, action))
   }
 
   //addMenuItem(subMenu[1], "Ограничивать", AllMenuListener(SetBounds()))

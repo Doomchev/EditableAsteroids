@@ -1,5 +1,7 @@
 package mod.actions.sprite
 
+import Image
+import ImageArray
 import Sprite
 import SpriteAction
 import mod.dragging.enterDouble
@@ -7,26 +9,25 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class SpriteSetSpeed: SpriteAction() {
-  var speed: Double = 0.0
+class SpriteSetImage: SpriteAction() {
+  var image: Image? = null
 
   override fun create(sprite: Sprite?): SpriteAction {
-    val action = SpriteSetSpeed()
+    val action = SpriteSetImage()
     action.sprite = sprite
-    action.speed = speed
+    action.image = image
     return action
   }
 
   override fun settings() {
-    speed = enterDouble("Введите скорость:")
+    image = currentImageArray!!.images[0]
   }
 
   override fun execute() {
-    sprite!!.movingVector.x = speed * cos(sprite!!.angle)
-    sprite!!.movingVector.y = speed * sin(sprite!!.angle)
+    sprite!!.image = image
   }
 
   override fun toString(): String {
-    return "Установить скорость"
+    return "Установить изображение"
   }
 }

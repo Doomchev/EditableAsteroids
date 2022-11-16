@@ -4,10 +4,9 @@ val actions = LinkedList<Action>()
 
 interface Action {
   fun conditions(): Boolean = true
-  fun execute() {
-  }
-
   fun settings() {
+  }
+  fun execute() {
   }
 }
 

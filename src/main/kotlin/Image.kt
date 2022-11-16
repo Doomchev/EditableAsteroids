@@ -2,8 +2,7 @@
 import java.awt.image.BufferedImage
 
 class Image(var texture: BufferedImage, var x: Int, var y: Int, var width: Int, var height: Int) {
-  constructor(texture: BufferedImage) : this(texture, 0, 0, texture.width, texture.height) {
-  }
+  constructor(texture: BufferedImage) : this(texture, 0, 0, texture.width, texture.height)
 
   fun draw(g: Graphics2D, sx: Int, sy: Int, swidth: Int, sheight: Int, angle: Double) {
     val oldTransform = g.transform

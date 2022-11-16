@@ -3,18 +3,15 @@ package mod.actions
 import Action
 import Image
 import ImageArray
-import mod.actions.sprite.currentImageArray
-import mod.dragging.enterInt
 
 object cutImage: Action {
   override fun execute() {
-    val xquantity = enterInt("Введите кол-во изображений по горизонтали:")
-    val yquantity = enterInt("Введите кол-во изображений по вертикали:")
-    cutSprite(currentImageArray!!, xquantity, yquantity)
   }
+
+  override fun toString(): String = "Разрезать"
 }
 
-fun cutSprite(array: ImageArray, xquantity: Int, yquantity: Int) {
+fun cutImage(array: ImageArray, xquantity: Int, yquantity: Int) {
   val texture = array.images[0].texture
   val width = texture.width / xquantity
   val height = texture.height / yquantity

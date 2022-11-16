@@ -14,6 +14,6 @@ class showMenu(val menu: JPopupMenu, val forShape: Boolean): Action {
   }
 
   override fun execute() {
-    menu.show(frame, mousesx, mousesy);
+    menu.show(frame, mousesx, mousesy)
   }
 }

@@ -6,7 +6,7 @@ import currentCanvas
 import mod.dragging.enterDouble
 import mod.dragging.sprites
 
-class SetBounds: SpriteAction() {
+class SpriteSetBounds: SpriteAction() {
   val bounds: Sprite = Sprite()
 
   override fun settings() {
@@ -22,11 +22,9 @@ class SetBounds: SpriteAction() {
   }
 
   override fun execute() {
-    for(sprite in sprites) {
-      if(sprite.centerX < bounds.leftX) sprite.centerX += bounds.width
-      if(sprite.centerX >= bounds.rightX) sprite.centerX -= bounds.width
-      if(sprite.centerY < bounds.topY) sprite.centerY += bounds.height
-      if(sprite.centerY >= bounds.bottomY) sprite.centerY -= bounds.height
-    }
+    if(sprite!!.centerX < bounds.leftX) sprite!!.centerX += bounds.width
+    if(sprite!!.centerX >= bounds.rightX) sprite!!.centerX -= bounds.width
+    if(sprite!!.centerY < bounds.topY) sprite!!.centerY += bounds.height
+    if(sprite!!.centerY >= bounds.bottomY) sprite!!.centerY -= bounds.height
   }
 }
