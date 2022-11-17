@@ -1,3 +1,4 @@
+import mod.actions.SoundPlay
 import mod.actions.cutImage
 import mod.actions.showMenu
 import mod.actions.sprite.*
@@ -9,16 +10,19 @@ import java.awt.event.MouseEvent.BUTTON3
 import java.io.File
 import java.util.*
 import javax.imageio.ImageIO
+import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
+import javax.sound.sampled.Clip
 import javax.swing.*
 import javax.swing.Timer
 import kotlin.math.PI
 
-
 val canvases = LinkedList<Canvas>()
 val imageArrays = LinkedList<ImageArray>()
-var currentCanvas: Canvas = Canvas(0, 0, 0, 0, 1.0)
 
+val sounds = LinkedList<File>()
+
+var currentCanvas: Canvas = Canvas(0, 0, 0, 0, 1.0)
 val windowHeight = 800
 val windowWidth = windowHeight * 9 / 16
 val frame = JFrame("Elasmotherium")
@@ -65,6 +69,19 @@ fun main() {
   cutImage(currentImageArray!!, 8, 4)
   cutImage(imageArrays[1], 1, 16)
 
+  for(soundFile in File("./").listFiles()) {
+    if(!soundFile.name.endsWith(".wav")) continue
+    sounds.add(soundFile)
+  }
+
+  val soundItem = JMenuItem("Разрезать")
+  soundItem.addActionListener {
+    val xquantity = enterInt("Введите кол-во изображений по горизонтали:")
+    val yquantity = enterInt("Введите кол-во изображений по вертикали:")
+    cutImage(currentImageArray!!, xquantity, yquantity)
+  }
+  //imageMenu.add(soundItem)
+
   val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
   canvases.add(assets)
 
@@ -88,13 +105,13 @@ fun main() {
   frame.contentPane = panel
 
   fillEventMenu(objectMenu, null)
+
   val item = JMenuItem("Разрезать")
   item.addActionListener {
     val xquantity = enterInt("Введите кол-во изображений по горизонтали:")
     val yquantity = enterInt("Введите кол-во изображений по вертикали:")
     cutImage(currentImageArray!!, xquantity, yquantity)
   }
-
   imageMenu.add(item)
 
   val player = Sprite(-3.0, -5.0, 2.0, 2.0)
@@ -196,7 +213,7 @@ fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
 }
 
 fun actionMenu(caption: String, spriteClass: SpriteClass?, event: MenuEvent): JMenu {
-  val actions = listOf(SpriteCreate(), SpritePositionAs(), SpriteSetSize(), SpriteRotation(), SpriteDirectAs(), SpriteMovement(), SpriteSetSpeed(), SpriteAcceleration(), SpriteSetImage(), SpriteAnimation())
+  val actions = listOf(SpriteCreate(), SpritePositionAs(), SpriteSetSize(), SpriteRotation(), SpriteDirectAs(), SpriteMovement(), SpriteSetSpeed(), SpriteAcceleration(), SpriteSetImage(), SpriteAnimation(), SoundPlay())
 
   val menu = JMenu(caption)
   for(action in actions) {
@@ -205,16 +222,4 @@ fun actionMenu(caption: String, spriteClass: SpriteClass?, event: MenuEvent): JM
 
   //addMenuItem(subMenu[1], "Ограничивать", AllMenuListener(SetBounds()))
   return menu
-}
-
-fun playSound() {
-  try {
-    val audioInputStream = AudioSystem.getAudioInputStream(File("blaster.wav").absoluteFile)
-    val clip = AudioSystem.getClip()
-    clip.open(audioInputStream)
-    clip.start()
-  } catch(ex: Exception) {
-    println("Error with playing sound.")
-    ex.printStackTrace()
-  }
 }

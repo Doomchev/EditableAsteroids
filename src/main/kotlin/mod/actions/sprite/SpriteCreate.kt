@@ -7,7 +7,6 @@ import actions
 import classes
 import fpsk
 import mod.dragging.enterDouble
-import playSound
 
 class SpriteCreate: SpriteAction() {
   var spriteClass: SpriteClass? = null
