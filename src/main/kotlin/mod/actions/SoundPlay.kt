@@ -1,19 +1,24 @@
 package mod.actions
 
-import Action
 import Sprite
 import SpriteAction
-import mod.actions.sprite.SpriteDirectAs
-import mod.dragging.selectedSprites
+import frame
+import soundOptions
 import sounds
+import java.io.File
 import javax.sound.sampled.AudioSystem
+import javax.swing.JOptionPane
 
 class SoundPlay: SpriteAction() {
+  private val file: File? = null
+
   override fun create(sprite: Sprite?): SpriteAction {
     return SoundPlay()
   }
 
   override fun settings() {
+    JOptionPane.showOptionDialog(frame, "", "Выберите звук:",
+      JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, soundOptions, soundOptions!![0])
   }
 
   override fun execute() {

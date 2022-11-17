@@ -10,9 +10,6 @@ import java.awt.event.MouseEvent.BUTTON3
 import java.io.File
 import java.util.*
 import javax.imageio.ImageIO
-import javax.sound.sampled.AudioInputStream
-import javax.sound.sampled.AudioSystem
-import javax.sound.sampled.Clip
 import javax.swing.*
 import javax.swing.Timer
 import kotlin.math.PI
@@ -21,6 +18,7 @@ val canvases = LinkedList<Canvas>()
 val imageArrays = LinkedList<ImageArray>()
 
 val sounds = LinkedList<File>()
+var soundOptions: Array<File>? = null
 
 var currentCanvas: Canvas = Canvas(0, 0, 0, 0, 1.0)
 val windowHeight = 800
@@ -73,14 +71,7 @@ fun main() {
     if(!soundFile.name.endsWith(".wav")) continue
     sounds.add(soundFile)
   }
-
-  val soundItem = JMenuItem("Разрезать")
-  soundItem.addActionListener {
-    val xquantity = enterInt("Введите кол-во изображений по горизонтали:")
-    val yquantity = enterInt("Введите кол-во изображений по вертикали:")
-    cutImage(currentImageArray!!, xquantity, yquantity)
-  }
-  //imageMenu.add(soundItem)
+  soundOptions = Array(sounds.size) {sounds[it]}
 
   val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
   canvases.add(assets)
@@ -142,10 +133,10 @@ fun main() {
   action5.acceleration = -15.0
   actions.add(action5)
 
-  val action12 = SpriteSetBounds()
+  /*val action12 = SpriteSetBounds()
   action12.sprite = player
   action12.settings()
-  actions.add(action12)
+  actions.add(action12)*/
 
   val bullet = addClass("Пуля")
 
