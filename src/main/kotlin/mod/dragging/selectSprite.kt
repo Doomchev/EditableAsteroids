@@ -3,15 +3,15 @@ package mod.dragging
 import Action
 import mousefx
 import mousefy
-import shapeUnderCursor
+import spriteUnderCursor
 
 object selectSprite: Action {
   override fun execute() {
-    if(shapeUnderCursor(selectedSprites, mousefx, mousefy) != null) {
+    if(spriteUnderCursor(selectedSprites, mousefx, mousefy) != null) {
       return
     }
     selectedSprites.clear()
-    val shape = shapeUnderCursor(sprites, mousefx, mousefy)
+    val shape = scene.spriteUnderCursor(mousefx, mousefy)
     if(shape != null) {
       selectedSprites.add(shape)
     }

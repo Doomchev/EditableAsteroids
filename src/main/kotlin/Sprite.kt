@@ -1,3 +1,4 @@
+import mod.dragging.SceneElement
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
@@ -14,7 +15,7 @@ class Vector(var x: Double, var y: Double) {
   val length get() = sqrt(x * x + y * y)
 }
 
-open class Sprite() {
+open class Sprite(): SceneElement() {
   var centerX: Double = 0.0
   var centerY: Double = 0.0
   var halfWidth: Double = 0.0
@@ -61,7 +62,18 @@ open class Sprite() {
     this.height = height
   }
 
-  open fun draw(g: Graphics2D) {
+  override fun select(selection: Sprite, selected: LinkedList<Sprite>) {
+    if(selection.overlaps(this)) selected.add(this)
+  }
+
+  override fun remove(sprite: Sprite) {
+  }
+
+  override fun spriteUnderCursor(fx: Double, fy: Double): Sprite? {
+    return if(collidesWithPoint(fx, fy)) this else null
+  }
+
+  override fun draw(g: Graphics2D) {
     image?.draw(g, xToScreen(leftX), yToScreen(topY), distToScreen(width), distToScreen(height), angle)
   }
 
@@ -84,9 +96,9 @@ open class Sprite() {
   }
 }
 
-fun shapeUnderCursor(sprites: LinkedList<Sprite>, x: Double, y: Double): Sprite? {
-  for(shape in sprites.descendingIterator()) {
-    if(shape.collidesWithPoint(x, y)) return shape
+fun spriteUnderCursor(sprites: LinkedList<Sprite>, x: Double, y: Double): Sprite? {
+  for(sprite in sprites.descendingIterator()) {
+    if(sprite.collidesWithPoint(x, y)) return sprite
   }
   return null
 }

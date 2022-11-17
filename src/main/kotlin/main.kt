@@ -3,14 +3,13 @@ import mod.actions.showMenu
 import mod.actions.sprite.*
 import mod.dragging.*
 import mod.drawing.drawImages
-import mod.drawing.drawSprites
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
+import mod.drawing.drawScene
 import java.awt.event.MouseEvent.BUTTON1
 import java.awt.event.MouseEvent.BUTTON3
 import java.io.File
 import java.util.*
 import javax.imageio.ImageIO
+import javax.sound.sampled.AudioSystem
 import javax.swing.*
 import javax.swing.Timer
 import kotlin.math.PI
@@ -52,7 +51,7 @@ fun main() {
   mouseWheelDown.addOnClick(world, zoomOut)
 
   world.add(grid)
-  world.add(drawSprites)
+  world.add(drawScene)
   world.add(selectSprites)
   world.add(rotateSprite)
   world.add(resizeSprite)
@@ -64,7 +63,7 @@ fun main() {
   }
   currentImageArray = imageArrays.first
   cutImage(currentImageArray!!, 8, 4)
-  //cutSprite(imageArrays[1], 1, 16)
+  cutImage(imageArrays[1], 1, 16)
 
   val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
   canvases.add(assets)
@@ -90,19 +89,16 @@ fun main() {
 
   fillEventMenu(objectMenu, null)
   val item = JMenuItem("Разрезать")
-  item.addActionListener(object: ActionListener {
-    override fun actionPerformed(e: ActionEvent?) {
-      val xquantity = enterInt("Введите кол-во изображений по горизонтали:")
-      val yquantity = enterInt("Введите кол-во изображений по вертикали:")
-      cutImage(currentImageArray!!, xquantity, yquantity)
-    }
-  })
+  item.addActionListener {
+    val xquantity = enterInt("Введите кол-во изображений по горизонтали:")
+    val yquantity = enterInt("Введите кол-во изображений по вертикали:")
+    cutImage(currentImageArray!!, xquantity, yquantity)
+  }
 
   imageMenu.add(item)
 
   val player = Sprite(-3.0, -5.0, 2.0, 2.0)
   player.image = imageArrays.last.images[0]
-  sprites.add(player)
 
   val action1 = SpriteRotation()
   action1.sprite = player
@@ -165,6 +161,8 @@ fun main() {
   action8.delay = 0.1
   Key(32).onPressActions.add(Pushable.ActionEntry(world, action8))
 
+  scene.add(player)
+  scene.add(bullet)
   frame.isVisible = true
 }
 
@@ -207,4 +205,16 @@ fun actionMenu(caption: String, spriteClass: SpriteClass?, event: MenuEvent): JM
 
   //addMenuItem(subMenu[1], "Ограничивать", AllMenuListener(SetBounds()))
   return menu
+}
+
+fun playSound() {
+  try {
+    val audioInputStream = AudioSystem.getAudioInputStream(File("blaster.wav").absoluteFile)
+    val clip = AudioSystem.getClip()
+    clip.open(audioInputStream)
+    clip.start()
+  } catch(ex: Exception) {
+    println("Error with playing sound.")
+    ex.printStackTrace()
+  }
 }

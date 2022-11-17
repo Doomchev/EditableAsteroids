@@ -42,7 +42,7 @@ object updatePanel: ActionListener {
 
 val childFrame: JFrame = JFrame("Key")
 class MenuListener(
-  val spriteClass: SpriteClass?, val event: MenuEvent
+  private val spriteClass: SpriteClass?, private val event: MenuEvent
   , val action: SpriteAction): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     if(event == MenuEvent.onPress || event == MenuEvent.onClick) {
@@ -60,8 +60,9 @@ class MenuListener(
   override fun toString(): String = action.toString()
 }
 
-class AnyKeyListener(val spriteClass: SpriteClass?, val event: MenuEvent
-                     , val action: SpriteAction): KeyListener {
+class AnyKeyListener(
+  private val spriteClass: SpriteClass?, private val event: MenuEvent
+  , val action: SpriteAction): KeyListener {
   override fun keyTyped(e: KeyEvent) {
     childFrame.removeKeyListener(this)
     childFrame.dispose()

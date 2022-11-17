@@ -4,7 +4,6 @@ import Sprite
 import SpriteAction
 import currentCanvas
 import mod.dragging.enterDouble
-import mod.dragging.sprites
 
 class SpriteSetBounds: SpriteAction() {
   val bounds: Sprite = Sprite()

@@ -7,7 +7,7 @@ import actions
 import classes
 import fpsk
 import mod.dragging.enterDouble
-import mod.dragging.sprites
+import playSound
 
 class SpriteCreate: SpriteAction() {
   var spriteClass: SpriteClass? = null
@@ -31,7 +31,7 @@ class SpriteCreate: SpriteAction() {
     if(time > 0.0) return
     time = delay
     val newSprite = Sprite()
-    sprites.add(newSprite)
+    spriteClass!!.add(newSprite)
     for(action in spriteClass!!.onCreate) {
       action.sprite = newSprite
       action.execute()

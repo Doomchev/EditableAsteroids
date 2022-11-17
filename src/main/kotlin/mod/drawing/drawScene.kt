@@ -1,13 +1,11 @@
 package mod.drawing
 
 import mod.dragging.Drawing
-import mod.dragging.sprites
+import mod.dragging.scene
 import java.awt.Graphics2D
 
-object drawSprites: Drawing {
+object drawScene: Drawing {
   override fun draw(g: Graphics2D) {
-    for(sprite in sprites) {
-      sprite.draw(g)
-    }
+    scene.draw(g)
   }
 }

@@ -13,7 +13,7 @@ object createSprite: createRectangle() {
     startingY = snapY(mousefy)
     sprite = Sprite(mousefx, mousefy, 0.0, 0.0)
     sprite!!.image = if(selectedSprites.size > 0) selectedSprites.first.image else currentImageArray!!.images[0]
-    sprites.add(sprite!!)
+    scene.add(sprite!!)
     selectedSprites.clear()
     selectedSprites.add(sprite!!)
   }
@@ -24,7 +24,7 @@ object createSprite: createRectangle() {
 
   override fun released() {
     if(sprite!!.width == 0.0 && sprite!!.height == 0.0) {
-      sprites.remove(sprite)
+      scene.remove(sprite!!)
       selectedSprites.clear()
     }
   }

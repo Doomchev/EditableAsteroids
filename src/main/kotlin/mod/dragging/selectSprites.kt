@@ -18,9 +18,7 @@ object selectSprites: createRectangle(), Drawing {
   }
 
   override fun released() {
-    for(shape in sprites) {
-      if(selection.overlaps(shape)) selectedSprites.add(shape)
-    }
+    scene.select(selection, selectedSprites)
   }
 
   override fun draw(g: Graphics2D) {

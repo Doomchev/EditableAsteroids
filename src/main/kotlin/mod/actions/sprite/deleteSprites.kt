@@ -1,12 +1,14 @@
 package mod.actions.sprite
 
 import Action
+import mod.dragging.scene
 import mod.dragging.selectedSprites
-import mod.dragging.sprites
 
 object deleteSprites: Action {
   override fun execute() {
-    sprites.removeAll(selectedSprites)
+    for(sprite in selectedSprites) {
+      scene.remove(sprite)
+    }
     selectedSprites.clear()
   }
 }

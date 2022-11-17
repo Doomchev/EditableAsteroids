@@ -19,8 +19,9 @@ object drawImages: Drawing {
       val image = array.images[0]
       val sx = xToScreen(fx)
       val sy = yToScreen(fy)
-      val ssize = distToScreen(fsize)
-      image.draw(g, sx, sy, ssize, ssize, 0.0)
+      val swidth = distToScreen(fsize)
+      //val sheight = swidth * image.width / image.height
+      image.draw(g, sx, sy, swidth, swidth, 0.0)
       if(currentImageArray == array) {
         drawDashedRectangle(g, fx, fy, fsize, fsize)
       }
