@@ -97,13 +97,34 @@ fun main() {
 
   fillEventMenu(objectMenu, null)
 
-  val item = JMenuItem("Разрезать")
-  item.addActionListener {
+  val itemToTop = JMenuItem("Наверх")
+  itemToTop.addActionListener {
+    for(sprite in selectedSprites) {
+      scene.remove(sprite)
+      scene.add(sprite)
+    }
+  }
+  objectMenu.add(itemToTop)
+
+  val itemToBottom = JMenuItem("Вниз")
+  itemToBottom.addActionListener {
+    for(sprite in selectedSprites.descendingIterator()) {
+      scene.remove(sprite)
+      scene.addFirst(sprite)
+    }
+  }
+  objectMenu.add(itemToBottom)
+
+  val itemSelectImage = JMenuItem("Разрезать")
+  itemSelectImage.addActionListener {
     val xquantity = enterInt("Введите кол-во изображений по горизонтали:")
     val yquantity = enterInt("Введите кол-во изображений по вертикали:")
     cutImage(currentImageArray!!, xquantity, yquantity)
   }
-  imageMenu.add(item)
+  imageMenu.add(itemSelectImage)
+
+
+
 
   val player = Sprite(-3.0, -5.0, 2.0, 2.0)
   player.image = imageArrays.last.images[0]
@@ -159,8 +180,8 @@ fun main() {
 
   bullet.always.add(SpriteMovement())
 
-  currentImageArray = imageArrays[1]
   val action13 = SpriteAnimation()
+  action13.array = imageArrays[1]
   action13.speed = 16.0
   bullet.always.add(action13)
 

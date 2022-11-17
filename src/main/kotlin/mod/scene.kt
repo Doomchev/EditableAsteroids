@@ -21,16 +21,23 @@ object scene: SceneElement() {
   fun add(element: SceneElement) {
     elements.add(element)
   }
+
+  fun addFirst(sprite: Sprite) {
+    elements.addFirst(sprite)
+  }
+
   override fun draw(g: Graphics2D) {
     for(element in elements) {
       element.draw(g)
     }
   }
+
   override fun select(selection: Sprite, selected: LinkedList<Sprite>) {
     for(element in elements) {
       element.select(selection, selected)
     }
   }
+
   override fun remove(sprite: Sprite) {
     val it = elements.iterator()
     while(it.hasNext()) {

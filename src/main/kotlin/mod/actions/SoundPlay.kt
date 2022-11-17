@@ -17,7 +17,7 @@ class SoundPlay: SpriteAction() {
   }
 
   override fun settings() {
-    JOptionPane.showOptionDialog(frame, "", "Выберите звук:",
+    JOptionPane.showOptionDialog(frame, "Выберите звук:", "",
       JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, soundOptions, soundOptions!![0])
   }
 
