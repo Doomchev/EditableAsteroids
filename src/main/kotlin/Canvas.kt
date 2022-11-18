@@ -1,7 +1,8 @@
 import mod.dragging.Drawing
 import mod.dragging.zk
+import mod.dragging.zoom
+import java.awt.Color
 import java.awt.Graphics2D
-import java.awt.MouseInfo
 import java.util.*
 import kotlin.math.pow
 
@@ -76,6 +77,27 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
 
   fun hasMouse(): Boolean {
     return viewport.hasPoint(mousesx, mousesy)
+  }
+
+  var oldZoom = 0
+  var defaultPosition: Sprite = this
+  fun setDefaultPosition() {
+    oldZoom = zoom
+    defaultPosition = Sprite(centerX, centerY, width, height)
+  }
+  fun restorePosition() {
+    centerX = defaultPosition.centerX
+    centerY = defaultPosition.centerY
+    width = defaultPosition.width
+    height = defaultPosition.height
+    zoom = oldZoom
+    update()
+  }
+
+  fun drawDefaultCamera(g: Graphics2D) {
+    g.color = Color.BLUE
+    g.drawRect(xToScreen(defaultPosition.leftX), yToScreen(defaultPosition.topY), distToScreen(defaultPosition.width), distToScreen(defaultPosition.height))
+    g.color = Color.BLACK
   }
 }
 fun xToScreen(fieldX: Double): Int = (fieldX * currentCanvas.k + currentCanvas.vdx).toInt()

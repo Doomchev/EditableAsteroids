@@ -178,8 +178,6 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   class KeyEntry(val key: Pushable, val canvas: Canvas, var remove: Boolean = false)
 
   override fun keyPressed(e: KeyEvent) {
-    //val point = MouseInfo.getPointerInfo().location
-    //updateMouse(point.x - frame.x, point.y - frame.y)
     for(keyEntry in keysPressed) {
       if(keyEntry.key.correspondsTo(e)) return
     }
@@ -195,8 +193,6 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   }
 
   fun onKeyDown() {
-    //val point = MouseInfo.getPointerInfo().location
-    //updateMouse(point.x - frame.x, point.y - frame.y)
     val it = keysPressed.iterator()
     while(it.hasNext()) {
       val entry = it.next()

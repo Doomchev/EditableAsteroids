@@ -13,7 +13,7 @@ class SpriteAnimation: SpriteAction() {
 
   override fun create(sprite: Sprite?): SpriteAction {
     val action = SpriteAnimation()
-    action.array = currentImageArray
+    action.array = array
     action.sprite = sprite
     action.speed = speed
     return action
@@ -21,6 +21,7 @@ class SpriteAnimation: SpriteAction() {
 
   override fun settings() {
     speed = enterDouble("Введите скорость (кадров/сек):")
+    array = currentImageArray
   }
 
   override fun execute() {

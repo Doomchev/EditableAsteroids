@@ -1,8 +1,10 @@
 import mod.actions.SoundPlay
 import mod.actions.cutImage
+import mod.actions.restoreCamera
 import mod.actions.showMenu
 import mod.actions.sprite.*
 import mod.dragging.*
+import mod.drawing.drawDefaultCamera
 import mod.drawing.drawImages
 import mod.drawing.drawScene
 import java.awt.event.MouseEvent.BUTTON1
@@ -36,6 +38,7 @@ val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
 fun main() {
   world.setZoom(zoom)
   world.update()
+  world.setDefaultPosition()
   canvases.add(world)
   currentCanvas = world
 
@@ -61,6 +64,9 @@ fun main() {
   world.add(selectSprites)
   world.add(rotateSprite)
   world.add(resizeSprite)
+  world.add(drawDefaultCamera)
+
+  /// ASSETS LOADING
 
   for(imageFile in File("./").listFiles()) {
     if(!imageFile.name.endsWith(".png")) continue
@@ -68,30 +74,13 @@ fun main() {
     imageArrays.add(ImageArray(Array(1) { image }))
   }
 
-  val asteroidImage = imageArrays.first
-  cutImage(asteroidImage, 8, 4)
-  currentImageArray = asteroidImage
-
-  val bulletImage = imageArrays[1]
-  cutImage(bulletImage, 1, 16)
-  bulletImage.setCenter(43.0 / 48.0, 5.5 / 12.0)
-  bulletImage.setVisibleArea(10.5, 3.0)
-
-  val shipImage = imageArrays[2]
-  shipImage.setCenter(0.35, 0.5)
-  shipImage.setVisibleArea(1.5, 1.5)
-
   for(soundFile in File("./").listFiles()) {
     if(!soundFile.name.endsWith(".wav")) continue
     sounds.add(soundFile)
   }
   soundOptions = Array(sounds.size) {sounds[it]}
 
-  canvases.add(assets)
-
-  assets.add(drawImages)
-  button1.addOnClick(assets, selectImage)
-  button2.addOnClick(assets, showMenu(imageMenu, false))
+  /// GUI
 
   val timer = Timer(10, updatePanel)
   timer.start()
@@ -107,6 +96,8 @@ fun main() {
   panel.addMouseWheelListener(listener)
   panel.setSize(windowWidth, windowHeight)
   frame.contentPane = panel
+
+  /// SCENE OBJECTS GUI
 
   fillEventMenu(objectMenu, null)
 
@@ -128,6 +119,16 @@ fun main() {
   }
   objectMenu.add(itemToBottom)
 
+  Key(99).addOnClick(world, restoreCamera())
+
+  /// IMAGES GUI
+
+  canvases.add(assets)
+
+  assets.add(drawImages)
+  button1.addOnClick(assets, selectImage)
+  button2.addOnClick(assets, showMenu(imageMenu, false))
+
   val itemCutImage = JMenuItem("Разрезать")
   itemCutImage.addActionListener {
     val xquantity = enterInt("Введите кол-во изображений по горизонтали:")
@@ -138,8 +139,8 @@ fun main() {
 
   val itemSetCenter = JMenuItem("Задать центр")
   itemSetCenter.addActionListener {
-    val x = enterDouble("Введите горизонтальное смещение (пикс):")
-    val y = enterDouble("Введите вертикальное смещение (пикс):")
+    val x = enterDouble("Введите горизонтальное смещение (%):")
+    val y = enterDouble("Введите вертикальное смещение (%):")
     currentImageArray!!.setCenter(x, y)
   }
   imageMenu.add(itemSetCenter)
@@ -152,7 +153,7 @@ fun main() {
   }
   imageMenu.add(itemSetVisArea)
 
-
+  /// SPRITES
 
   val player = Sprite(-3.0, -5.0, 2.0, 2.0)
   player.image = imageArrays.last.images[0]
@@ -220,6 +221,22 @@ fun main() {
 
   scene.add(player)
   scene.add(bullet)
+
+  // IMAGES
+
+  val asteroidImage = imageArrays.first
+  cutImage(asteroidImage, 8, 4)
+  currentImageArray = asteroidImage
+
+  val bulletImage = imageArrays[1]
+  cutImage(bulletImage, 1, 16)
+  bulletImage.setCenter(43.0 / 48.0, 5.5 / 12.0)
+  bulletImage.setVisibleArea(10.5, 3.0)
+
+  val shipImage = imageArrays[2]
+  shipImage.setCenter(0.35, 0.5)
+  shipImage.setVisibleArea(1.5, 1.5)
+
   frame.isVisible = true
 }
 
