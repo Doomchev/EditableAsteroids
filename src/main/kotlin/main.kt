@@ -14,6 +14,8 @@ import javax.swing.*
 import javax.swing.Timer
 import kotlin.math.PI
 
+val showCollisionShapes = true
+
 val canvases = LinkedList<Canvas>()
 val imageArrays = LinkedList<ImageArray>()
 
@@ -115,14 +117,21 @@ fun main() {
   }
   objectMenu.add(itemToBottom)
 
-  val itemSelectImage = JMenuItem("Разрезать")
-  itemSelectImage.addActionListener {
+  val itemCutImage = JMenuItem("Разрезать")
+  itemCutImage.addActionListener {
     val xquantity = enterInt("Введите кол-во изображений по горизонтали:")
     val yquantity = enterInt("Введите кол-во изображений по вертикали:")
     cutImage(currentImageArray!!, xquantity, yquantity)
   }
-  imageMenu.add(itemSelectImage)
+  imageMenu.add(itemCutImage)
 
+  val itemSetAnchor = JMenuItem("Разрезать")
+  itemSetAnchor.addActionListener {
+    val x = enterInt("Введите координату x:")
+    val y = enterInt("Введите координату y:")
+    //cutImage(currentImageArray!!, xquantity, yquantity)
+  }
+  imageMenu.add(itemSetAnchor)
 
 
 

@@ -1,4 +1,5 @@
 import java.awt.Graphics2D
+import java.awt.MouseInfo
 import java.awt.event.*
 import java.util.*
 import kotlin.math.abs
@@ -34,7 +35,7 @@ abstract class Pushable {
 val buttons = LinkedList<Pushable>()
 class Key(var code: Int): Pushable() {
   override fun correspondsTo(e: KeyEvent): Boolean {
-    return e.keyChar.code == code
+    return e.keyChar.code == code || e.keyCode == code
   }
 }
 
@@ -90,6 +91,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   var pressedEvent: MouseEvent? = null
 
   override fun mousePressed(e: MouseEvent) {
+    updateMouse(e.x, e.y)
     pressedEvent = e
   }
 
@@ -152,8 +154,8 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   }
 
   override fun mouseMoved(e: MouseEvent) {
-    if(currentDraggingAction == null) return
     updateMouse(e.x, e.y)
+    if(currentDraggingAction == null) return
     currentCanvas = currentDraggingCanvas!!
     currentDraggingAction!!.dragged()
   }
@@ -176,6 +178,8 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   class KeyEntry(val key: Pushable, val canvas: Canvas, var remove: Boolean = false)
 
   override fun keyPressed(e: KeyEvent) {
+    //val point = MouseInfo.getPointerInfo().location
+    //updateMouse(point.x - frame.x, point.y - frame.y)
     for(keyEntry in keysPressed) {
       if(keyEntry.key.correspondsTo(e)) return
     }
@@ -191,6 +195,8 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   }
 
   fun onKeyDown() {
+    //val point = MouseInfo.getPointerInfo().location
+    //updateMouse(point.x - frame.x, point.y - frame.y)
     val it = keysPressed.iterator()
     while(it.hasNext()) {
       val entry = it.next()

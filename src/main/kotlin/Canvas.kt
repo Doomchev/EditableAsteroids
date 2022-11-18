@@ -54,8 +54,8 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
   fun update() {
     k = 1.0 * viewport.width / width
     height = 1.0 * viewport.height / k
-    vdx = centerX * k - (viewport.leftX + 0.5 * viewport.width)
-    vdy = centerY * k - (viewport.topY + 0.5 * viewport.height)
+    vdx = 0.5 * viewport.width - centerX * k
+    vdy = 0.5 * viewport.height - centerY * k
   }
 
   fun setZoom(zoom: Int) {
@@ -75,14 +75,13 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
   }
 
   fun hasMouse(): Boolean {
-    val point = MouseInfo.getPointerInfo().location
-    return viewport.hasPoint(point.x, point.y)
+    return viewport.hasPoint(mousesx, mousesy)
   }
 }
-fun xToScreen(fieldX: Double): Int = (fieldX * currentCanvas.k - currentCanvas.vdx).toInt()
-fun yToScreen(fieldY: Double): Int = (fieldY * currentCanvas.k - currentCanvas.vdy).toInt()
+fun xToScreen(fieldX: Double): Int = (fieldX * currentCanvas.k + currentCanvas.vdx).toInt()
+fun yToScreen(fieldY: Double): Int = (fieldY * currentCanvas.k + currentCanvas.vdy).toInt()
 fun distToScreen(fieldDist: Double): Int = (fieldDist * currentCanvas.k).toInt()
 
-fun xFromScreen(screenX: Int): Double = (screenX + currentCanvas.vdx) / currentCanvas.k
-fun yFromScreen(screenY: Int): Double = (screenY + currentCanvas.vdy) / currentCanvas.k
+fun xFromScreen(screenX: Int): Double = (screenX - currentCanvas.vdx) / currentCanvas.k
+fun yFromScreen(screenY: Int): Double = (screenY - currentCanvas.vdy) / currentCanvas.k
 fun distFromScreen(screenDist: Int): Double = screenDist / currentCanvas.k
