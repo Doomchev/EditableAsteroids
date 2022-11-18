@@ -74,7 +74,8 @@ open class Sprite(): SceneElement() {
   }
 
   override fun draw(g: Graphics2D) {
-    image?.draw(g, xToScreen(leftX), yToScreen(topY), distToScreen(width), distToScreen(height), angle)
+    image?.draw(g, xToScreen(leftX), yToScreen(topY), distToScreen(width),
+      distToScreen(height), angle, false)
   }
 
   fun drawSelection(g: Graphics2D) {

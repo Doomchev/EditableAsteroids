@@ -31,6 +31,8 @@ val world = Canvas(0, 0, windowWidth, windowHeight - 100, 10.0)
 val objectMenu = JPopupMenu()
 val imageMenu = JPopupMenu()
 
+val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
+
 fun main() {
   world.setZoom(zoom)
   world.update()
@@ -65,9 +67,19 @@ fun main() {
     val image = Image(ImageIO.read(imageFile))
     imageArrays.add(ImageArray(Array(1) { image }))
   }
-  currentImageArray = imageArrays.first
-  cutImage(currentImageArray!!, 8, 4)
-  cutImage(imageArrays[1], 1, 16)
+
+  val asteroidImage = imageArrays.first
+  cutImage(asteroidImage, 8, 4)
+  currentImageArray = asteroidImage
+
+  val bulletImage = imageArrays[1]
+  cutImage(bulletImage, 1, 16)
+  bulletImage.setCenter(43.0 / 48.0, 5.5 / 12.0)
+  bulletImage.setVisibleArea(10.5, 3.0)
+
+  val shipImage = imageArrays[2]
+  shipImage.setCenter(0.35, 0.5)
+  shipImage.setVisibleArea(1.5, 1.5)
 
   for(soundFile in File("./").listFiles()) {
     if(!soundFile.name.endsWith(".wav")) continue
@@ -75,7 +87,6 @@ fun main() {
   }
   soundOptions = Array(sounds.size) {sounds[it]}
 
-  val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
   canvases.add(assets)
 
   assets.add(drawImages)
@@ -125,13 +136,21 @@ fun main() {
   }
   imageMenu.add(itemCutImage)
 
-  val itemSetAnchor = JMenuItem("Разрезать")
-  itemSetAnchor.addActionListener {
-    val x = enterInt("Введите координату x:")
-    val y = enterInt("Введите координату y:")
-    //cutImage(currentImageArray!!, xquantity, yquantity)
+  val itemSetCenter = JMenuItem("Задать центр")
+  itemSetCenter.addActionListener {
+    val x = enterDouble("Введите горизонтальное смещение (пикс):")
+    val y = enterDouble("Введите вертикальное смещение (пикс):")
+    currentImageArray!!.setCenter(x, y)
   }
-  imageMenu.add(itemSetAnchor)
+  imageMenu.add(itemSetCenter)
+
+  val itemSetVisArea = JMenuItem("Задать размер обл. вывода")
+  itemSetVisArea.addActionListener {
+    val xk = enterDouble("Введите коэфф. к ширине:")
+    val yk = enterDouble("Введите коэфф. к высоте:")
+    currentImageArray!!.setVisibleArea(xk, yk)
+  }
+  imageMenu.add(itemSetVisArea)
 
 
 
@@ -175,8 +194,8 @@ fun main() {
   bullet.onCreate.add(action6)
 
   val action9 = SpriteSetSize()
-  action9.width = 3.5
-  action9.height = 0.5
+  action9.width = 0.15
+  action9.height = 0.15
   bullet.onCreate.add(action9)
 
   val action7 = SpriteDirectAs()

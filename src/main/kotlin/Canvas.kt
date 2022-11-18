@@ -55,7 +55,7 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
     k = 1.0 * viewport.width / width
     height = 1.0 * viewport.height / k
     vdx = 0.5 * viewport.width - centerX * k
-    vdy = 0.5 * viewport.height - centerY * k
+    vdy = 0.5 * viewport.height - centerY * k + viewport.topY
   }
 
   fun setZoom(zoom: Int) {

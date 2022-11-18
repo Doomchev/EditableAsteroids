@@ -13,7 +13,7 @@ class SpriteAnimation: SpriteAction() {
 
   override fun create(sprite: Sprite?): SpriteAction {
     val action = SpriteAnimation()
-    action.array = array
+    action.array = currentImageArray
     action.sprite = sprite
     action.speed = speed
     return action
