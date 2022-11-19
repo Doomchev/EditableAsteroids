@@ -43,6 +43,7 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
     val oldCanvas = currentCanvas
     currentCanvas = this
     update()
+    g.background = backgroundColor
     g.setClip(viewport.leftX, viewport.topY, viewport.width, viewport.height)
     g.clearRect(viewport.leftX, viewport.topY, viewport.width, viewport.height)
     for(module in drawingModules) {

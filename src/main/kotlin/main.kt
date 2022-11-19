@@ -7,6 +7,7 @@ import mod.dragging.*
 import mod.drawing.drawDefaultCamera
 import mod.drawing.drawImages
 import mod.drawing.drawScene
+import java.awt.Color
 import java.awt.event.MouseEvent.BUTTON1
 import java.awt.event.MouseEvent.BUTTON3
 import java.io.File
@@ -33,6 +34,7 @@ val frame = JFrame("Elasmotherium")
 val world = Canvas(0, 0, windowWidth, windowHeight - 100, 10.0)
 val objectMenu = JPopupMenu()
 val imageMenu = JPopupMenu()
+var backgroundColor: Color = Color.white
 
 val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
 
@@ -119,6 +121,12 @@ fun main() {
     }
   }
   objectMenu.add(itemToBottom)
+
+  val itemSetBackground = JMenuItem("Цвет фона")
+  itemSetBackground.addActionListener {
+    backgroundColor = JColorChooser.showDialog(frame, "Выберите цвет фона:", backgroundColor)
+  }
+  objectMenu.add(itemSetBackground)
 
   Key(99).addOnClick(world, restoreCamera())
 
