@@ -20,6 +20,7 @@ val showCollisionShapes = true
 
 val canvases = LinkedList<Canvas>()
 val imageArrays = LinkedList<ImageArray>()
+var blankImage: Image? = null
 
 val sounds = LinkedList<File>()
 var soundOptions: Array<File>? = null
@@ -153,10 +154,25 @@ fun main() {
   }
   imageMenu.add(itemSetVisArea)
 
+  /// IMAGES
+
+  val asteroidImage = imageArrays.first
+  cutImage(asteroidImage, 8, 4)
+  currentImageArray = asteroidImage
+
+  val bulletImage = imageArrays[1]
+  cutImage(bulletImage, 1, 16)
+  bulletImage.setCenter(43.0 / 48.0, 5.5 / 12.0)
+  bulletImage.setVisibleArea(10.5, 3.0)
+
+  val shipImage = imageArrays[2]
+  shipImage.setCenter(0.35, 0.5)
+  shipImage.setVisibleArea(1.5, 1.5)
+
   /// SPRITES
 
-  val player = Sprite(-3.0, -5.0, 2.0, 2.0)
-  player.image = imageArrays.last.images[0]
+  val player = Sprite(-3.0, -5.0, 1.5, 1.5)
+  player.image = imageArrays[2].images[0]
 
   val action1 = SpriteRotation()
   action1.sprite = player
@@ -222,20 +238,8 @@ fun main() {
   scene.add(player)
   scene.add(bullet)
 
-  // IMAGES
-
-  val asteroidImage = imageArrays.first
-  cutImage(asteroidImage, 8, 4)
-  currentImageArray = asteroidImage
-
-  val bulletImage = imageArrays[1]
-  cutImage(bulletImage, 1, 16)
-  bulletImage.setCenter(43.0 / 48.0, 5.5 / 12.0)
-  bulletImage.setVisibleArea(10.5, 3.0)
-
-  val shipImage = imageArrays[2]
-  shipImage.setCenter(0.35, 0.5)
-  shipImage.setVisibleArea(1.5, 1.5)
+  blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
+  imageArrays.addFirst(ImageArray(Array(1) {blankImage!!}))
 
   frame.isVisible = true
 }
@@ -270,13 +274,12 @@ fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
 }
 
 fun actionMenu(caption: String, spriteClass: SpriteClass?, event: MenuEvent): JMenu {
-  val actions = listOf(SpriteCreate(), SpritePositionAs(), SpriteSetSize(), SpriteRotation(), SpriteDirectAs(), SpriteMovement(), SpriteSetSpeed(), SpriteAcceleration(), SpriteSetImage(), SpriteAnimation(), SoundPlay())
+  val actions = listOf(SpriteCreate(), SpritePositionAs(), SpriteSetSize(), SpriteRotation(), SpriteDirectAs(), SpriteMovement(), SpriteSetSpeed(), SpriteAcceleration(), SpriteSetImage(), SpriteAnimation(), SoundPlay(), SpriteSetBounds(), SpriteLoopArea())
 
   val menu = JMenu(caption)
   for(action in actions) {
     addMenuItem(menu, MenuListener(spriteClass, event, action))
   }
 
-  //addMenuItem(subMenu[1], "Ограничивать", AllMenuListener(SetBounds()))
   return menu
 }

@@ -106,8 +106,6 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
         return
       }
 
-      updateMouse(pressedEvent!!.x, pressedEvent!!.y)
-
       for(button in buttons) {
         if(!button.correspondsTo(pressedEvent!!)) continue
         onDragStart(button.draggingActions)
@@ -123,6 +121,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     for(entry in entries) {
       if(!entry.canvas.hasMouse()) continue
       currentCanvas = entry.canvas
+      updateMouse(pressedEvent!!.x, pressedEvent!!.y)
       if(!entry.action.conditions()) continue
       currentDraggingCanvas = entry.canvas
       currentDraggingAction = entry.action

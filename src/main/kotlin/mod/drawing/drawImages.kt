@@ -1,5 +1,6 @@
 package mod.drawing
 
+import blankImage
 import distToScreen
 import drawDashedRectangle
 import imageArrays
@@ -21,7 +22,9 @@ object drawImages: Drawing {
       val sy = yToScreen(fy)
       val swidth = distToScreen(fsize)
       //val sheight = swidth * image.width / image.height
-      image.draw(g, sx, sy, swidth, swidth, 0.0, true)
+      if(image != blankImage) {
+        image.draw(g, sx, sy, swidth, swidth, 0.0, true)
+      }
       if(currentImageArray == array) {
         drawDashedRectangle(g, fx, fy, fsize, fsize)
       }

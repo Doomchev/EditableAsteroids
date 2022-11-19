@@ -1,6 +1,7 @@
 package mod.dragging
 
 import Sprite
+import buttons
 import java.awt.Graphics2D
 import java.util.*
 

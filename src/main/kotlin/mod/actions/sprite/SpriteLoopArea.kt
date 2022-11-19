@@ -4,9 +4,8 @@ import Sprite
 import SpriteAction
 import currentCanvas
 import mod.dragging.enterDouble
-import mod.dragging.scene
 
-class SpriteSetBounds: SpriteAction() {
+class SpriteLoopArea: SpriteAction() {
   private var bounds: Sprite = Sprite()
 
   override fun settings() {
@@ -18,16 +17,18 @@ class SpriteSetBounds: SpriteAction() {
   }
 
   override fun create(sprite: Sprite?): SpriteAction {
-    val action = SpriteSetBounds()
+    val action = SpriteLoopArea()
     action.sprite = sprite
     action.bounds = bounds
     return action
   }
 
   override fun execute() {
-    if(sprite!!.centerX >= bounds.leftX && sprite!!.centerX < bounds.rightX && sprite!!.centerY >= bounds.topY && sprite!!.centerY < bounds.bottomY) return
-    scene.remove(sprite!!)
+    if(sprite!!.centerX < bounds.leftX) sprite!!.centerX += bounds.width
+    if(sprite!!.centerX >= bounds.rightX) sprite!!.centerX -= bounds.width
+    if(sprite!!.centerY < bounds.topY) sprite!!.centerY += bounds.height
+    if(sprite!!.centerY >= bounds.bottomY) sprite!!.centerY -= bounds.height
   }
 
-  override fun toString(): String = "Установить границы"
+  override fun toString(): String = "Зациклить пространство"
 }
