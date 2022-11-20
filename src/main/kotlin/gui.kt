@@ -1,12 +1,16 @@
 package mod.dragging
 
+import Formula
 import Key
 import MenuEvent
 import SpriteAction
 import SpriteClass
+import SpriteFactory
 import actions
 import canvases
+import classes
 import currentCanvas
+import frame
 import listener
 import world
 import java.awt.Graphics
@@ -17,6 +21,7 @@ import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 import javax.swing.*
+import kotlin.random.Random
 
 class Window : JPanel() {
   override fun paintComponent(g: Graphics) {
@@ -43,53 +48,52 @@ object updatePanel: ActionListener {
 val childFrame: JFrame = JFrame("Key")
 class MenuListener(
   private val spriteClass: SpriteClass?, private val event: MenuEvent
-  , val action: SpriteAction): ActionListener {
+  , private val factory: SpriteFactory): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     if(event == MenuEvent.onPress || event == MenuEvent.onClick) {
       childFrame.setSize(200, 100)
       childFrame.addKeyListener(AnyKeyListener(spriteClass, event
-        , action))
+        , factory))
       childFrame.add(Label("Нажмите клавишу для действия"))
       childFrame.pack()
       childFrame.isVisible = true
     } else {
-      menuItemAction(spriteClass, event, 0, action)
+      menuItemAction(spriteClass, event, 0, factory)
     }
   }
 
-  override fun toString(): String = action.toString()
+  override fun toString(): String = factory.toString()
 }
 
 class AnyKeyListener(
   private val spriteClass: SpriteClass?, private val event: MenuEvent
-  , val action: SpriteAction): KeyListener {
+  , private val factory: SpriteFactory): KeyListener {
   override fun keyTyped(e: KeyEvent) {
     childFrame.removeKeyListener(this)
     childFrame.dispose()
-    menuItemAction(spriteClass, event, e.keyChar.code, action)
+    menuItemAction(spriteClass, event, e.keyChar.code, factory)
   }
   override fun keyPressed(e: KeyEvent) {}
   override fun keyReleased(e: KeyEvent) {}
 }
 
 private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent
-                           , keyCode: Int, action: SpriteAction) {
-  action.settings()
+                           , keyCode: Int, factory: SpriteFactory) {
   if(spriteClass == null) {
     for(sprite in selectedSprites) {
       when(event) {
         MenuEvent.onCreate -> {}
-        MenuEvent.onClick -> Key(keyCode).addOnClick(world, action.create(sprite))
-        MenuEvent.onPress -> Key(keyCode).addOnPress(world, action.create(sprite))
-        MenuEvent.always -> actions.add(action.create(sprite))
+        MenuEvent.onClick -> Key(keyCode).addOnClick(world, factory.create(sprite))
+        MenuEvent.onPress -> Key(keyCode).addOnPress(world, factory.create(sprite))
+        MenuEvent.always -> actions.add(factory.create(sprite))
       }
     }
   } else {
     when(event) {
-      MenuEvent.onCreate -> spriteClass.onCreate.add(action.create(null))
+      MenuEvent.onCreate -> spriteClass.onCreate.add(factory.copy())
       MenuEvent.onClick -> {}
       MenuEvent.onPress -> {}
-      MenuEvent.always -> spriteClass.always.add(action.create(null))
+      MenuEvent.always -> spriteClass.always.add(factory.copy())
     }
   }
 }
@@ -109,6 +113,28 @@ fun enterInt(message: String): Int {
   return enterString(message).toInt()
 }
 
-fun enterDouble(message: String): Double {
-  return enterString(message).toDouble()
+fun enterDouble(message: String): Formula {
+  val string = enterString(message)
+  if(string.contains("..")) {
+    val parts = string.split("..")
+    return RandomDoubleValue(parts[0].toDouble(), parts[1].toDouble())
+  }
+  return DoubleValue(string.toDouble())
+}
+
+class DoubleValue(private val value: Double): Formula() {
+  override fun get(): Double {
+    return value
+  }
+}
+
+class RandomDoubleValue(private val from: Double, private val size:Double): Formula() {
+  override fun get(): Double {
+    return from + size * Random.nextDouble()
+  }
+}
+
+fun selectClass(): SpriteClass {
+  val classesArray = Array<SpriteClass>(classes.size) {classes[it]}
+  return classesArray[JOptionPane.showOptionDialog(frame, "Выберите класс:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, classesArray, classes.first)]
 }

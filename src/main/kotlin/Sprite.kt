@@ -15,6 +15,8 @@ class Vector(var x: Double, var y: Double) {
   val length get() = sqrt(x * x + y * y)
 }
 
+val nullSprite = Sprite()
+
 open class Sprite(): SceneElement() {
   var centerX: Double = 0.0
   var centerY: Double = 0.0
@@ -22,7 +24,8 @@ open class Sprite(): SceneElement() {
   var halfHeight: Double = 0.0
   var angle: Double = 0.0
   var image: Image? = null
-  var movingVector = Vector(0.0, 0.0)
+  var dx: Double = 0.0
+  var dy: Double = 0.0
 
   var width: Double
     inline get() = halfWidth * 2.0
@@ -62,6 +65,15 @@ open class Sprite(): SceneElement() {
     this.height = height
   }
 
+  fun copy(): Sprite {
+    val sprite = Sprite()
+    sprite.centerX = centerX
+    sprite.centerY = centerY
+    sprite.width = width
+    sprite.height = height
+    return sprite
+  }
+
   override fun select(selection: Sprite, selected: LinkedList<Sprite>) {
     if(selection.overlaps(this)) selected.add(this)
   }
@@ -87,8 +99,8 @@ open class Sprite(): SceneElement() {
   }
 
   fun move() {
-    centerX += fpsk * movingVector.x
-    centerY += fpsk * movingVector.y
+    centerX += fpsk * dx
+    centerY += fpsk * dy
   }
 
   fun collidesWithPoint(x: Double, y: Double): Boolean {

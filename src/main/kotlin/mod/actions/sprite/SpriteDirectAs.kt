@@ -2,25 +2,23 @@ package mod.actions.sprite
 
 import Sprite
 import SpriteAction
+import SpriteFactory
 import mod.dragging.selectedSprites
+import nullSprite
 
-class SpriteDirectAs: SpriteAction() {
-  var sprite2: Sprite? = null
-
-  override fun create(sprite: Sprite?): SpriteAction {
-    val action = SpriteDirectAs()
-    action.sprite = sprite
-    action.sprite2 = sprite2
-    return action
+class SpriteDirectAsFactory(private val asSprite: Sprite = nullSprite): SpriteFactory() {
+  override fun copy(): SpriteFactory {
+    return SpriteDirectAsFactory(selectedSprites.first)
   }
 
-  override fun settings() {
-    sprite2 = selectedSprites.first
-  }
-
-  override fun execute() {
-    sprite!!.angle = sprite2!!.angle
+  override fun create(sprite: Sprite): SpriteAction {
+    return SpriteDirectAs(sprite, asSprite)
   }
 
   override fun toString(): String = "Повернуть как"
+}
+class SpriteDirectAs(sprite: Sprite, private val asSprite: Sprite): SpriteAction(sprite) {
+  override fun execute() {
+    sprite.angle = asSprite.angle
+  }
 }

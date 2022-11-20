@@ -1,5 +1,4 @@
 import java.awt.Graphics2D
-import java.awt.MouseInfo
 import java.awt.event.*
 import java.util.*
 import kotlin.math.abs
@@ -33,13 +32,13 @@ abstract class Pushable {
 }
 
 val buttons = LinkedList<Pushable>()
-class Key(var code: Int): Pushable() {
+class Key(private var code: Int): Pushable() {
   override fun correspondsTo(e: KeyEvent): Boolean {
     return e.keyChar.code == code || e.keyCode == code
   }
 }
 
-class MouseButton(var button: Int): Pushable() {
+class MouseButton(private var button: Int): Pushable() {
   override fun correspondsTo(e: MouseEvent): Boolean {
     return e.button == button
   }
@@ -87,8 +86,8 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     }
   }
 
-  val minDraggingDistance = 3
-  var pressedEvent: MouseEvent? = null
+  private const val minDraggingDistance = 3
+  private var pressedEvent: MouseEvent? = null
 
   override fun mousePressed(e: MouseEvent) {
     updateMouse(e.x, e.y)

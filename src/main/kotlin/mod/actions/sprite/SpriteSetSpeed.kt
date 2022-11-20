@@ -1,32 +1,30 @@
 package mod.actions.sprite
 
+import Formula
 import Sprite
 import SpriteAction
+import SpriteFactory
 import mod.dragging.enterDouble
+import zero
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class SpriteSetSpeed: SpriteAction() {
-  var speed: Double = 0.0
-
-  override fun create(sprite: Sprite?): SpriteAction {
-    val action = SpriteSetSpeed()
-    action.sprite = sprite
-    action.speed = speed
-    return action
+class SpriteSetSpeedFactory(private val speed: Formula = zero): SpriteFactory() {
+  override fun copy(): SpriteFactory {
+    return SpriteSetSpeedFactory(enterDouble("Введите скорость:"))
   }
 
-  override fun settings() {
-    speed = enterDouble("Введите скорость:")
+  override fun create(sprite: Sprite): SpriteAction {
+    return SpriteSetSpeed(sprite, speed.get())
   }
 
+  override fun toString(): String = "Ускорять"
+}
+
+class SpriteSetSpeed(sprite: Sprite, val speed: Double): SpriteAction(sprite) {
   override fun execute() {
-    sprite!!.movingVector.x = speed * cos(sprite!!.angle)
-    sprite!!.movingVector.y = speed * sin(sprite!!.angle)
-  }
-
-  override fun toString(): String {
-    return "Установить скорость"
+    sprite.dx = speed * cos(sprite.angle)
+    sprite.dy = speed * sin(sprite.angle)
   }
 }

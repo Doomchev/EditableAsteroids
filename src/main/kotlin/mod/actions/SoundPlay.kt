@@ -2,32 +2,36 @@ package mod.actions
 
 import Sprite
 import SpriteAction
+import SpriteFactory
 import frame
-import soundOptions
+import mod.actions.sprite.currentImageArray
 import sounds
 import java.io.File
 import javax.sound.sampled.AudioSystem
 import javax.swing.JOptionPane
 
-class SoundPlay: SpriteAction() {
-  private val file: File? = null
-
-  override fun create(sprite: Sprite?): SpriteAction {
-    return SoundPlay()
+class SoundPlayFactory(var file: File? = null): SpriteFactory() {
+  override fun copy(): SpriteFactory {
+    return SoundPlayFactory(file)
   }
 
-  override fun settings() {
-    JOptionPane.showOptionDialog(frame, "Выберите звук:", "",
-      JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, soundOptions, soundOptions!![0])
+  override fun create(sprite: Sprite): SpriteAction {
+    return SoundPlay(sprite, selectSound())
   }
 
+  override fun toString(): String = "Проиграть звук"
+}
+
+class SoundPlay(sprite: Sprite, var file: File): SpriteAction(sprite) {
   override fun execute() {
-    val file = sounds[0]
     val audioInputStream = AudioSystem.getAudioInputStream(file.absoluteFile)
     val clip = AudioSystem.getClip()
     clip.open(audioInputStream)
     clip.start()
   }
+}
 
-  override fun toString(): String = "Проиграть звук"
+fun selectSound(): File {
+  val soundOptions = Array(sounds.size) {sounds[it]}
+  return soundOptions[JOptionPane.showOptionDialog(frame, "Выберите звук:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, soundOptions, soundOptions[0])]
 }

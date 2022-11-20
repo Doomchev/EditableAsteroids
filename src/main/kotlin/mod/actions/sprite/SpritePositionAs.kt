@@ -2,26 +2,25 @@ package mod.actions.sprite
 
 import Sprite
 import SpriteAction
+import SpriteFactory
 import mod.dragging.selectedSprites
+import nullSprite
 
-class SpritePositionAs: SpriteAction() {
-  var sprite2: Sprite? = null
-
-  override fun create(sprite: Sprite?): SpriteAction {
-    val action = SpritePositionAs()
-    action.sprite = sprite
-    action.sprite2 = sprite2
-    return action
+class SpritePositionAsFactory(private val asSprite: Sprite = nullSprite): SpriteFactory() {
+  override fun copy(): SpriteFactory {
+    return SpriteDirectAsFactory(selectedSprites.first)
   }
 
-  override fun settings() {
-    sprite2 = selectedSprites.first
-  }
-
-  override fun execute() {
-    sprite!!.centerX = sprite2!!.centerX
-    sprite!!.centerY = sprite2!!.centerY
+  override fun create(sprite: Sprite): SpriteAction {
+    return SpritePositionAs(sprite, asSprite)
   }
 
   override fun toString(): String = "Переместить к"
 }
+class SpritePositionAs(sprite: Sprite, private val asSprite: Sprite): SpriteAction(sprite) {
+  override fun execute() {
+    sprite.centerX = asSprite.centerX
+    sprite.centerY = asSprite.centerY
+  }
+}
+

@@ -3,11 +3,12 @@ import java.awt.Graphics2D
 import java.util.LinkedList
 
 val classes = LinkedList<SpriteClass>()
+val emptyClass = SpriteClass("")
 
 class SpriteClass(var name: String): SceneElement() {
   private val sprites = LinkedList<Sprite>()
-  val onCreate = LinkedList<SpriteAction>()
-  val always = LinkedList<SpriteAction>()
+  val onCreate = LinkedList<SpriteFactory>()
+  val always = LinkedList<SpriteFactory>()
   fun add(sprite: Sprite) {
     sprites.add(sprite)
   }

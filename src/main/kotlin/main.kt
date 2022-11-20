@@ -1,4 +1,4 @@
-import mod.actions.SoundPlay
+import mod.actions.SoundPlayFactory
 import mod.actions.cutImage
 import mod.actions.restoreCamera
 import mod.actions.showMenu
@@ -10,6 +10,8 @@ import mod.drawing.drawScene
 import java.awt.Color
 import java.awt.event.MouseEvent.BUTTON1
 import java.awt.event.MouseEvent.BUTTON3
+import java.awt.image.BufferedImage
+import java.awt.image.BufferedImage.TYPE_INT_RGB
 import java.io.File
 import java.util.*
 import javax.imageio.ImageIO
@@ -21,14 +23,13 @@ val showCollisionShapes = true
 
 val canvases = LinkedList<Canvas>()
 val imageArrays = LinkedList<ImageArray>()
-var blankImage: Image? = null
+var blankImage: Image = Image(BufferedImage(1, 1, TYPE_INT_RGB))
 
 val sounds = LinkedList<File>()
-var soundOptions: Array<File>? = null
 
 var currentCanvas: Canvas = Canvas(0, 0, 0, 0, 1.0)
-val windowHeight = 800
-val windowWidth = windowHeight * 9 / 16
+const val windowHeight = 800
+const val windowWidth = windowHeight * 9 / 16
 val frame = JFrame("Elasmotherium")
 
 val world = Canvas(0, 0, windowWidth, windowHeight - 100, 10.0)
@@ -81,7 +82,6 @@ fun main() {
     if(!soundFile.name.endsWith(".wav")) continue
     sounds.add(soundFile)
   }
-  soundOptions = Array(sounds.size) {sounds[it]}
 
   /// GUI
 
@@ -148,20 +148,39 @@ fun main() {
 
   val itemSetCenter = JMenuItem("Задать центр")
   itemSetCenter.addActionListener {
-    val x = enterDouble("Введите горизонтальное смещение (%):")
-    val y = enterDouble("Введите вертикальное смещение (%):")
+    val x = enterDouble("Введите горизонтальное смещение (%):").get()
+    val y = enterDouble("Введите вертикальное смещение (%):").get()
     currentImageArray!!.setCenter(x, y)
   }
   imageMenu.add(itemSetCenter)
 
   val itemSetVisArea = JMenuItem("Задать размер обл. вывода")
   itemSetVisArea.addActionListener {
-    val xk = enterDouble("Введите коэфф. к ширине:")
-    val yk = enterDouble("Введите коэфф. к высоте:")
+    val xk = enterDouble("Введите коэфф. к ширине:").get()
+    val yk = enterDouble("Введите коэфф. к высоте:").get()
     currentImageArray!!.setVisibleArea(xk, yk)
   }
   imageMenu.add(itemSetVisArea)
 
+  asteroids()
+
+  blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
+  imageArrays.addFirst(ImageArray(Array(1) {blankImage}))
+
+  frame.isVisible = true
+}
+
+fun snow() {
+  backgroundColor = Color.BLACK
+  val flake = addClass("Снежинка")
+
+  flake.onCreate.add(SpritePositionInAreaFactory(Sprite(0.0, -6.0, 10.0, 2.0)))
+  flake.onCreate.add(SpriteMoveFactory())
+
+  //actions.add(SpriteCreateFactory(flake, 0.1))
+}
+
+fun asteroids() {
   /// IMAGES
 
   val asteroidImage = imageArrays.first
@@ -182,30 +201,12 @@ fun main() {
   val player = Sprite(-3.0, -5.0, 1.5, 1.5)
   player.image = imageArrays[2].images[0]
 
-  val action1 = SpriteRotation()
-  action1.sprite = player
-  action1.speed = -1.5 * PI
-  Key(97).onPressActions.add(Pushable.ActionEntry(world, action1))
+  Key(97).onPressActions.add(Pushable.ActionEntry(world, SpriteRotation(player, -1.5 * PI)))
+  Key(100).onPressActions.add(Pushable.ActionEntry(world, SpriteRotation(player, 1.5 * PI)))
+  Key(119).onPressActions.add(Pushable.ActionEntry(world, SpriteAcceleration(player, 50.0, 10.0)))
 
-  val action2 = SpriteRotation()
-  action2.sprite = player
-  action2.speed = 1.5 * PI
-  Key(100).onPressActions.add(Pushable.ActionEntry(world, action2))
-
-  val action3 = SpriteAcceleration()
-  action3.sprite = player
-  action3.acceleration = 50.0
-  action3.limit = 10.0
-  Key(119).onPressActions.add(Pushable.ActionEntry(world, action3))
-
-  val action4 = SpriteMovement()
-  action4.sprite = player
-  actions.add(action4)
-
-  val action5 = SpriteAcceleration()
-  action5.sprite = player
-  action5.acceleration = -15.0
-  actions.add(action5)
+  actions.add(SpriteMove(player))
+  actions.add(SpriteAcceleration(player, -15.0, 100.0))
 
   /*val action12 = SpriteSetBounds()
   action12.sprite = player
@@ -214,42 +215,17 @@ fun main() {
 
   val bullet = addClass("Пуля")
 
-  val action6 = SpritePositionAs()
-  action6.sprite2 = player
-  bullet.onCreate.add(action6)
+  bullet.onCreate.add(SpritePositionAsFactory(player))
+  bullet.onCreate.add(SpriteDirectAsFactory(player))
+  bullet.onCreate.add(SpriteSetSizeFactory(DoubleValue(0.15), DoubleValue(0.15)))
+  bullet.onCreate.add(SpriteSetSpeedFactory(DoubleValue(15.0)))
+  bullet.always.add(SpriteMoveFactory())
+  bullet.always.add(SpriteAnimationFactory(imageArrays[1], DoubleValue(16.0)))
 
-  val action9 = SpriteSetSize()
-  action9.width = 0.15
-  action9.height = 0.15
-  bullet.onCreate.add(action9)
-
-  val action7 = SpriteDirectAs()
-  action7.sprite2 = player
-  bullet.onCreate.add(action7)
-
-  val action11 = SpriteSetSpeed()
-  action11.speed = 15.0
-  bullet.onCreate.add(action11)
-
-  bullet.always.add(SpriteMovement())
-
-  val action13 = SpriteAnimation()
-  action13.array = imageArrays[1]
-  action13.speed = 16.0
-  bullet.always.add(action13)
-
-  val action8 = SpriteCreate()
-  action8.spriteClass = bullet
-  action8.delay = 0.1
-  Key(32).onPressActions.add(Pushable.ActionEntry(world, action8))
+  Key(32).onPressActions.add(Pushable.ActionEntry(world, SpriteCreate(player, bullet, 0.1)))
 
   scene.add(player)
   scene.add(bullet)
-
-  blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
-  imageArrays.addFirst(ImageArray(Array(1) {blankImage!!}))
-
-  frame.isVisible = true
 }
 
 fun addClass(caption: String): SpriteClass {
@@ -282,7 +258,7 @@ fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
 }
 
 fun actionMenu(caption: String, spriteClass: SpriteClass?, event: MenuEvent): JMenu {
-  val actions = listOf(SpriteCreate(), SpritePositionAs(), SpriteSetSize(), SpriteRotation(), SpriteDirectAs(), SpriteMovement(), SpriteSetSpeed(), SpriteAcceleration(), SpriteSetImage(), SpriteAnimation(), SoundPlay(), SpriteSetBounds(), SpriteLoopArea())
+  val actions = listOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteRotationFactory(), SpriteDirectAsFactory(), SpriteMoveFactory(), SpriteSetSpeedFactory(), SpriteAccelerationFactory(), SpriteSetImageFactory(), SpriteAnimationFactory(), SoundPlayFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory())
 
   val menu = JMenu(caption)
   for(action in actions) {
