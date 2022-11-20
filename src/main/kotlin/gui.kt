@@ -3,7 +3,7 @@ package mod.dragging
 import Formula
 import Key
 import MenuEvent
-import SpriteAction
+import Sprite
 import SpriteClass
 import SpriteFactory
 import actions
@@ -12,6 +12,7 @@ import classes
 import currentCanvas
 import frame
 import listener
+import newActions
 import world
 import java.awt.Graphics
 import java.awt.Graphics2D
@@ -20,6 +21,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
+import java.util.LinkedList
 import javax.swing.*
 import kotlin.random.Random
 
@@ -30,6 +32,10 @@ class Window : JPanel() {
     for(action in actions) {
       action.execute()
     }
+    for(action in newActions) {
+      actions.add(action)
+    }
+    newActions.clear()
     for(cnv in canvases) {
       cnv.draw(g2d)
     }

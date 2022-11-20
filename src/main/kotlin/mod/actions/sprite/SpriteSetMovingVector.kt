@@ -22,7 +22,7 @@ class SpriteSetMovingVectorFactory(private val dx: Formula = zero, private val d
 
 class SpriteSetMovingVector(sprite: Sprite, private val dx: Double, private val dy: Double): SpriteAction(sprite) {
   override fun execute() {
-    sprite.centerX += fpsk * dx
-    sprite.centerY += fpsk * dy
+    sprite.dx += dx
+    sprite.dy += dy
   }
 }

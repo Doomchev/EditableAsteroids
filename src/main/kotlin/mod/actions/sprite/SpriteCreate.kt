@@ -12,6 +12,7 @@ import fpsk
 import frame
 import mod.dragging.enterDouble
 import mod.dragging.selectClass
+import newActions
 import zero
 import javax.swing.JOptionPane
 import kotlin.math.cos
@@ -41,7 +42,7 @@ class SpriteCreate(sprite: Sprite, private val spriteClass: SpriteClass, private
       factory.create(newSprite).execute()
     }
     for(action in spriteClass.always) {
-      actions.add(action.create(newSprite))
+      newActions.add(action.create(newSprite))
     }
   }
 }

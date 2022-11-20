@@ -39,6 +39,8 @@ var backgroundColor: Color = Color.white
 
 val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
 
+val newActions = LinkedList<Action>()
+
 fun main() {
   world.setZoom(zoom)
   world.update()
@@ -162,7 +164,7 @@ fun main() {
   }
   imageMenu.add(itemSetVisArea)
 
-  asteroids()
+  snow()
 
   blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
   imageArrays.addFirst(ImageArray(Array(1) {blankImage}))
@@ -174,10 +176,15 @@ fun snow() {
   backgroundColor = Color.BLACK
   val flake = addClass("Снежинка")
 
-  flake.onCreate.add(SpritePositionInAreaFactory(Sprite(0.0, -6.0, 10.0, 2.0)))
-  flake.onCreate.add(SpriteMoveFactory())
+  flake.onCreate.add(SpritePositionInAreaFactory(Sprite(0.0, -10.0, 10.0, 2.0)))
+  flake.onCreate.add(SpriteSetSizeFactory(DoubleValue(1.0), DoubleValue(1.0)))
+  flake.onCreate.add(SpriteSetImageFactory(imageArrays[3].images[0]))
+  flake.onCreate.add(SpriteSetMovingVectorFactory(zero, RandomDoubleValue(1.0, 5.0)))
+  flake.always.add(SpriteMoveFactory())
 
-  //actions.add(SpriteCreateFactory(flake, 0.1))
+  actions.add(SpriteCreate(Sprite(), flake, 0.1))
+
+  scene.add(flake)
 }
 
 fun asteroids() {
