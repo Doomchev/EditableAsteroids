@@ -56,7 +56,7 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
   fun update() {
     k = 1.0 * viewport.width / width
     height = 1.0 * viewport.height / k
-    vdx = 0.5 * viewport.width - centerX * k
+    vdx = 0.5 * viewport.width - centerX * k + viewport.leftX
     vdy = 0.5 * viewport.height - centerY * k + viewport.topY
   }
 

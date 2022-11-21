@@ -9,7 +9,7 @@ import kotlin.random.Random
 
 class SpritePositionInAreaFactory(private val area: Sprite = nullSprite): SpriteFactory() {
   override fun copy(): SpriteFactory {
-    return SpriteDirectAsFactory(selectedSprites.first)
+    return SpritePositionInAreaFactory(selectedSprites.first)
   }
 
   override fun create(sprite: Sprite): SpriteAction {

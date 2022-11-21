@@ -6,6 +6,7 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import fpsk
+import mod.dragging.RandomDoubleValue
 import mod.dragging.enterDouble
 import zero
 

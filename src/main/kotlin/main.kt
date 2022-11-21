@@ -8,8 +8,7 @@ import mod.drawing.drawDefaultCamera
 import mod.drawing.drawImages
 import mod.drawing.drawScene
 import java.awt.Color
-import java.awt.event.MouseEvent.BUTTON1
-import java.awt.event.MouseEvent.BUTTON3
+import java.awt.event.MouseEvent.*
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_INT_RGB
 import java.io.File
@@ -19,7 +18,8 @@ import javax.swing.*
 import javax.swing.Timer
 import kotlin.math.PI
 
-val showCollisionShapes = true
+var showCollisionShapes = false
+var showGrid = false
 
 val canvases = LinkedList<Canvas>()
 val imageArrays = LinkedList<ImageArray>()
@@ -59,7 +59,8 @@ fun main() {
   button2.add(world, createSprite)
   button2.addOnClick(world, showMenu(objectMenu, false))
 
-  Key(17).add(world, pan)
+  val panButton = MouseButton(BUTTON2)
+  panButton.add(world, pan)
   Key(127).addOnClick(world, deleteSprites)
 
   mouseWheelUp.addOnClick(world, zoomIn)
@@ -106,6 +107,13 @@ fun main() {
 
   fillEventMenu(objectMenu, null)
 
+  val itemCreate = JMenuItem("Создать элемент")
+  itemCreate.addActionListener {
+    actions.add(SpriteCreate(Sprite(), selectClass(), enterDouble(
+      "Введите интервал:").get()))
+  }
+  objectMenu.add(itemCreate)
+
   val itemToTop = JMenuItem("Наверх")
   itemToTop.addActionListener {
     for(sprite in selectedSprites) {
@@ -129,6 +137,12 @@ fun main() {
     backgroundColor = JColorChooser.showDialog(frame, "Выберите цвет фона:", backgroundColor)
   }
   objectMenu.add(itemSetBackground)
+
+  val classItem = JMenuItem("Создать класс")
+  classItem.addActionListener {
+    addClass(enterString("Введите название класса:"))
+  }
+  objectMenu.add(classItem)
 
   Key(99).addOnClick(world, restoreCamera())
 
@@ -168,6 +182,7 @@ fun main() {
 
   blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
   imageArrays.addFirst(ImageArray(Array(1) {blankImage}))
+  currentImageArray = imageArrays[0]
 
   frame.isVisible = true
 }
@@ -176,15 +191,15 @@ fun snow() {
   backgroundColor = Color.BLACK
   val flake = addClass("Снежинка")
 
-  flake.onCreate.add(SpritePositionInAreaFactory(Sprite(0.0, -10.0, 10.0, 2.0)))
-  flake.onCreate.add(SpriteSetSizeFactory(DoubleValue(1.0), DoubleValue(1.0)))
+  val area = Sprite(0.0, -10.0, 10.0, 2.0)
+  flake.onCreate.add(SpritePositionInAreaFactory(area))
+  flake.onCreate.add(SpriteSetSizeFactory(RandomDoubleValue(0.25, 1.0)))
   flake.onCreate.add(SpriteSetImageFactory(imageArrays[3].images[0]))
   flake.onCreate.add(SpriteSetMovingVectorFactory(zero, RandomDoubleValue(1.0, 5.0)))
   flake.always.add(SpriteMoveFactory())
 
+  scene.add(area)
   actions.add(SpriteCreate(Sprite(), flake, 0.1))
-
-  scene.add(flake)
 }
 
 fun asteroids() {
@@ -192,7 +207,6 @@ fun asteroids() {
 
   val asteroidImage = imageArrays.first
   cutImage(asteroidImage, 8, 4)
-  currentImageArray = asteroidImage
 
   val bulletImage = imageArrays[1]
   cutImage(bulletImage, 1, 16)
@@ -224,7 +238,7 @@ fun asteroids() {
 
   bullet.onCreate.add(SpritePositionAsFactory(player))
   bullet.onCreate.add(SpriteDirectAsFactory(player))
-  bullet.onCreate.add(SpriteSetSizeFactory(DoubleValue(0.15), DoubleValue(0.15)))
+  bullet.onCreate.add(SpriteSetSizeFactory(DoubleValue(0.15)))
   bullet.onCreate.add(SpriteSetSpeedFactory(DoubleValue(15.0)))
   bullet.always.add(SpriteMoveFactory())
   bullet.always.add(SpriteAnimationFactory(imageArrays[1], DoubleValue(16.0)))
@@ -242,6 +256,7 @@ fun addClass(caption: String): SpriteClass {
   objectMenu.add(classMenu)
   classMenu.add(actionMenu("При создании...", newClass, MenuEvent.onCreate))
   classMenu.add(actionMenu("Всегда...", newClass, MenuEvent.always))
+  scene.add(newClass)
   return newClass
 }
 
@@ -256,16 +271,10 @@ fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
   menu.add(actionMenu("При клике...", spriteClass, MenuEvent.onClick))
   menu.add(actionMenu("При нажатии...", spriteClass, MenuEvent.onPress))
   menu.add(actionMenu("Всегда...", spriteClass, MenuEvent.always))
-
-  val classItem = JMenuItem("Создать класс")
-  classItem.addActionListener {
-    addClass(enterString("Введите название класса:"))
-  }
-  objectMenu.add(classItem)
 }
 
 fun actionMenu(caption: String, spriteClass: SpriteClass?, event: MenuEvent): JMenu {
-  val actions = listOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteRotationFactory(), SpriteDirectAsFactory(), SpriteMoveFactory(), SpriteSetSpeedFactory(), SpriteAccelerationFactory(), SpriteSetImageFactory(), SpriteAnimationFactory(), SoundPlayFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory())
+  val actions = listOf(SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteRotationFactory(), SpriteDirectAsFactory(), SpriteMoveFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SpriteAccelerationFactory(), SpriteSetImageFactory(), SpriteAnimationFactory(), SoundPlayFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory())
 
   val menu = JMenu(caption)
   for(action in actions) {

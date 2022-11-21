@@ -11,9 +11,9 @@ object selectSprite: Action {
       return
     }
     selectedSprites.clear()
-    val shape = scene.spriteUnderCursor(mousefx, mousefy)
-    if(shape != null) {
-      selectedSprites.add(shape)
+    val sprite = scene.spriteUnderCursor(mousefx, mousefy)
+    if(sprite != null) {
+      selectedSprites.add(sprite)
     }
   }
 }

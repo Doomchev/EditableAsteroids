@@ -14,8 +14,8 @@ object selectImage: Action {
     val imageNum = floor(mousefx / fsize + 0.5 * imageArrays.size).toInt()
     if(imageNum < 0 || imageNum >= imageArrays.size) return
     currentImageArray = imageArrays[imageNum]
-    for(shape in selectedSprites) {
-      shape.image = currentImageArray!!.images[0]
+    for(sprite in selectedSprites) {
+      sprite.image = currentImageArray!!.images[0]
     }
   }
 }

@@ -5,13 +5,14 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import fpsk
+import mod.dragging.RandomDoubleValue
 import mod.dragging.enterDouble
 import zero
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class SpriteAccelerationFactory(val acceleration: Formula = zero, val limit: Formula = zero):
+class SpriteAccelerationFactory(private val acceleration: Formula = zero, private val limit: Formula = zero):
   SpriteFactory() {
   override fun copy(): SpriteFactory {
     return SpriteAccelerationFactory(
@@ -26,7 +27,7 @@ class SpriteAccelerationFactory(val acceleration: Formula = zero, val limit: For
   override fun toString(): String = "Ускорять"
 }
 
-class SpriteAcceleration(sprite: Sprite, val acceleration: Double, val limit: Double): SpriteAction(sprite) {
+class SpriteAcceleration(sprite: Sprite, private val acceleration: Double, private val limit: Double): SpriteAction(sprite) {
   override fun execute() {
     var newLength = vectorLength(sprite.dx, sprite.dy) + acceleration * fpsk
     if(newLength < 0) newLength = 0.0

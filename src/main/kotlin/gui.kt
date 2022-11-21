@@ -3,7 +3,6 @@ package mod.dragging
 import Formula
 import Key
 import MenuEvent
-import Sprite
 import SpriteClass
 import SpriteFactory
 import actions
@@ -21,7 +20,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
-import java.util.LinkedList
 import javax.swing.*
 import kotlin.random.Random
 

@@ -19,10 +19,6 @@ object pan: DraggingAction {
   }
 
   override fun dragged() {
-    currentCanvas.centerX = startingCanvasX
-    currentCanvas.centerY = startingCanvasY
-    currentCanvas.update()
-
     currentCanvas.centerX = startingCanvasX + startingX - mousefx
     currentCanvas.centerY = startingCanvasY + startingY - mousefy
     currentCanvas.update()

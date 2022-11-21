@@ -11,7 +11,7 @@ import nullSprite
 
 class SpriteSetBoundsFactory(private val bounds: Sprite = nullSprite): SpriteFactory() {
   override fun copy(): SpriteFactory {
-    return SpriteLoopAreaFactory(selectedSprites.first)
+    return SpriteSetBoundsFactory(selectedSprites.first)
   }
 
   override fun create(sprite: Sprite): SpriteAction {

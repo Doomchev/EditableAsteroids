@@ -1,27 +1,12 @@
 import java.awt.EventQueue
-import java.awt.Graphics
-import java.awt.Graphics2D
-import java.awt.event.KeyEvent
-import java.awt.event.KeyListener
-import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
 import javax.swing.JFrame
-import javax.swing.JPanel
-
-class Window(obj: Element) : JPanel() {
-	var block: Block = obj.toBlock()
-
-	override fun paintComponent(g: Graphics2D) {
-		block.draw(g as Graphics2D, 0, 0)
-	}
-}
 
 fun createWindow(obj: Element) {
 	val frame = JFrame("Elasmotherium")
 	frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-	val panel = Window(obj)
-	panel.addKeyListener(Listener())
-	frame.add(panel)
+	//val panel = Window(obj)
+	//panel.addKeyListener(Listener())
+	//frame.add(panel)
 	frame.setSize(1600, 900)
 	frame.isVisible = true
 }
@@ -37,12 +22,12 @@ val menu = Container(
 	containerStyle,
 )
 
-val buttons = Container(
+/*val buttons = Container(
 	ContainerType.horizontalList,
 	HorizontalAlign.left,
 	VerticalAlign.center,
 	containerStyle,
-)
+)*/
 
 val tree = CanvasBlock(HorizontalAlign.center, VerticalAlign.justify, containerStyle)
 val canvas = CanvasBlock(HorizontalAlign.justify, VerticalAlign.justify, containerStyle)
@@ -63,7 +48,7 @@ fun gui() {
 			VerticalAlign.justify,
 			containerStyle,
 			menu,
-			buttons,
+			//buttons,
 			Container(
 				ContainerType.horizontalList,
 				HorizontalAlign.justify,

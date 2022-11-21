@@ -5,20 +5,15 @@ import Sprite
 import SpriteAction
 import SpriteClass
 import SpriteFactory
-import actions
-import classes
 import emptyClass
 import fpsk
-import frame
+import mod.dragging.RandomDoubleValue
 import mod.dragging.enterDouble
 import mod.dragging.selectClass
 import newActions
 import zero
-import javax.swing.JOptionPane
-import kotlin.math.cos
-import kotlin.math.sin
 
-class SpriteCreateFactory(val spriteClass: SpriteClass = emptyClass, private val delay: Formula = zero): SpriteFactory() {
+class SpriteCreateFactory(private val spriteClass: SpriteClass = emptyClass, private val delay: Formula = zero): SpriteFactory() {
   override fun copy(): SpriteFactory {
     return SpriteCreateFactory(selectClass(), enterDouble("Введите интервал (сек):"))
   }

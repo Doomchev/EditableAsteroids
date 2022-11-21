@@ -13,6 +13,8 @@ object grid: Drawing {
   var angleDivider = PI * 15 / 180
 
   override fun draw(g: Graphics2D) {
+    if(!showGrid) return
+
     g.color = Color.MAGENTA
 
     val viewport = currentCanvas.viewport

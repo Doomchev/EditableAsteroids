@@ -4,9 +4,9 @@ import Formula
 import Sprite
 import SpriteAction
 import SpriteFactory
+import mod.dragging.RandomDoubleValue
 import mod.dragging.enterDouble
 import zero
-import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -19,7 +19,7 @@ class SpriteSetSpeedFactory(private val speed: Formula = zero): SpriteFactory() 
     return SpriteSetSpeed(sprite, speed.get())
   }
 
-  override fun toString(): String = "Ускорять"
+  override fun toString(): String = "Задать скорость"
 }
 
 class SpriteSetSpeed(sprite: Sprite, val speed: Double): SpriteAction(sprite) {

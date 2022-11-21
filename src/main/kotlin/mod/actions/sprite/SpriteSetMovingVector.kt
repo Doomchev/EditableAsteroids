@@ -4,20 +4,21 @@ import Formula
 import Sprite
 import SpriteAction
 import SpriteFactory
-import fpsk
+import mod.dragging.RandomDoubleValue
 import mod.dragging.enterDouble
 import zero
 
 class SpriteSetMovingVectorFactory(private val dx: Formula = zero, private val dy: Formula = zero): SpriteFactory() {
   override fun copy(): SpriteFactory {
-    return SpriteSetMovingVectorFactory(enterDouble("Введите приращение по Х:"), enterDouble("Введите приращение по Y:"))
+    return SpriteSetMovingVectorFactory(enterDouble("Введите приращение по Х:"
+    ), enterDouble("Введите приращение по Y:"))
   }
 
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteSetMovingVector(sprite, dx.get(), dy.get())
   }
 
-  override fun toString(): String = "Перемещать"
+  override fun toString(): String = "Задать движение"
 }
 
 class SpriteSetMovingVector(sprite: Sprite, private val dx: Double, private val dy: Double): SpriteAction(sprite) {

@@ -4,29 +4,26 @@ import Formula
 import Sprite
 import SpriteAction
 import SpriteFactory
+import mod.dragging.RandomDoubleValue
 import mod.dragging.enterDouble
 import zero
-import kotlin.math.cos
-import kotlin.math.sin
 
-class SpriteSetSizeFactory(val width: Formula = zero, val height: Formula = zero):
-  SpriteFactory() {
+class SpriteSetSizeFactory(val size: Formula = zero): SpriteFactory() {
   override fun copy(): SpriteFactory {
-    return SpriteSetSizeFactory(
-      enterDouble("Введите ширину:")
-      , enterDouble("Введите высоту:"))
+    return SpriteSetSizeFactory(enterDouble("Введите ширину/высоту:"))
   }
 
   override fun create(sprite: Sprite): SpriteAction {
-    return SpriteSetSize(sprite, width.get(), height.get())
+    val value = size.get()
+    return SpriteSetSize(sprite, value)
   }
 
-  override fun toString(): String = "Ускорять"
+  override fun toString(): String = "Изменить размер"
 }
 
-class SpriteSetSize(sprite: Sprite, val width: Double, val height: Double): SpriteAction(sprite) {
+class SpriteSetSize(sprite: Sprite, val size: Double): SpriteAction(sprite) {
   override fun execute() {
-    sprite.width = width
-    sprite.height = height
+    sprite.width = size
+    sprite.height = size
   }
 }

@@ -5,8 +5,8 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import fpsk
+import mod.dragging.RandomDoubleValue
 import mod.dragging.enterDouble
-import mod.dragging.selectedSprites
 import zero
 import kotlin.math.PI
 
@@ -19,7 +19,7 @@ class SpriteRotationFactory(private val speed: Formula = zero): SpriteFactory() 
     return SpriteRotation(sprite, speed.get() * PI / 180.0)
   }
 
-  override fun toString(): String = "Повернуть как"
+  override fun toString(): String = "Повернуть"
 }
 
 class SpriteRotation(sprite: Sprite, private val speed: Double): SpriteAction(sprite) {
