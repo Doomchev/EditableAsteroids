@@ -19,7 +19,7 @@ import javax.swing.*
 import javax.swing.Timer
 import kotlin.math.PI
 
-var showCollisionShapes = false
+var showCollisionShapes = true
 var showGrid = false
 
 val canvases = LinkedList<Canvas>()
@@ -36,7 +36,7 @@ val frame = JFrame("Elasmotherium")
 val world = Canvas(0, 0, windowWidth, windowHeight - 100, 10.0)
 val objectMenu = JPopupMenu()
 val imageMenu = JPopupMenu()
-var backgroundColor: Color = Color.white
+var backgroundColor = Color(9, 44, 84)
 
 val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
 
@@ -185,7 +185,7 @@ fun main() {
   }
   imageMenu.add(itemSetVisArea)
 
-  tilemap()
+  asteroids()
 
   blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
   imageArrays.addFirst(ImageArray(Array(1) {blankImage}))
@@ -200,7 +200,6 @@ fun tilemap() {
 }
 
 fun snow() {
-  backgroundColor = Color.BLACK
   val flake = addClass("Снежинка")
 
   val area = Sprite(0.0, -10.0, 10.0, 2.0)

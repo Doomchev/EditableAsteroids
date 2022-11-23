@@ -8,14 +8,15 @@ import mousefy
 import snapAngle
 import xToScreen
 import yToScreen
+import java.awt.Color
 import java.awt.Graphics2D
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
 object rotateSprite: DraggingAction, Drawing {
-  val cursorSize = 8
-  val block = Sprite()
+  private const val cursorSize = 8
+  private val block = Sprite()
   var currentSprite: Sprite? = null
 
   override fun conditions(): Boolean {
@@ -36,7 +37,12 @@ object rotateSprite: DraggingAction, Drawing {
   override fun draw(g: Graphics2D) {
     if(selectedSprites.size != 1) return
     setBlock(selectedSprites.first)
-    g.drawOval(xToScreen(block.leftX), yToScreen(block.topY), cursorSize, cursorSize)
+    val xx = xToScreen(block.leftX)
+    val yy = yToScreen(block.topY)
+    g.color = Color.WHITE
+    g.fillOval(xx, yy, cursorSize, cursorSize)
+    g.color = Color.BLACK
+    g.drawOval(xx, yy, cursorSize, cursorSize)
   }
 
   private fun setBlock(sprite: Sprite) {

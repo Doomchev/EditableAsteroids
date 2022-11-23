@@ -9,6 +9,7 @@ import snapX
 import snapY
 import xToScreen
 import yToScreen
+import java.awt.Color
 import java.awt.Graphics2D
 import kotlin.math.abs
 
@@ -128,6 +129,9 @@ object resizeSprite: StartingPosition(), Drawing {
     for(block in blocks) {
       if(block.type == BlockType.nothing) continue
       g.fillRect(block.x, block.y, cursorSize, cursorSize)
+      g.color = Color.WHITE
+      g.drawRect(block.x, block.y, cursorSize, cursorSize)
+      g.color = Color.BLACK
     }
   }
 
