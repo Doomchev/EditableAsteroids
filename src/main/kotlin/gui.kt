@@ -3,6 +3,7 @@ package mod.dragging
 import Formula
 import Key
 import MenuEvent
+import Sprite
 import SpriteClass
 import SpriteFactory
 import actions
@@ -50,9 +51,7 @@ object updatePanel: ActionListener {
 }
 
 val childFrame: JFrame = JFrame("Key")
-class MenuListener(
-  private val spriteClass: SpriteClass?, private val event: MenuEvent
-  , private val factory: SpriteFactory): ActionListener {
+class MenuListener(private val spriteClass: SpriteClass?, private val event: MenuEvent, private val factory: SpriteFactory): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     if(event == MenuEvent.onPress || event == MenuEvent.onClick) {
       childFrame.setSize(200, 100)
@@ -81,15 +80,23 @@ class AnyKeyListener(
   override fun keyReleased(e: KeyEvent) {}
 }
 
-private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent
-                           , keyCode: Int, factory: SpriteFactory) {
+private fun applyToSprite(sprite: Sprite, event: MenuEvent, keyCode: Int, factory: SpriteFactory) {
+  when(event) {
+    MenuEvent.onCreate -> {}
+    MenuEvent.onClick -> Key(keyCode).addOnClick(world, factory.create(sprite))
+    MenuEvent.onPress -> Key(keyCode).addOnPress(world, factory.create(sprite))
+    MenuEvent.always -> actions.add(factory.create(sprite))
+  }
+}
+
+
+private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode: Int, factory: SpriteFactory) {
   if(spriteClass == null) {
-    for(sprite in selectedSprites) {
-      when(event) {
-        MenuEvent.onCreate -> {}
-        MenuEvent.onClick -> Key(keyCode).addOnClick(world, factory.create(sprite))
-        MenuEvent.onPress -> Key(keyCode).addOnPress(world, factory.create(sprite))
-        MenuEvent.always -> actions.add(factory.create(sprite))
+    if(selectedSprites.isEmpty()) {
+      applyToSprite(Sprite(), event, keyCode, factory.copy())
+    } else {
+      for(sprite in selectedSprites) {
+        applyToSprite(sprite, event, keyCode, factory)
       }
     }
   } else {
@@ -118,10 +125,16 @@ fun enterInt(message: String): Int {
 }
 
 fun enterDouble(message: String): Formula {
-  val string = enterString(message)
+  var string = enterString(message)
+  var dir = false
+  if(string.startsWith("+-")) {
+    string = string.substring(2)
+    dir = true
+  }
   if(string.contains("..")) {
     val parts = string.split("..")
-    return RandomDoubleValue(parts[0].toDouble(), parts[1].toDouble())
+    val formula = RandomDoubleValue(parts[0].toDouble(), parts[1].toDouble())
+    return if(dir) RandomDirection(formula) else formula
   }
   return DoubleValue(string.toDouble())
 }
@@ -136,6 +149,12 @@ class RandomDoubleValue(private val from: Double, private val size:Double): Form
   override fun get(): Double {
     return from + size * Random.nextDouble()
   }
+}
+
+class RandomDirection(private val formula: Formula) : Formula() {
+    override fun get(): Double {
+      return if(Random.nextBoolean()) -formula.get() else formula.get()
+    }
 }
 
 fun selectClass(): SpriteClass {

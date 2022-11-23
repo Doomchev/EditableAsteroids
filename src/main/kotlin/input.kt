@@ -3,6 +3,8 @@ import java.awt.event.*
 import java.util.*
 import kotlin.math.abs
 
+class ActionEntry(val canvas: Canvas, val action: Action)
+
 abstract class Pushable {
   init {
     buttons.add(this)
@@ -17,8 +19,6 @@ abstract class Pushable {
   fun add(canvas: Canvas, action: DraggingAction) {
     draggingActions.add(DraggingEntry(canvas, action))
   }
-
-  class ActionEntry(val canvas: Canvas, val action: Action)
 
   val onClickActions = LinkedList<ActionEntry>()
   fun addOnClick(canvas: Canvas, action: Action) {
@@ -77,7 +77,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     }
   }
 
-  private fun onClick(entries: LinkedList<Pushable.ActionEntry>) {
+  private fun onClick(entries: LinkedList<ActionEntry>) {
     for(entry in entries) {
       if(!entry.canvas.hasMouse()) continue
       currentCanvas = entry.canvas
@@ -134,7 +134,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     if(currentDraggingAction == null) {
       for(button in buttons) {
         if(!button.correspondsTo(e)) continue
-        onClick(button.onClickActions)
+        //onClick(button.onClickActions)
         break
       }
       return
@@ -172,7 +172,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     }
   }
 
-  val keysPressed = LinkedList<KeyEntry>()
+  private val keysPressed = LinkedList<KeyEntry>()
   class KeyEntry(val key: Pushable, val canvas: Canvas, var remove: Boolean = false)
 
   override fun keyPressed(e: KeyEvent) {

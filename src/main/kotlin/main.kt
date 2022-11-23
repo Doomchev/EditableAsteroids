@@ -19,7 +19,7 @@ import javax.swing.*
 import javax.swing.Timer
 import kotlin.math.PI
 
-var showCollisionShapes = true
+var showCollisionShapes = false
 var showGrid = false
 
 val canvases = LinkedList<Canvas>()
@@ -185,6 +185,18 @@ fun main() {
   }
   imageMenu.add(itemSetVisArea)
 
+  Key(103).onClickActions.add(ActionEntry(world, object: Action {
+    override fun execute() {
+      showGrid = !showGrid
+    }
+  }))
+
+  Key(99).onClickActions.add(ActionEntry(world, object: Action {
+    override fun execute() {
+      showCollisionShapes = !showCollisionShapes
+    }
+  }))
+
   asteroids()
 
   blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
@@ -235,9 +247,9 @@ fun asteroids() {
   player.image = imageArrays[2].images[0]
   players.add(player)
 
-  Key(97).onPressActions.add(Pushable.ActionEntry(world, SpriteRotation(player, -1.5 * PI)))
-  Key(100).onPressActions.add(Pushable.ActionEntry(world, SpriteRotation(player, 1.5 * PI)))
-  Key(119).onPressActions.add(Pushable.ActionEntry(world, SpriteAcceleration(player, 50.0, 10.0)))
+  Key(97).onPressActions.add(ActionEntry(world,SpriteRotation(player, -1.5 * PI)))
+  Key(100).onPressActions.add(ActionEntry(world,SpriteRotation(player, 1.5 * PI)))
+  Key(119).onPressActions.add(ActionEntry(world,SpriteAcceleration(player, 50.0, 10.0)))
 
   val bounds = Sprite(world.centerX, world.centerY, world.width + 2.0, world.height + 2.0)
   actions.add(SpriteAcceleration(player, -15.0, 100.0))
@@ -254,10 +266,21 @@ fun asteroids() {
   bullet.always.add(SpriteAnimationFactory(imageArrays[1], DoubleValue(16.0)))
   bullet.always.add(SpriteSetBoundsFactory(bounds))
 
-  Key(32).onPressActions.add(Pushable.ActionEntry(world, SpriteCreate(player, bullet, 0.1)))
+  Key(32).onPressActions.add(ActionEntry(world,SpriteCreate(player, bullet, 0.1)))
 
-  scene.add(player)
+  val asteroid = addClass("Астероид")
+  asteroid.onCreate.add(SpritePositionInAreaFactory(bounds))
+  asteroid.onCreate.add(SpriteSetSizeFactory(RandomDoubleValue(0.5, 2.0)))
+  asteroid.always.add(SpriteAnimationFactory(imageArrays[0], RandomDirection(RandomDoubleValue(12.0, 20.0))))
+  asteroid.always.add(SpriteRotationFactory(RandomDoubleValue(-180.0, 180.0)))
+  asteroid.always.add(SpriteLoopAreaFactory(bounds))
+
+  Key(98).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(), asteroid, 0.0)))
+
+  scene.add(bounds)
   scene.add(bullet)
+  scene.add(asteroid)
+  scene.add(player)
 }
 
 fun addClass(caption: String): SpriteClass {
@@ -285,7 +308,7 @@ fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
 }
 
 fun actionMenu(caption: String, spriteClass: SpriteClass?, event: MenuEvent): JMenu {
-  val actions = listOf(SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteRotationFactory(), SpriteDirectAsFactory(), SpriteMoveFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SpriteAccelerationFactory(), SpriteSetImageFactory(), SpriteAnimationFactory(), SoundPlayFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory())
+  val actions = listOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteRotationFactory(), SpriteDirectAsFactory(), SpriteMoveFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SpriteAccelerationFactory(), SpriteSetImageFactory(), SpriteAnimationFactory(), SoundPlayFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory())
 
   val menu = JMenu(caption)
   for(action in actions) {

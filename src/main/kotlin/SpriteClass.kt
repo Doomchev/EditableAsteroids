@@ -32,4 +32,6 @@ class SpriteClass(var name: String): SceneElement() {
       sprite.draw(g)
     }
   }
+
+  override fun toString(): String = name
 }
