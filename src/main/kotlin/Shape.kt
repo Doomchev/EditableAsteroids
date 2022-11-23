@@ -4,11 +4,14 @@ import java.awt.Color
 import java.awt.Graphics2D
 import java.util.*
 
-abstract class Shape: SceneElement() {
-  var centerX: Double = 0.0
-  var centerY: Double = 0.0
-  var halfWidth: Double = 0.0
-  var halfHeight: Double = 0.0
+abstract class Shape(var centerX: Double = 0.0, var centerY: Double = 0.0,  width: Double = 1.0, height: Double = 0.5): SceneElement() {
+  var halfWidth: Double
+  var halfHeight: Double
+
+  init {
+    halfWidth= 0.5 * width
+    halfHeight = 0.5 * height
+  }
 
   var width: Double
     inline get() = halfWidth * 2.0

@@ -4,7 +4,6 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import frame
-import mod.actions.sprite.currentImageArray
 import sounds
 import java.io.File
 import javax.sound.sampled.AudioSystem
@@ -12,11 +11,11 @@ import javax.swing.JOptionPane
 
 class SoundPlayFactory(var file: File? = null): SpriteFactory() {
   override fun copy(): SpriteFactory {
-    return SoundPlayFactory(file)
+    return SoundPlayFactory(selectSound())
   }
 
   override fun create(sprite: Sprite): SpriteAction {
-    return SoundPlay(sprite, selectSound())
+    return SoundPlay(sprite, file!!)
   }
 
   override fun toString(): String = "Проиграть звук"
@@ -32,6 +31,6 @@ class SoundPlay(sprite: Sprite, var file: File): SpriteAction(sprite) {
 }
 
 fun selectSound(): File {
-  val soundOptions = Array(sounds.size) {sounds[it]}
-  return soundOptions[JOptionPane.showOptionDialog(frame, "Выберите звук:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, soundOptions, soundOptions[0])]
+  val options = Array(sounds.size) {sounds[it]}
+  return options[JOptionPane.showOptionDialog(frame, "Выберите звук:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
 }

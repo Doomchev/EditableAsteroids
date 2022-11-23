@@ -230,20 +230,19 @@ fun asteroids() {
 
   /// SPRITES
 
+  val players = addClass("Игрок")
   val player = Sprite(-3.0, -5.0, 1.5, 1.5)
   player.image = imageArrays[2].images[0]
+  players.add(player)
 
   Key(97).onPressActions.add(Pushable.ActionEntry(world, SpriteRotation(player, -1.5 * PI)))
   Key(100).onPressActions.add(Pushable.ActionEntry(world, SpriteRotation(player, 1.5 * PI)))
   Key(119).onPressActions.add(Pushable.ActionEntry(world, SpriteAcceleration(player, 50.0, 10.0)))
 
-  actions.add(SpriteMove(player))
+  val bounds = Sprite(world.centerX, world.centerY, world.width + 2.0, world.height + 2.0)
   actions.add(SpriteAcceleration(player, -15.0, 100.0))
-
-  /*val action12 = SpriteSetBounds()
-  action12.sprite = player
-  action12.settings()
-  actions.add(action12)*/
+  actions.add(SpriteLoopArea(player, bounds))
+  actions.add(SpriteMove(player))
 
   val bullet = addClass("Пуля")
 
@@ -253,6 +252,7 @@ fun asteroids() {
   bullet.onCreate.add(SpriteSetSpeedFactory(DoubleValue(15.0)))
   bullet.always.add(SpriteMoveFactory())
   bullet.always.add(SpriteAnimationFactory(imageArrays[1], DoubleValue(16.0)))
+  bullet.always.add(SpriteSetBoundsFactory(bounds))
 
   Key(32).onPressActions.add(Pushable.ActionEntry(world, SpriteCreate(player, bullet, 0.1)))
 

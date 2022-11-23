@@ -10,18 +10,11 @@ var fpsk = 1.0 / fps
 
 val nullSprite = Sprite()
 
-open class Sprite(): Shape() {
+open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double = 1.0, height: Double = 1.0): Shape(centerX, centerY, width, height) {
   var angle: Double = 0.0
   var image: Image? = null
   var dx: Double = 0.0
   var dy: Double = 0.0
-
-  constructor(centerX: Double, centerY: Double, width: Double, height: Double) : this() {
-    this.centerX = centerX
-    this.centerY = centerY
-    this.width = width
-    this.height = height
-  }
 
   fun copy(): Sprite {
     val sprite = Sprite()

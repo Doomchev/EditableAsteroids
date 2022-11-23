@@ -9,7 +9,7 @@ import nullSprite
 
 class SpriteSetBoundsFactory(private val bounds: Sprite = nullSprite): SpriteFactory() {
   override fun copy(): SpriteFactory {
-    return SpriteSetBoundsFactory(selectedSprites.first)
+    return SpriteSetBoundsFactory(bounds)
   }
 
   override fun create(sprite: Sprite): SpriteAction {
@@ -21,7 +21,8 @@ class SpriteSetBoundsFactory(private val bounds: Sprite = nullSprite): SpriteFac
 
 class SpriteSetBounds(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAction(sprite) {
   override fun execute() {
-    if(sprite.rightX < bounds.leftX || sprite.leftX > bounds.rightX || sprite.bottomY < bounds.topY && sprite.topY > bounds.bottomY) return
-    scene.remove(sprite)
+    if(sprite.rightX < bounds.leftX || sprite.leftX > bounds.rightX || sprite.bottomY < bounds.topY || sprite.topY > bounds.bottomY) {
+      scene.remove(sprite)
+    }
   }
 }
