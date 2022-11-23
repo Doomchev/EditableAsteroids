@@ -26,7 +26,7 @@ object drawImages: Drawing {
         image.draw(g, sx, sy, swidth, swidth, 0.0, true)
       }
       if(currentImageArray == array) {
-        drawDashedRectangle(g, fx, fy, fsize, fsize)
+        drawDashedRectangle(g, fx, fy, fsize, fsize, 4f)
       }
       fx += fsize
     }

@@ -19,8 +19,8 @@ class SpriteClass(var name: String): SceneElement() {
     }
   }
 
-  override fun remove(sprite: Sprite) {
-    sprites.remove(sprite)
+  override fun remove(shape: Shape) {
+    sprites.remove(shape)
   }
 
   override fun spriteUnderCursor(fx: Double, fy: Double): Sprite? {

@@ -1,7 +1,7 @@
 package mod.dragging
 
+import Shape
 import Sprite
-import buttons
 import java.awt.Graphics2D
 import java.util.*
 
@@ -13,7 +13,7 @@ val selectedSprites = LinkedList<Sprite>()
 
 abstract class SceneElement: Drawing {
   abstract fun select(selection: Sprite, selected: LinkedList<Sprite>)
-  abstract fun remove(sprite: Sprite)
+  abstract fun remove(shape: Shape)
   abstract fun spriteUnderCursor(fx: Double, fy: Double): Sprite?
 }
 
@@ -39,14 +39,14 @@ object scene: SceneElement() {
     }
   }
 
-  override fun remove(sprite: Sprite) {
+  override fun remove(shape: Shape) {
     val it = elements.iterator()
     while(it.hasNext()) {
       val element = it.next()
-      if(sprite == element) {
+      if(shape == element) {
         it.remove()
       } else {
-        element.remove(sprite)
+        element.remove(shape)
       }
     }
   }

@@ -10,7 +10,7 @@ import kotlin.math.floor
 var currentImageArray:ImageArray? = null
 object selectImage: Action {
   override fun execute() {
-    var fsize = 1.0 / 1.2
+    val fsize = 1.0 / 1.2
     val imageNum = floor(mousefx / fsize + 0.5 * imageArrays.size).toInt()
     if(imageNum < 0 || imageNum >= imageArrays.size) return
     currentImageArray = imageArrays[imageNum]

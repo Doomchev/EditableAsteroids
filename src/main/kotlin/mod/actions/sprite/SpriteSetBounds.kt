@@ -3,8 +3,6 @@ package mod.actions.sprite
 import Sprite
 import SpriteAction
 import SpriteFactory
-import currentCanvas
-import mod.dragging.enterDouble
 import mod.dragging.scene
 import mod.dragging.selectedSprites
 import nullSprite
@@ -23,7 +21,7 @@ class SpriteSetBoundsFactory(private val bounds: Sprite = nullSprite): SpriteFac
 
 class SpriteSetBounds(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAction(sprite) {
   override fun execute() {
-    if(sprite.centerX >= bounds.leftX && sprite.centerX < bounds.rightX && sprite.centerY >= bounds.topY && sprite.centerY < bounds.bottomY) return
+    if(sprite.rightX < bounds.leftX || sprite.leftX > bounds.rightX || sprite.bottomY < bounds.topY && sprite.topY > bounds.bottomY) return
     scene.remove(sprite)
   }
 }

@@ -1,13 +1,11 @@
 package mod.dragging
 
 import Sprite
-import currentCanvas
 import mod.actions.sprite.currentImageArray
 import mousefx
 import mousefy
 import snapX
 import snapY
-import world
 
 object createSprite: createRectangle() {
   override fun pressed() {

@@ -1,8 +1,9 @@
 import mod.actions.SoundPlayFactory
-import mod.actions.cutImage
+import mod.actions.splitImage
 import mod.actions.restoreCamera
 import mod.actions.showMenu
 import mod.actions.sprite.*
+import mod.actions.tilemap.createTileMap
 import mod.dragging.*
 import mod.drawing.drawDefaultCamera
 import mod.drawing.drawImages
@@ -144,6 +145,12 @@ fun main() {
   }
   objectMenu.add(classItem)
 
+  val tileMapItem = JMenuItem("Создать карту")
+  tileMapItem.addActionListener {
+    scene.add(createTileMap())
+  }
+  objectMenu.add(tileMapItem)
+
   Key(99).addOnClick(world, restoreCamera())
 
   /// IMAGES GUI
@@ -158,7 +165,7 @@ fun main() {
   itemCutImage.addActionListener {
     val xquantity = enterInt("Введите кол-во изображений по горизонтали:")
     val yquantity = enterInt("Введите кол-во изображений по вертикали:")
-    cutImage(currentImageArray!!, xquantity, yquantity)
+    splitImage(currentImageArray!!, xquantity, yquantity)
   }
   imageMenu.add(itemCutImage)
 
@@ -178,13 +185,18 @@ fun main() {
   }
   imageMenu.add(itemSetVisArea)
 
-  snow()
+  tilemap()
 
   blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
   imageArrays.addFirst(ImageArray(Array(1) {blankImage}))
   currentImageArray = imageArrays[0]
 
   frame.isVisible = true
+}
+
+fun tilemap() {
+  splitImage(imageArrays[4], 5, 7)
+  scene.add(TileMap(10, 16, 1.0, 1.0, imageArrays[4]))
 }
 
 fun snow() {
@@ -206,10 +218,10 @@ fun asteroids() {
   /// IMAGES
 
   val asteroidImage = imageArrays.first
-  cutImage(asteroidImage, 8, 4)
+  splitImage(asteroidImage, 8, 4)
 
   val bulletImage = imageArrays[1]
-  cutImage(bulletImage, 1, 16)
+  splitImage(bulletImage, 1, 16)
   bulletImage.setCenter(43.0 / 48.0, 5.5 / 12.0)
   bulletImage.setVisibleArea(10.5, 3.0)
 

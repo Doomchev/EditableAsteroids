@@ -12,6 +12,10 @@ class Image(var texture: BufferedImage, var x: Int, var y: Int, var width: Int
   constructor(texture: BufferedImage) : this(texture, 0, 0, texture.width
     , texture.height)
 
+  fun draw(g: Graphics2D, sx: Int, sy: Int, swidth: Int, sheight: Int) {
+    g.drawImage(texture, sx, sy, sx + swidth, sy + sheight, x, y, x + width, y + height, null)
+  }
+
   fun draw(g: Graphics2D, sx: Int, sy: Int, swidth: Int, sheight: Int,
            angle: Double, icon: Boolean) {
     val oldTransform = g.transform
