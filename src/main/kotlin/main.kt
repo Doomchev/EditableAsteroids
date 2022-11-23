@@ -108,13 +108,6 @@ fun main() {
 
   fillEventMenu(objectMenu, null)
 
-  val itemCreate = JMenuItem("Создать элемент")
-  itemCreate.addActionListener {
-    actions.add(SpriteCreate(Sprite(), selectClass(), enterDouble(
-      "Введите интервал:").get()))
-  }
-  objectMenu.add(itemCreate)
-
   val itemToTop = JMenuItem("Наверх")
   itemToTop.addActionListener {
     for(sprite in selectedSprites) {
@@ -139,17 +132,27 @@ fun main() {
   }
   objectMenu.add(itemSetBackground)
 
-  val classItem = JMenuItem("Создать класс")
+  val createItem = JMenu("Создать")
+  objectMenu.add(createItem)
+
+  val classItem = JMenuItem("Класс")
   classItem.addActionListener {
     addClass(enterString("Введите название класса:"))
   }
-  objectMenu.add(classItem)
+  createItem.add(classItem)
 
-  val tileMapItem = JMenuItem("Создать карту")
+  val itemCreate = JMenuItem("Элемент")
+  itemCreate.addActionListener {
+    actions.add(SpriteCreate(Sprite(), selectClass(), enterDouble(
+      "Введите интервал:").get()))
+  }
+  createItem.add(itemCreate)
+
+  val tileMapItem = JMenuItem("Карту")
   tileMapItem.addActionListener {
     scene.add(createTileMap())
   }
-  objectMenu.add(tileMapItem)
+  createItem.add(tileMapItem)
 
   Key(99).addOnClick(world, restoreCamera())
 
@@ -197,11 +200,11 @@ fun main() {
     }
   }))
 
-  asteroids()
-
   blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
   imageArrays.addFirst(ImageArray(Array(1) {blankImage}))
   currentImageArray = imageArrays[0]
+
+  asteroids()
 
   frame.isVisible = true
 }
@@ -217,7 +220,7 @@ fun snow() {
   val area = Sprite(0.0, -10.0, 10.0, 2.0)
   flake.onCreate.add(SpritePositionInAreaFactory(area))
   flake.onCreate.add(SpriteSetSizeFactory(RandomDoubleValue(0.25, 1.0)))
-  flake.onCreate.add(SpriteSetImageFactory(imageArrays[3].images[0]))
+  flake.onCreate.add(SpriteSetImageFactory(imageArrays[4].images[0]))
   flake.onCreate.add(SpriteSetMovingVectorFactory(zero, RandomDoubleValue(1.0, 5.0)))
   flake.always.add(SpriteMoveFactory())
 
@@ -228,23 +231,23 @@ fun snow() {
 fun asteroids() {
   /// IMAGES
 
-  val asteroidImage = imageArrays.first
+  val asteroidImage = imageArrays[1]
   splitImage(asteroidImage, 8, 4)
 
-  val bulletImage = imageArrays[1]
+  val bulletImage = imageArrays[2]
   splitImage(bulletImage, 1, 16)
   bulletImage.setCenter(43.0 / 48.0, 5.5 / 12.0)
   bulletImage.setVisibleArea(10.5, 3.0)
 
-  val shipImage = imageArrays[2]
+  val shipImage = imageArrays[3]
   shipImage.setCenter(0.35, 0.5)
   shipImage.setVisibleArea(1.5, 1.5)
 
   /// SPRITES
 
   val players = addClass("Игрок")
-  val player = Sprite(-3.0, -5.0, 1.5, 1.5)
-  player.image = imageArrays[2].images[0]
+  val player = Sprite(-3.0, -5.0, 1.0, 1.0)
+  player.image = imageArrays[3].images[0]
   players.add(player)
 
   Key(97).onPressActions.add(ActionEntry(world,SpriteRotation(player, -1.5 * PI)))
@@ -263,7 +266,7 @@ fun asteroids() {
   bullet.onCreate.add(SpriteSetSizeFactory(DoubleValue(0.15)))
   bullet.onCreate.add(SpriteSetSpeedFactory(DoubleValue(15.0)))
   bullet.always.add(SpriteMoveFactory())
-  bullet.always.add(SpriteAnimationFactory(imageArrays[1], DoubleValue(16.0)))
+  bullet.always.add(SpriteAnimationFactory(imageArrays[2], DoubleValue(16.0)))
   bullet.always.add(SpriteSetBoundsFactory(bounds))
 
   Key(32).onPressActions.add(ActionEntry(world,SpriteCreate(player, bullet, 0.1)))
@@ -271,7 +274,8 @@ fun asteroids() {
   val asteroid = addClass("Астероид")
   asteroid.onCreate.add(SpritePositionInAreaFactory(bounds))
   asteroid.onCreate.add(SpriteSetSizeFactory(RandomDoubleValue(0.5, 2.0)))
-  asteroid.always.add(SpriteAnimationFactory(imageArrays[0], RandomDirection(RandomDoubleValue(12.0, 20.0))))
+  asteroid.onCreate.add(SpriteSetSpeedFactory(DoubleValue(15.0)))
+  asteroid.always.add(SpriteAnimationFactory(imageArrays[1], RandomDirection(RandomDoubleValue(12.0, 20.0))))
   asteroid.always.add(SpriteRotationFactory(RandomDoubleValue(-180.0, 180.0)))
   asteroid.always.add(SpriteLoopAreaFactory(bounds))
 
@@ -288,8 +292,8 @@ fun addClass(caption: String): SpriteClass {
   classes.add(newClass)
   val classMenu = JMenu(caption)
   objectMenu.add(classMenu)
-  classMenu.add(actionMenu("При создании...", newClass, MenuEvent.onCreate))
-  classMenu.add(actionMenu("Всегда...", newClass, MenuEvent.always))
+  classMenu.add(actionMenu("При создании...", newClass, MenuEvent.onCreate, true))
+  classMenu.add(actionMenu("Всегда...", newClass, MenuEvent.always, false))
   scene.add(newClass)
   return newClass
 }
@@ -302,13 +306,16 @@ enum class MenuEvent {
 }
 
 fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
-  menu.add(actionMenu("При клике...", spriteClass, MenuEvent.onClick))
-  menu.add(actionMenu("При нажатии...", spriteClass, MenuEvent.onPress))
-  menu.add(actionMenu("Всегда...", spriteClass, MenuEvent.always))
+  menu.add(actionMenu("При клике...", spriteClass, MenuEvent.onClick, true))
+  menu.add(actionMenu("При нажатии...", spriteClass, MenuEvent.onPress, false))
+  menu.add(actionMenu("Всегда...", spriteClass, MenuEvent.always, true))
 }
 
-fun actionMenu(caption: String, spriteClass: SpriteClass?, event: MenuEvent): JMenu {
-  val actions = listOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteRotationFactory(), SpriteDirectAsFactory(), SpriteMoveFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SpriteAccelerationFactory(), SpriteSetImageFactory(), SpriteAnimationFactory(), SoundPlayFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory())
+fun actionMenu(caption: String, spriteClass: SpriteClass?, event: MenuEvent, discrete: Boolean): JMenu {
+  val actions = if(discrete)
+    listOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteDirectAsFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SoundPlayFactory(), SpriteSetImageFactory())
+  else
+    listOf(SpriteRotationFactory(), SpriteMoveFactory(), SpriteAccelerationFactory(), SpriteAnimationFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory())
 
   val menu = JMenu(caption)
   for(action in actions) {
