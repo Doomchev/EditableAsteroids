@@ -5,6 +5,7 @@ import mod.actions.showMenu
 import mod.actions.sprite.*
 import mod.actions.tilemap.createTileMap
 import mod.dragging.*
+import mod.drawing.drawBlocks
 import mod.drawing.drawDefaultCamera
 import mod.drawing.drawImages
 import mod.drawing.drawScene
@@ -29,17 +30,19 @@ var blankImage: Image = Image(BufferedImage(1, 1, TYPE_INT_RGB))
 
 val sounds = LinkedList<File>()
 
-var currentCanvas: Canvas = Canvas(0, 0, 0, 0, 1.0)
 const val windowHeight = 800
 const val windowWidth = windowHeight * 9 / 16
 val frame = JFrame("Elasmotherium")
 
-val world = Canvas(0, 0, windowWidth, windowHeight - 100, 10.0)
+val world = Canvas(0, 0, windowWidth, windowHeight - 100, 10.0, false)
+var currentCanvas: Canvas = world
 val objectMenu = JPopupMenu()
 val imageMenu = JPopupMenu()
 var backgroundColor = Color(9, 44, 84)
 
-val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
+val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0, false)
+
+val properties = Canvas(0, 0, windowWidth, windowHeight, 1.0, true)
 
 val newActions = LinkedList<Action>()
 
@@ -210,6 +213,9 @@ fun main() {
   blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
   imageArrays.addFirst(ImageArray(Array(1) {blankImage}))
   currentImageArray = imageArrays[0]
+
+  properties.add(drawBlocks)
+  canvases.add(properties)
 
   asteroids()
 

@@ -6,7 +6,7 @@ import java.awt.Graphics2D
 import java.util.*
 import kotlin.math.pow
 
-class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
+class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double, var active: Boolean)
   : Sprite(0.0, 0.0, fwidth.toDouble() / scale, fheight.toDouble() / scale) {
   var vdx: Double = 1.0
   var vdy: Double = 1.0
@@ -34,12 +34,13 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double)
     update()
   }
 
-  val drawingModules = LinkedList<Drawing>()
+  private val drawingModules = LinkedList<Drawing>()
   fun add(obj: Drawing) {
     drawingModules.add(obj)
   }
 
   override fun draw(g: Graphics2D) {
+    if(!active) return
     val oldCanvas = currentCanvas
     currentCanvas = this
     update()

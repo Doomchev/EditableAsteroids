@@ -43,13 +43,3 @@ fun showActions(message: String, button: Pushable, actions: LinkedList<ActionEnt
 fun addBlock(string: String) {
   blocks.add(Block(string))
 }
-
-fun drawBlocks(g: Graphics2D) {
-  g.color = Color.white
-  var y = 16
-  for(block in blocks) {
-    g.drawString(block.message, 0, y)
-    y += 16
-  }
-  g.color = Color.black
-}
