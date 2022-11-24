@@ -19,11 +19,13 @@ class SpriteRotationFactory(private val speed: Formula = zero): SpriteFactory() 
     return SpriteRotation(sprite, speed.get() * PI / 180.0)
   }
 
-  override fun toString(): String = "Повернуть"
+  override fun toString(): String = "Повернуть со скоростью $speed"
 }
 
 class SpriteRotation(sprite: Sprite, private val speed: Double): SpriteAction(sprite) {
   override fun execute() {
     sprite.angle += fpsk * speed
   }
+
+  override fun toString(): String = "Повернуть со скоростью $speed"
 }

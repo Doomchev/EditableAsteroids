@@ -23,4 +23,6 @@ class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
     sprite.centerX += fpsk * sprite.dx
     sprite.centerY += fpsk * sprite.dy
   }
+
+  override fun toString(): String = "Перемещать"
 }

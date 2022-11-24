@@ -19,7 +19,7 @@ class SpriteAnimationFactory(private val array: ImageArray? = null, private val 
     return SpriteAnimation(sprite, array!!, speed.get())
   }
 
-  override fun toString(): String = "Анимировать"
+  override fun toString(): String = "Анимировать со скоростью $speed"
 }
 
 class SpriteAnimation(sprite: Sprite, private val array: ImageArray, private val speed: Double): SpriteAction(sprite) {
@@ -33,4 +33,6 @@ class SpriteAnimation(sprite: Sprite, private val array: ImageArray, private val
     }
     sprite.image = images[frame.toInt() % images.size]
   }
+
+  override fun toString(): String = "Анимировать со скоростью $speed"
 }

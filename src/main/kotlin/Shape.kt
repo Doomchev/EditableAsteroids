@@ -56,6 +56,10 @@ abstract class Shape(var centerX: Double = 0.0, var centerY: Double = 0.0,  widt
   fun drawSelection(g: Graphics2D) {
     drawDashedRectangle(g, leftX, topY, width, height, 4f)
   }
+
+  override fun toString(): String {
+    return "$centerX, $centerY, $width x $height"
+  }
 }
 
 fun drawDashedRectangle(g: Graphics2D, fx: Double, fy: Double

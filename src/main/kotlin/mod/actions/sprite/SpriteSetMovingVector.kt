@@ -18,7 +18,7 @@ class SpriteSetMovingVectorFactory(private val dx: Formula = zero, private val d
     return SpriteSetMovingVector(sprite, dx.get(), dy.get())
   }
 
-  override fun toString(): String = "Задать движение"
+  override fun toString(): String = "Задать движение ($dx, $dy)"
 }
 
 class SpriteSetMovingVector(sprite: Sprite, private val dx: Double, private val dy: Double): SpriteAction(sprite) {
@@ -26,4 +26,6 @@ class SpriteSetMovingVector(sprite: Sprite, private val dx: Double, private val 
     sprite.dx += dx
     sprite.dy += dy
   }
+
+  override fun toString(): String = "Задать движение ($dx, $dy)"
 }

@@ -24,7 +24,7 @@ class SpriteAccelerationFactory(private val acceleration: Formula = zero, privat
     return SpriteAcceleration(sprite, acceleration.get(), limit.get())
   }
 
-  override fun toString(): String = "Ускорять"
+  override fun toString(): String = "Ускорять на $acceleration до $limit"
 }
 
 class SpriteAcceleration(sprite: Sprite, private val acceleration: Double, private val limit: Double): SpriteAction(sprite) {
@@ -35,6 +35,8 @@ class SpriteAcceleration(sprite: Sprite, private val acceleration: Double, priva
     sprite.dx = newLength * cos(sprite.angle)
     sprite.dy = newLength * sin(sprite.angle)
   }
+
+  override fun toString(): String = "Ускорять на $acceleration до $limit"
 }
 
 private fun vectorLength(dx: Double, dy: Double): Double {

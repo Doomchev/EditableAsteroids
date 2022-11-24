@@ -9,6 +9,7 @@ import mod.drawing.drawDefaultCamera
 import mod.drawing.drawImages
 import mod.drawing.drawScene
 import java.awt.Color
+import java.awt.Graphics2D
 import java.awt.event.MouseEvent.*
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_INT_RGB
@@ -132,7 +133,7 @@ fun main() {
   }
   objectMenu.add(itemSetBackground)
 
-  val createItem = JMenu("Создать")
+  val createItem = JMenu("Создать...")
   objectMenu.add(createItem)
 
   val classItem = JMenuItem("Класс")
@@ -154,7 +155,7 @@ fun main() {
   }
   createItem.add(tileMapItem)
 
-  Key(99).addOnClick(world, restoreCamera())
+  Key(118).addOnClick(world, restoreCamera())
 
   /// IMAGES GUI
 
@@ -206,8 +207,11 @@ fun main() {
 
   asteroids()
 
+  showActions()
+
   frame.isVisible = true
 }
+
 
 fun tilemap() {
   splitImage(imageArrays[4], 5, 7)
@@ -247,7 +251,7 @@ fun asteroids() {
 
   val players = addClass("Игрок")
   val player = Sprite(-3.0, -5.0, 1.0, 1.0)
-  player.image = imageArrays[3].images[0]
+  player.image = imageArrays[4].images[0]
   players.add(player)
 
   Key(97).onPressActions.add(ActionEntry(world,SpriteRotation(player, -1.5 * PI)))
@@ -293,6 +297,7 @@ fun addClass(caption: String): SpriteClass {
   val classMenu = JMenu(caption)
   objectMenu.add(classMenu)
   classMenu.add(actionMenu("При создании...", newClass, MenuEvent.onCreate, true))
+  classMenu.add(actionMenu("При столкновении...", newClass, MenuEvent.onCollision, true))
   classMenu.add(actionMenu("Всегда...", newClass, MenuEvent.always, false))
   scene.add(newClass)
   return newClass
@@ -302,18 +307,19 @@ enum class MenuEvent {
   onClick,
   onPress,
   always,
+  onCollision,
   onCreate
 }
 
 fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
   menu.add(actionMenu("При клике...", spriteClass, MenuEvent.onClick, true))
   menu.add(actionMenu("При нажатии...", spriteClass, MenuEvent.onPress, false))
-  menu.add(actionMenu("Всегда...", spriteClass, MenuEvent.always, true))
+  menu.add(actionMenu("Всегда...", spriteClass, MenuEvent.always, false))
 }
 
 fun actionMenu(caption: String, spriteClass: SpriteClass?, event: MenuEvent, discrete: Boolean): JMenu {
   val actions = if(discrete)
-    listOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteDirectAsFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SoundPlayFactory(), SpriteSetImageFactory())
+    listOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteDirectAsFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SoundPlayFactory(), SpriteSetImageFactory(), SpriteRemoveFactory())
   else
     listOf(SpriteRotationFactory(), SpriteMoveFactory(), SpriteAccelerationFactory(), SpriteAnimationFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory())
 

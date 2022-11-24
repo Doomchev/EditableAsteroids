@@ -18,7 +18,7 @@ class SpriteSetSizeFactory(val size: Formula = zero): SpriteFactory() {
     return SpriteSetSize(sprite, value)
   }
 
-  override fun toString(): String = "Изменить размер"
+  override fun toString(): String = "Изменить размер на $size"
 }
 
 class SpriteSetSize(sprite: Sprite, val size: Double): SpriteAction(sprite) {
@@ -26,4 +26,6 @@ class SpriteSetSize(sprite: Sprite, val size: Double): SpriteAction(sprite) {
     sprite.width = size
     sprite.height = size
   }
+
+  override fun toString(): String = "Изменить размер на $size"
 }

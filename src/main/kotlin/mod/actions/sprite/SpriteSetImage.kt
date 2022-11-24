@@ -28,4 +28,6 @@ class SpriteSetImage(sprite: Sprite, val image: Image): SpriteAction(sprite) {
   override fun execute() {
     sprite.image = image
   }
+
+  override fun toString(): String = "Установить изображение"
 }

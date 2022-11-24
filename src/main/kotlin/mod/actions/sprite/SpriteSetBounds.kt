@@ -16,7 +16,7 @@ class SpriteSetBoundsFactory(private val bounds: Sprite = nullSprite): SpriteFac
     return SpriteSetBounds(sprite, bounds)
   }
 
-  override fun toString(): String = "Установить границы"
+  override fun toString(): String = "Установить границы $bounds"
 }
 
 class SpriteSetBounds(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAction(sprite) {
@@ -25,4 +25,6 @@ class SpriteSetBounds(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAc
       scene.remove(sprite)
     }
   }
+
+  override fun toString(): String = "Установить границы $bounds"
 }

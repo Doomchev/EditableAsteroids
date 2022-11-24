@@ -22,7 +22,7 @@ class SpriteCreateFactory(private val spriteClass: SpriteClass = emptyClass, pri
     return SpriteCreate(sprite, spriteClass, delay.get())
   }
 
-  override fun toString(): String = "Создать"
+  override fun toString(): String = "Создать $spriteClass через $delay"
 }
 
 class SpriteCreate(sprite: Sprite, private val spriteClass: SpriteClass, private val delay: Double): SpriteAction(sprite) {
@@ -40,4 +40,6 @@ class SpriteCreate(sprite: Sprite, private val spriteClass: SpriteClass, private
       newActions.add(action.create(newSprite))
     }
   }
+
+  override fun toString(): String = "Создать $spriteClass через $delay"
 }

@@ -18,7 +18,7 @@ class SpriteSetSpeedFactory(private val speed: Formula = zero): SpriteFactory() 
     return SpriteSetSpeed(sprite, speed.get())
   }
 
-  override fun toString(): String = "Задать скорость"
+  override fun toString(): String = "Задать скорость $speed"
 }
 
 class SpriteSetSpeed(sprite: Sprite, private val speed: Double): SpriteAction(sprite) {
@@ -26,4 +26,6 @@ class SpriteSetSpeed(sprite: Sprite, private val speed: Double): SpriteAction(sp
     sprite.dx = speed * cos(sprite.angle)
     sprite.dy = speed * sin(sprite.angle)
   }
+
+  override fun toString(): String = "Задать скорость $speed"
 }

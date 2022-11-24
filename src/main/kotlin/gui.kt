@@ -60,6 +60,8 @@ class MenuListener(private val spriteClass: SpriteClass?, private val event: Men
       childFrame.add(Label("Нажмите клавишу для действия"))
       childFrame.pack()
       childFrame.isVisible = true
+    } else if(event == MenuEvent.onCollision) {
+
     } else {
       menuItemAction(spriteClass, event, 0, factory)
     }
@@ -85,10 +87,10 @@ private fun applyToSprite(sprite: Sprite, event: MenuEvent, keyCode: Int, factor
     MenuEvent.onCreate -> {}
     MenuEvent.onClick -> Key(keyCode).addOnClick(world, factory.create(sprite))
     MenuEvent.onPress -> Key(keyCode).addOnPress(world, factory.create(sprite))
+    MenuEvent.onCollision -> {}
     MenuEvent.always -> actions.add(factory.create(sprite))
   }
 }
-
 
 private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode: Int, factory: SpriteFactory) {
   if(spriteClass == null) {
@@ -96,7 +98,7 @@ private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode:
       applyToSprite(Sprite(), event, keyCode, factory.copy())
     } else {
       for(sprite in selectedSprites) {
-        applyToSprite(sprite, event, keyCode, factory)
+        applyToSprite(sprite, event, keyCode, factory.copy())
       }
     }
   } else {
@@ -104,6 +106,7 @@ private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode:
       MenuEvent.onCreate -> spriteClass.onCreate.add(factory.copy())
       MenuEvent.onClick -> {}
       MenuEvent.onPress -> {}
+      MenuEvent.onCollision -> {}
       MenuEvent.always -> spriteClass.always.add(factory.copy())
     }
   }
@@ -143,11 +146,19 @@ class DoubleValue(private val value: Double): Formula() {
   override fun get(): Double {
     return value
   }
+
+  override fun toString(): String {
+    return "$value"
+  }
 }
 
 class RandomDoubleValue(private val from: Double, private val size:Double): Formula() {
   override fun get(): Double {
     return from + size * Random.nextDouble()
+  }
+
+  override fun toString(): String {
+    return "$from..$size"
   }
 }
 
@@ -155,6 +166,10 @@ class RandomDirection(private val formula: Formula) : Formula() {
     override fun get(): Double {
       return if(Random.nextBoolean()) -formula.get() else formula.get()
     }
+
+  override fun toString(): String {
+    return "+-$formula"
+  }
 }
 
 fun selectClass(): SpriteClass {

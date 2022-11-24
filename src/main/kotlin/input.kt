@@ -3,7 +3,11 @@ import java.awt.event.*
 import java.util.*
 import kotlin.math.abs
 
-class ActionEntry(val canvas: Canvas, val action: Action)
+class ActionEntry(val canvas: Canvas, val action: Action) {
+  override fun toString(): String {
+    return action.toString()
+  }
+}
 
 abstract class Pushable {
   init {
@@ -15,6 +19,7 @@ abstract class Pushable {
   open fun correspondsTo(e: KeyEvent): Boolean = false
 
   class DraggingEntry(val canvas: Canvas, val action: DraggingAction)
+
   val draggingActions = LinkedList<DraggingEntry>()
   fun add(canvas: Canvas, action: DraggingAction) {
     draggingActions.add(DraggingEntry(canvas, action))
@@ -36,11 +41,19 @@ class Key(private var code: Int): Pushable() {
   override fun correspondsTo(e: KeyEvent): Boolean {
     return e.keyChar.code == code || e.keyCode == code
   }
+
+  override fun toString(): String {
+    return "$code"
+  }
 }
 
 class MouseButton(private var button: Int): Pushable() {
   override fun correspondsTo(e: MouseEvent): Boolean {
     return e.button == button
+  }
+
+  override fun toString(): String {
+    return "кнопку мыши $button"
   }
 }
 
@@ -48,11 +61,19 @@ object mouseWheelUp: Pushable() {
   override fun correspondsTo(e: MouseWheelEvent): Boolean {
     return e.wheelRotation < 0
   }
+
+  override fun toString(): String {
+    return "колесо вверх"
+  }
 }
 
 object mouseWheelDown: Pushable() {
   override fun correspondsTo(e: MouseWheelEvent): Boolean {
     return e.wheelRotation > 0
+  }
+
+  override fun toString(): String {
+    return "колесо вниз"
   }
 }
 

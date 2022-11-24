@@ -15,12 +15,14 @@ class SpritePositionAsFactory(private val asSprite: Sprite = nullSprite): Sprite
     return SpritePositionAs(sprite, asSprite)
   }
 
-  override fun toString(): String = "Переместить к"
+  override fun toString(): String = "Переместить к $asSprite"
 }
 class SpritePositionAs(sprite: Sprite, private val asSprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
     sprite.centerX = asSprite.centerX
     sprite.centerY = asSprite.centerY
   }
+
+  override fun toString(): String = "Переместить к $asSprite"
 }
 

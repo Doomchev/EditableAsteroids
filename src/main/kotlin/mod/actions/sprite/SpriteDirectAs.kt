@@ -15,10 +15,12 @@ class SpriteDirectAsFactory(private val asSprite: Sprite = nullSprite): SpriteFa
     return SpriteDirectAs(sprite, asSprite)
   }
 
-  override fun toString(): String = "Повернуть как"
+  override fun toString(): String = "Повернуть как $asSprite"
 }
 class SpriteDirectAs(sprite: Sprite, private val asSprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
     sprite.angle = asSprite.angle
   }
+
+  override fun toString(): String = "Повернуть как $asSprite"
 }
