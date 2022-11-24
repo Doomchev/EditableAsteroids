@@ -9,6 +9,7 @@ class Block(var message: String) {
 val blocks = LinkedList<Block>()
 fun showActions() {
   for(button in buttons) {
+    if(button.project != user) continue
     showActions("При клике на ", button, button.onClickActions)
     showActions("При нажатой ", button, button.onPressActions)
   }

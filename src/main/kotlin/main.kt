@@ -43,30 +43,36 @@ val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0)
 
 val newActions = LinkedList<Action>()
 
+class Project()
+
+val user = Project()
+
 fun main() {
+  val ide = Project()
+
   world.setZoom(zoom)
   world.update()
   world.setDefaultPosition()
   canvases.add(world)
   currentCanvas = world
 
-  val button1 = MouseButton(BUTTON1)
+  val button1 = MouseButton(BUTTON1, ide)
   button1.add(world, resizeSprite)
   button1.add(world, rotateSprite)
   button1.add(world, moveSprites)
   button1.add(world, selectSprites)
   button1.addOnClick(world, selectSprite)
 
-  val button2 = MouseButton(BUTTON3)
+  val button2 = MouseButton(BUTTON3, ide)
   button2.add(world, createSprite)
   button2.addOnClick(world, showMenu(objectMenu, false))
 
-  val panButton = MouseButton(BUTTON2)
+  val panButton = MouseButton(BUTTON2, ide)
   panButton.add(world, pan)
-  Key(127).addOnClick(world, deleteSprites)
+  Key(127, ide).addOnClick(world, deleteSprites)
 
-  mouseWheelUp.addOnClick(world, zoomIn)
-  mouseWheelDown.addOnClick(world, zoomOut)
+  mouseWheelUp(ide).addOnClick(world, zoomIn)
+  mouseWheelDown(ide).addOnClick(world, zoomOut)
 
   world.add(grid)
   world.add(drawScene)
@@ -155,7 +161,7 @@ fun main() {
   }
   createItem.add(tileMapItem)
 
-  Key(118).addOnClick(world, restoreCamera())
+  Key(118, ide).addOnClick(world, restoreCamera())
 
   /// IMAGES GUI
 
@@ -189,13 +195,13 @@ fun main() {
   }
   imageMenu.add(itemSetVisArea)
 
-  Key(103).onClickActions.add(ActionEntry(world, object: Action {
+  Key(103, ide).onClickActions.add(ActionEntry(world, object: Action {
     override fun execute() {
       showGrid = !showGrid
     }
   }))
 
-  Key(99).onClickActions.add(ActionEntry(world, object: Action {
+  Key(99, ide).onClickActions.add(ActionEntry(world, object: Action {
     override fun execute() {
       showCollisionShapes = !showCollisionShapes
     }
@@ -254,9 +260,9 @@ fun asteroids() {
   player.image = imageArrays[4].images[0]
   players.add(player)
 
-  Key(97).onPressActions.add(ActionEntry(world,SpriteRotation(player, -1.5 * PI)))
-  Key(100).onPressActions.add(ActionEntry(world,SpriteRotation(player, 1.5 * PI)))
-  Key(119).onPressActions.add(ActionEntry(world,SpriteAcceleration(player, 50.0, 10.0)))
+  Key(97, user).onPressActions.add(ActionEntry(world,SpriteRotation(player, -1.5 * PI)))
+  Key(100, user).onPressActions.add(ActionEntry(world,SpriteRotation(player, 1.5 * PI)))
+  Key(119, user).onPressActions.add(ActionEntry(world,SpriteAcceleration(player, 50.0, 10.0)))
 
   val bounds = Sprite(world.centerX, world.centerY, world.width + 2.0, world.height + 2.0)
   actions.add(SpriteAcceleration(player, -15.0, 100.0))
@@ -273,7 +279,7 @@ fun asteroids() {
   bullet.always.add(SpriteAnimationFactory(imageArrays[2], DoubleValue(16.0)))
   bullet.always.add(SpriteSetBoundsFactory(bounds))
 
-  Key(32).onPressActions.add(ActionEntry(world,SpriteCreate(player, bullet, 0.1)))
+  Key(32, user).onPressActions.add(ActionEntry(world,SpriteCreate(player, bullet, 0.1)))
 
   val asteroid = addClass("Астероид")
   asteroid.onCreate.add(SpritePositionInAreaFactory(bounds))
@@ -283,7 +289,7 @@ fun asteroids() {
   asteroid.always.add(SpriteRotationFactory(RandomDoubleValue(-180.0, 180.0)))
   asteroid.always.add(SpriteLoopAreaFactory(bounds))
 
-  Key(98).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(), asteroid, 0.0)))
+  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(), asteroid, 0.0)))
 
   scene.add(bounds)
   scene.add(bullet)

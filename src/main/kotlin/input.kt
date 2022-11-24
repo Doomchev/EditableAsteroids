@@ -9,7 +9,7 @@ class ActionEntry(val canvas: Canvas, val action: Action) {
   }
 }
 
-abstract class Pushable {
+abstract class Pushable(val project: Project) {
   init {
     buttons.add(this)
   }
@@ -37,7 +37,7 @@ abstract class Pushable {
 }
 
 val buttons = LinkedList<Pushable>()
-class Key(private var code: Int): Pushable() {
+class Key(private var code: Int, project: Project): Pushable(project) {
   override fun correspondsTo(e: KeyEvent): Boolean {
     return e.keyChar.code == code || e.keyCode == code
   }
@@ -47,7 +47,7 @@ class Key(private var code: Int): Pushable() {
   }
 }
 
-class MouseButton(private var button: Int): Pushable() {
+class MouseButton(private var button: Int, project: Project): Pushable(project) {
   override fun correspondsTo(e: MouseEvent): Boolean {
     return e.button == button
   }
@@ -57,7 +57,7 @@ class MouseButton(private var button: Int): Pushable() {
   }
 }
 
-object mouseWheelUp: Pushable() {
+class mouseWheelUp(project: Project): Pushable(project) {
   override fun correspondsTo(e: MouseWheelEvent): Boolean {
     return e.wheelRotation < 0
   }
@@ -67,7 +67,7 @@ object mouseWheelUp: Pushable() {
   }
 }
 
-object mouseWheelDown: Pushable() {
+class mouseWheelDown(project: Project): Pushable(project) {
   override fun correspondsTo(e: MouseWheelEvent): Boolean {
     return e.wheelRotation > 0
   }

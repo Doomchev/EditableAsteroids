@@ -13,6 +13,7 @@ import currentCanvas
 import frame
 import listener
 import newActions
+import user
 import world
 import java.awt.Graphics
 import java.awt.Graphics2D
@@ -85,8 +86,8 @@ class AnyKeyListener(
 private fun applyToSprite(sprite: Sprite, event: MenuEvent, keyCode: Int, factory: SpriteFactory) {
   when(event) {
     MenuEvent.onCreate -> {}
-    MenuEvent.onClick -> Key(keyCode).addOnClick(world, factory.create(sprite))
-    MenuEvent.onPress -> Key(keyCode).addOnPress(world, factory.create(sprite))
+    MenuEvent.onClick -> Key(keyCode, user).addOnClick(world, factory.create(sprite))
+    MenuEvent.onPress -> Key(keyCode, user).addOnPress(world, factory.create(sprite))
     MenuEvent.onCollision -> {}
     MenuEvent.always -> actions.add(factory.create(sprite))
   }
