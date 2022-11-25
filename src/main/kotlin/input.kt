@@ -43,7 +43,7 @@ class Key(private var code: Int, project: Project): Pushable(project) {
   }
 
   override fun toString(): String {
-    return "$code"
+    return "клавишу ${Char(code)} ($code)"
   }
 }
 

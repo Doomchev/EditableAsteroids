@@ -12,6 +12,8 @@ import classes
 import currentCanvas
 import frame
 import listener
+import mod.actions.SoundPlayFactory
+import mod.actions.sprite.*
 import newActions
 import user
 import world
@@ -22,6 +24,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
+import java.util.LinkedList
 import javax.swing.*
 import kotlin.random.Random
 
@@ -174,6 +177,20 @@ class RandomDirection(private val formula: Formula) : Formula() {
 }
 
 fun selectClass(): SpriteClass {
-  val classesArray = Array<SpriteClass>(classes.size) {classes[it]}
+  val classesArray = Array(classes.size) {classes[it]}
   return classesArray[JOptionPane.showOptionDialog(frame, "Выберите класс:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, classesArray, classes.first)]
+}
+
+val discreteActions = arrayOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteDirectAsFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SoundPlayFactory(), SpriteSetImageFactory(), SpriteRemoveFactory())
+val continuousActions = arrayOf(SpriteRotationFactory(), SpriteMoveFactory(), SpriteAccelerationFactory(), SpriteAnimationFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory())
+
+fun selectFactory(discrete: Boolean): SpriteFactory {
+  val factoriesArray = if(discrete) discreteActions else continuousActions
+  return factoriesArray[JOptionPane.showOptionDialog(frame, "Выберите действие:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, factoriesArray, factoriesArray[0])]
+}
+
+val spritesList = LinkedList<Sprite>()
+fun selectSprite(): Sprite {
+  val options = Array(spritesList.size) { spritesList[it] }
+  return options[JOptionPane.showOptionDialog(frame, "Выберите действие:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
 }

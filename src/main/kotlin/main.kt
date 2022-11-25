@@ -1,16 +1,11 @@
-import mod.actions.SoundPlayFactory
 import mod.actions.splitImage
 import mod.actions.restoreCamera
 import mod.actions.showMenu
 import mod.actions.sprite.*
 import mod.actions.tilemap.createTileMap
 import mod.dragging.*
-import mod.drawing.drawBlocks
-import mod.drawing.drawDefaultCamera
-import mod.drawing.drawImages
-import mod.drawing.drawScene
+import mod.drawing.*
 import java.awt.Color
-import java.awt.Graphics2D
 import java.awt.event.MouseEvent.*
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_INT_RGB
@@ -38,6 +33,7 @@ val world = Canvas(0, 0, windowWidth, windowHeight - 100, 10.0, false)
 var currentCanvas: Canvas = world
 val objectMenu = JPopupMenu()
 val imageMenu = JPopupMenu()
+val actionMenu = JPopupMenu()
 var backgroundColor = Color(9, 44, 84)
 
 val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0, false)
@@ -48,10 +44,10 @@ val newActions = LinkedList<Action>()
 
 class Project()
 
+val ide = Project()
 val user = Project()
 
 fun main() {
-  val ide = Project()
 
   world.setZoom(zoom)
   world.update()
@@ -115,8 +111,6 @@ fun main() {
   frame.contentPane = panel
 
   /// SCENE OBJECTS GUI
-
-  fillEventMenu(objectMenu, null)
 
   val itemToTop = JMenuItem("Наверх")
   itemToTop.addActionListener {
@@ -214,12 +208,34 @@ fun main() {
   imageArrays.addFirst(ImageArray(Array(1) {blankImage}))
   currentImageArray = imageArrays[0]
 
+  // PROPERTIES GUI
+
   properties.add(drawBlocks)
   canvases.add(properties)
+  button2.addOnClick(properties, showMenu(actionMenu, false))
+
+  val addProperty = JMenuItem("Добавить действие")
+  addProperty.addActionListener {
+    selectedBlock!!.addElement()
+  }
+  actionMenu.add(addProperty)
+
+  val removeProperty = JMenuItem("Удалить")
+  removeProperty.addActionListener {
+    selectedBlock!!.removeElement()
+  }
+  actionMenu.add(removeProperty)
+
+  val addEvent = JMenuItem("Добавить событие")
+  addEvent.addActionListener {
+    //selectedBlock!!.addEvent()
+  }
+  actionMenu.add(addEvent)
+
+  // SCENE
 
   asteroids()
-
-  showActions()
+  updateActions()
 
   frame.isVisible = true
 }
@@ -233,7 +249,7 @@ fun tilemap() {
 fun snow() {
   val flake = addClass("Снежинка")
 
-  val area = Sprite(0.0, -10.0, 10.0, 2.0)
+  val area = Sprite(0.0, -10.0, 10.0, 2.0, "snow gen")
   flake.onCreate.add(SpritePositionInAreaFactory(area))
   flake.onCreate.add(SpriteSetSizeFactory(RandomDoubleValue(0.25, 1.0)))
   flake.onCreate.add(SpriteSetImageFactory(imageArrays[4].images[0]))
@@ -261,16 +277,14 @@ fun asteroids() {
 
   /// SPRITES
 
-  val players = addClass("Игрок")
-  val player = Sprite(-3.0, -5.0, 1.0, 1.0)
+  val player = Sprite(-3.0, -5.0, 1.0, 1.0, "игрок")
   player.image = imageArrays[4].images[0]
-  players.add(player)
 
   Key(97, user).onPressActions.add(ActionEntry(world,SpriteRotation(player, -1.5 * PI)))
   Key(100, user).onPressActions.add(ActionEntry(world,SpriteRotation(player, 1.5 * PI)))
   Key(119, user).onPressActions.add(ActionEntry(world,SpriteAcceleration(player, 50.0, 10.0)))
 
-  val bounds = Sprite(world.centerX, world.centerY, world.width + 2.0, world.height + 2.0)
+  val bounds = Sprite(world.centerX, world.centerY, world.width + 2.0, world.height + 2.0, "границы поля")
   actions.add(SpriteAcceleration(player, -15.0, 100.0))
   actions.add(SpriteLoopArea(player, bounds))
   actions.add(SpriteMove(player))
@@ -285,7 +299,7 @@ fun asteroids() {
   bullet.always.add(SpriteAnimationFactory(imageArrays[2], DoubleValue(16.0)))
   bullet.always.add(SpriteSetBoundsFactory(bounds))
 
-  Key(32, user).onPressActions.add(ActionEntry(world,SpriteCreate(player, bullet, 0.1)))
+  Key(32, user).onPressActions.add(ActionEntry(world, SpriteCreate(player, bullet, 0.1)))
 
   val asteroid = addClass("Астероид")
   asteroid.onCreate.add(SpritePositionInAreaFactory(bounds))
@@ -306,12 +320,6 @@ fun asteroids() {
 fun addClass(caption: String): SpriteClass {
   val newClass = SpriteClass(caption)
   classes.add(newClass)
-  val classMenu = JMenu(caption)
-  objectMenu.add(classMenu)
-  classMenu.add(actionMenu("При создании...", newClass, MenuEvent.onCreate, true))
-  classMenu.add(actionMenu("При столкновении...", newClass, MenuEvent.onCollision, true))
-  classMenu.add(actionMenu("Всегда...", newClass, MenuEvent.always, false))
-  scene.add(newClass)
   return newClass
 }
 
@@ -321,24 +329,4 @@ enum class MenuEvent {
   always,
   onCollision,
   onCreate
-}
-
-fun fillEventMenu(menu: JPopupMenu, spriteClass: SpriteClass?) {
-  menu.add(actionMenu("При клике...", spriteClass, MenuEvent.onClick, true))
-  menu.add(actionMenu("При нажатии...", spriteClass, MenuEvent.onPress, false))
-  menu.add(actionMenu("Всегда...", spriteClass, MenuEvent.always, false))
-}
-
-fun actionMenu(caption: String, spriteClass: SpriteClass?, event: MenuEvent, discrete: Boolean): JMenu {
-  val actions = if(discrete)
-    listOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteDirectAsFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SoundPlayFactory(), SpriteSetImageFactory(), SpriteRemoveFactory())
-  else
-    listOf(SpriteRotationFactory(), SpriteMoveFactory(), SpriteAccelerationFactory(), SpriteAnimationFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory())
-
-  val menu = JMenu(caption)
-  for(action in actions) {
-    addMenuItem(menu, MenuListener(spriteClass, event, action))
-  }
-
-  return menu
 }

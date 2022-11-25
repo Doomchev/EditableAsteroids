@@ -27,5 +27,5 @@ class SpriteSetSpeed(sprite: Sprite, private val speed: Double): SpriteAction(sp
     sprite.dy = speed * sin(sprite.angle)
   }
 
-  override fun toString(): String = "Задать скорость $speed"
+  override fun toString(): String = "Задать $sprite скорость $speed"
 }

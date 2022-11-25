@@ -36,7 +36,7 @@ class SpriteAcceleration(sprite: Sprite, private val acceleration: Double, priva
     sprite.dy = newLength * sin(sprite.angle)
   }
 
-  override fun toString(): String = "Ускорять на $acceleration до $limit"
+  override fun toString(): String = "Ускорять $sprite на $acceleration до $limit"
 }
 
 private fun vectorLength(dx: Double, dy: Double): Double {

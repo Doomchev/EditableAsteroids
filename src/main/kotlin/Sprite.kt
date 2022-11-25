@@ -1,3 +1,4 @@
+import mod.dragging.spritesList
 import java.awt.BasicStroke
 import java.awt.Graphics2D
 import java.util.*
@@ -10,11 +11,15 @@ var fpsk = 1.0 / fps
 
 val nullSprite = Sprite()
 
-open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double = 1.0, height: Double = 1.0): Shape(centerX, centerY, width, height) {
+open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double = 1.0, height: Double = 1.0, var name:String = ""): Shape(centerX, centerY, width, height) {
   var angle: Double = 0.0
   var image: Image? = null
   var dx: Double = 0.0
   var dy: Double = 0.0
+
+  init {
+    if(!name.isEmpty()) spritesList.add(this)
+  }
 
   fun copy(): Sprite {
     val sprite = Sprite()
@@ -48,6 +53,10 @@ open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double =
   fun move() {
     centerX += fpsk * dx
     centerY += fpsk * dy
+  }
+
+  override fun toString(): String {
+    return if(name.isEmpty()) super.toString() else name
   }
 }
 
