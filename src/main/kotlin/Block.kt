@@ -55,6 +55,29 @@ class ActionBlock(var entry: ActionEntry, var entries: LinkedList<ActionEntry>, 
   }
 }
 
+class AlwaysBlock(message: String) : Block(message) {
+  override fun addElement() {
+    actions.addFirst(selectFactory(false).copy().create(selectSprite()))
+    updateActions()
+  }
+
+  override fun removeElement() {
+    actions.clear()
+    updateActions()
+  }
+}
+
+class AlwaysAction(val action: Action, message: String) : Block(message) {
+  override fun addElement() {
+    actions.add(actions.indexOf(action) + 1, selectFactory(false).copy().create(selectSprite()))
+    updateActions()
+  }
+
+  override fun removeElement() {
+    actions.remove(action)
+    updateActions()
+  }
+}
 val blocks = LinkedList<Block>()
 fun updateActions() {
   blocks.clear()
@@ -68,10 +91,10 @@ fun updateActions() {
     showClassActions(spriteClass, spriteClass.always, false, "Всегда для ")
   }
 
-  /*blocks.add(AlwaysBlock("Всегда"))
+  blocks.add(AlwaysBlock("Всегда"))
   for(action in actions) {
-    blocks.add(ActionBlock(ActionEntry(user, action), actions, "  $action"))
-  }*/
+    blocks.add(AlwaysAction(action, "  $action"))
+  }
 }
 
 fun showClassActions(spriteClass: SpriteClass, factories: LinkedList<SpriteFactory>, discrete: Boolean, message: String) {

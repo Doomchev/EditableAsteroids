@@ -8,9 +8,10 @@ import mousesy
 import javax.swing.JMenu
 import javax.swing.JPopupMenu
 
-class showMenu(private val menu: JPopupMenu, private val forShape: Boolean): Action {
+class showMenu(private val menu: JPopupMenu):
+  Action {
   override fun conditions(): Boolean {
-    return (!forShape || !selectedSprites.isEmpty()) && !menu.isVisible
+    return true
   }
 
   override fun execute() {
@@ -18,6 +19,6 @@ class showMenu(private val menu: JPopupMenu, private val forShape: Boolean): Act
   }
 
   override fun toString(): String {
-    return "$menu $forShape"
+    return "$menu"
   }
 }

@@ -65,7 +65,7 @@ fun main() {
 
   val button2 = MouseButton(BUTTON3, ide)
   button2.add(world, createSprite)
-  button2.addOnClick(world, showMenu(objectMenu, false))
+  button2.addOnClick(world, showMenu(objectMenu))
 
   val panButton = MouseButton(BUTTON2, ide)
   panButton.add(world, pan)
@@ -159,14 +159,6 @@ fun main() {
   }
   createItem.add(tileMapItem)
 
-  Key(96, ide).addOnClick(world, object: Action {
-    override fun execute() {
-      world.toggle()
-      assets.toggle()
-      properties.toggle()
-    }
-  })
-
   Key(118, ide).addOnClick(world, restoreCamera())
 
   Key(103, ide).addOnClick(world, object: Action {
@@ -175,11 +167,11 @@ fun main() {
     }
   })
 
-  Key(99, ide).onClickActions.add(ActionEntry(world, object: Action {
+  Key(99, ide).addOnClick(world, object: Action {
     override fun execute() {
       showCollisionShapes = !showCollisionShapes
     }
-  }))
+  })
 
   /// IMAGES GUI
 
@@ -187,7 +179,7 @@ fun main() {
 
   assets.add(drawImages)
   button1.addOnClick(assets, selectImage)
-  button2.addOnClick(assets, showMenu(imageMenu, false))
+  button2.addOnClick(assets, showMenu(imageMenu))
 
   val itemCutImage = JMenuItem("Разрезать")
   itemCutImage.addActionListener {
@@ -221,7 +213,7 @@ fun main() {
 
   properties.add(drawBlocks)
   canvases.add(properties)
-  button2.addOnClick(properties, showMenu(actionMenu, false))
+  button2.addOnClick(properties, showMenu(actionMenu))
 
   val addProperty = JMenuItem("Добавить действие")
   addProperty.addActionListener {

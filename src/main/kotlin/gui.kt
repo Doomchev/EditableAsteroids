@@ -14,6 +14,8 @@ import frame
 import listener
 import mod.actions.SoundPlayFactory
 import mod.actions.sprite.*
+import mousesx
+import mousesy
 import newActions
 import updateActions
 import user
@@ -84,8 +86,6 @@ class MenuListener(private val forClass: Boolean, private val event: MenuEvent, 
       menuItemAction(spriteClass, event, 0, factory)
     }
   }
-
-  //override fun toString(): String = factory.toString()
 }
 
 class AnyKeyListener(private val spriteClass: SpriteClass?, private val event: MenuEvent, private val factory: SpriteFactory): KeyListener {
@@ -127,13 +127,6 @@ private fun applyToSprite(sprite: Sprite, event: MenuEvent, keyCode: Int, factor
     MenuEvent.onCollision -> {}
     MenuEvent.always -> actions.add(factory.create(sprite))
   }
-}
-
-fun addMenuItem(caption: String, parent: JMenu, listener: ActionListener): JMenuItem {
-  val item = JMenuItem(caption)
-  item.addActionListener(listener)
-  parent.add(item)
-  return item
 }
 
 fun enterString(message: String): String {

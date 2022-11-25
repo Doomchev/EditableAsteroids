@@ -2,7 +2,12 @@ import mod.dragging.SceneElement
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
+import java.text.DecimalFormat
 import java.util.*
+
+
+private var dformat = DecimalFormat("#.####")
+fun format(value: Double): String = dformat.format(value)
 
 abstract class Shape(var centerX: Double = 0.0, var centerY: Double = 0.0,  width: Double = 1.0, height: Double = 0.5): SceneElement() {
   var halfWidth: Double
@@ -58,7 +63,7 @@ abstract class Shape(var centerX: Double = 0.0, var centerY: Double = 0.0,  widt
   }
 
   override fun toString(): String {
-    return "$centerX, $centerY, $width x $height"
+    return "${format(centerX)}, ${format(centerY)}, ${format(width)} x ${format(height)}"
   }
 }
 

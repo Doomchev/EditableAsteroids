@@ -4,8 +4,8 @@ import Formula
 import Sprite
 import SpriteAction
 import SpriteFactory
+import format
 import fpsk
-import mod.dragging.RandomDoubleValue
 import mod.dragging.enterDouble
 import zero
 import kotlin.math.PI
@@ -27,5 +27,5 @@ class SpriteRotation(sprite: Sprite, private val speed: Double): SpriteAction(sp
     sprite.angle += fpsk * speed
   }
 
-  override fun toString(): String = "Повернуть $sprite со скоростью $speed"
+  override fun toString(): String = "Повернуть $sprite со скоростью ${format(speed)}"
 }

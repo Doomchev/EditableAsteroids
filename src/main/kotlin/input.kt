@@ -3,12 +3,6 @@ import java.awt.event.*
 import java.util.*
 import kotlin.math.abs
 
-class ActionEntry(val canvas: Canvas, val action: Action) {
-  override fun toString(): String {
-    return action.toString()
-  }
-}
-
 abstract class Pushable(val project: Project) {
   init {
     buttons.add(this)
@@ -100,7 +94,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
 
   private fun onClick(entries: LinkedList<ActionEntry>) {
     for(entry in entries) {
-      if(!entry.canvas.hasMouse()) continue
+      if(!entry.canvas.active || !entry.canvas.hasMouse()) continue
       currentCanvas = entry.canvas
       if(!entry.action.conditions()) continue
       entry.action.execute()
@@ -187,6 +181,13 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   }
 
   override fun keyTyped(e: KeyEvent) {
+    if(e.keyChar.code == 96) {
+      world.toggle()
+      assets.toggle()
+      properties.toggle()
+      return
+    }
+
     for(key in buttons) {
       if(!key.correspondsTo(e)) continue
       onClick(key.onClickActions)
