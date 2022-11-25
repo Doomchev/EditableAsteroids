@@ -43,7 +43,7 @@ class ButtonBlock(var entries: LinkedList<ActionEntry>, message: String, private
   }
 }
 
-class ActionBlock(var entry: ActionEntry, var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
+class ActionEntryBlock(var entry: ActionEntry, var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
     entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectFactory(discrete).copy().create(selectSprite())))
     updateActions()
@@ -67,7 +67,7 @@ class AlwaysBlock(message: String) : Block(message) {
   }
 }
 
-class AlwaysAction(val action: Action, message: String) : Block(message) {
+class ActionBlock(val action: Action, message: String) : Block(message) {
   override fun addElement() {
     actions.add(actions.indexOf(action) + 1, selectFactory(false).copy().create(selectSprite()))
     updateActions()
@@ -78,6 +78,7 @@ class AlwaysAction(val action: Action, message: String) : Block(message) {
     updateActions()
   }
 }
+
 val blocks = LinkedList<Block>()
 fun updateActions() {
   blocks.clear()
@@ -93,7 +94,7 @@ fun updateActions() {
 
   blocks.add(AlwaysBlock("Всегда"))
   for(action in actions) {
-    blocks.add(AlwaysAction(action, "  $action"))
+    blocks.add(ActionBlock(action, "  $action"))
   }
 }
 
@@ -109,6 +110,6 @@ fun showButtonActions(button: Pushable, actions: LinkedList<ActionEntry>, discre
   if(actions.isEmpty()) return
   blocks.add(ButtonBlock(actions, "$message$button:", discrete))
   for(entry in actions) {
-    blocks.add(ActionBlock(entry, actions,"  $entry", discrete))
+    blocks.add(ActionEntryBlock(entry, actions,"  $entry", discrete))
   }
 }

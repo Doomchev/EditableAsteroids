@@ -40,7 +40,7 @@ fun asteroids() {
   /// SPRITES
 
   val player = Sprite(-3.0, -5.0, 1.0, 1.0, "игрок")
-  player.image = imageArrays[4].images[0]
+  player.image = imageArrays[3].images[0]
 
   Key(97, user).onPressActions.add(ActionEntry(world,
     SpriteRotation(player, -1.5 * PI)
