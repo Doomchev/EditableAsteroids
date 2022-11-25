@@ -15,6 +15,7 @@ import listener
 import mod.actions.SoundPlayFactory
 import mod.actions.sprite.*
 import newActions
+import updateActions
 import user
 import world
 import java.awt.Graphics
@@ -28,7 +29,7 @@ import java.util.LinkedList
 import javax.swing.*
 import kotlin.random.Random
 
-class Window : JPanel() {
+class Window: JPanel() {
   override fun paintComponent(g: Graphics) {
     val oldCanvas = currentCanvas
     val g2d = g as Graphics2D
@@ -54,13 +55,26 @@ object updatePanel: ActionListener {
   }
 }
 
+fun addClass(caption: String): SpriteClass {
+  val newClass = SpriteClass(caption)
+  classes.add(newClass)
+  return newClass
+}
+
+fun addEventMenu(spriteEvent: JMenu, forClass: Boolean, caption: String, event: MenuEvent, discrete: Boolean) {
+  val item = JMenuItem(caption)
+  item.addActionListener(MenuListener(forClass, event, discrete))
+  spriteEvent.add(item)
+}
+
 val childFrame: JFrame = JFrame("Key")
-class MenuListener(private val spriteClass: SpriteClass?, private val event: MenuEvent, private val factory: SpriteFactory): ActionListener {
+class MenuListener(private val forClass: Boolean, private val event: MenuEvent, private val discrete: Boolean): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
+    val spriteClass = if(forClass) selectClass() else null
+    val factory = selectFactory(discrete)
     if(event == MenuEvent.onPress || event == MenuEvent.onClick) {
       childFrame.setSize(200, 100)
-      childFrame.addKeyListener(AnyKeyListener(spriteClass, event
-        , factory))
+      childFrame.addKeyListener(AnyKeyListener(spriteClass, event, factory))
       childFrame.add(Label("Нажмите клавишу для действия"))
       childFrame.pack()
       childFrame.isVisible = true
@@ -71,12 +85,10 @@ class MenuListener(private val spriteClass: SpriteClass?, private val event: Men
     }
   }
 
-  override fun toString(): String = factory.toString()
+  //override fun toString(): String = factory.toString()
 }
 
-class AnyKeyListener(
-  private val spriteClass: SpriteClass?, private val event: MenuEvent
-  , private val factory: SpriteFactory): KeyListener {
+class AnyKeyListener(private val spriteClass: SpriteClass?, private val event: MenuEvent, private val factory: SpriteFactory): KeyListener {
   override fun keyTyped(e: KeyEvent) {
     childFrame.removeKeyListener(this)
     childFrame.dispose()
@@ -86,20 +98,10 @@ class AnyKeyListener(
   override fun keyReleased(e: KeyEvent) {}
 }
 
-private fun applyToSprite(sprite: Sprite, event: MenuEvent, keyCode: Int, factory: SpriteFactory) {
-  when(event) {
-    MenuEvent.onCreate -> {}
-    MenuEvent.onClick -> Key(keyCode, user).addOnClick(world, factory.create(sprite))
-    MenuEvent.onPress -> Key(keyCode, user).addOnPress(world, factory.create(sprite))
-    MenuEvent.onCollision -> {}
-    MenuEvent.always -> actions.add(factory.create(sprite))
-  }
-}
-
 private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode: Int, factory: SpriteFactory) {
   if(spriteClass == null) {
     if(selectedSprites.isEmpty()) {
-      applyToSprite(Sprite(), event, keyCode, factory.copy())
+      applyToSprite(selectSprite(), event, keyCode, factory.copy())
     } else {
       for(sprite in selectedSprites) {
         applyToSprite(sprite, event, keyCode, factory.copy())
@@ -114,10 +116,21 @@ private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode:
       MenuEvent.always -> spriteClass.always.add(factory.copy())
     }
   }
+  updateActions()
 }
 
-fun addMenuItem(parent: JMenu, listener: ActionListener): JMenuItem {
-  val item = JMenuItem(listener.toString())
+private fun applyToSprite(sprite: Sprite, event: MenuEvent, keyCode: Int, factory: SpriteFactory) {
+  when(event) {
+    MenuEvent.onCreate -> {}
+    MenuEvent.onClick -> Key(keyCode, user).addOnClick(world, factory.create(sprite))
+    MenuEvent.onPress -> Key(keyCode, user).addOnPress(world, factory.create(sprite))
+    MenuEvent.onCollision -> {}
+    MenuEvent.always -> actions.add(factory.create(sprite))
+  }
+}
+
+fun addMenuItem(caption: String, parent: JMenu, listener: ActionListener): JMenuItem {
+  val item = JMenuItem(caption)
   item.addActionListener(listener)
   parent.add(item)
   return item
@@ -192,5 +205,5 @@ fun selectFactory(discrete: Boolean): SpriteFactory {
 val spritesList = LinkedList<Sprite>()
 fun selectSprite(): Sprite {
   val options = Array(spritesList.size) { spritesList[it] }
-  return options[JOptionPane.showOptionDialog(frame, "Выберите действие:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
+  return options[JOptionPane.showOptionDialog(frame, "Выберите спрайт:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
 }

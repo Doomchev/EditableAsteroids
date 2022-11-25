@@ -6,6 +6,7 @@ import mod.actions.tilemap.createTileMap
 import mod.dragging.*
 import mod.drawing.*
 import java.awt.Color
+import java.awt.event.ActionListener
 import java.awt.event.MouseEvent.*
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_INT_RGB
@@ -158,7 +159,27 @@ fun main() {
   }
   createItem.add(tileMapItem)
 
+  Key(96, ide).addOnClick(world, object: Action {
+    override fun execute() {
+      world.toggle()
+      assets.toggle()
+      properties.toggle()
+    }
+  })
+
   Key(118, ide).addOnClick(world, restoreCamera())
+
+  Key(103, ide).addOnClick(world, object: Action {
+    override fun execute() {
+      showGrid = !showGrid
+    }
+  })
+
+  Key(99, ide).onClickActions.add(ActionEntry(world, object: Action {
+    override fun execute() {
+      showCollisionShapes = !showCollisionShapes
+    }
+  }))
 
   /// IMAGES GUI
 
@@ -192,18 +213,6 @@ fun main() {
   }
   imageMenu.add(itemSetVisArea)
 
-  Key(103, ide).onClickActions.add(ActionEntry(world, object: Action {
-    override fun execute() {
-      showGrid = !showGrid
-    }
-  }))
-
-  Key(99, ide).onClickActions.add(ActionEntry(world, object: Action {
-    override fun execute() {
-      showCollisionShapes = !showCollisionShapes
-    }
-  }))
-
   blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
   imageArrays.addFirst(ImageArray(Array(1) {blankImage}))
   currentImageArray = imageArrays[0]
@@ -226,11 +235,18 @@ fun main() {
   }
   actionMenu.add(removeProperty)
 
-  val addEvent = JMenuItem("Добавить событие")
-  addEvent.addActionListener {
-    //selectedBlock!!.addEvent()
-  }
-  actionMenu.add(addEvent)
+  val addSpriteEvent = JMenu("Добавить событие спрайта")
+  actionMenu.add(addSpriteEvent)
+
+  addEventMenu(addSpriteEvent, false, "При клике...", MenuEvent.onClick, true)
+  addEventMenu(addSpriteEvent, false, "При нажатии...", MenuEvent.onPress, false)
+  addEventMenu(addSpriteEvent, false, "Всегда...", MenuEvent.always, false)
+
+  val addClassEvent = JMenu("Добавить событие класса")
+  actionMenu.add(addClassEvent)
+
+  addEventMenu(addClassEvent, true, "При создании...", MenuEvent.onCreate, true)
+  addEventMenu(addClassEvent, true, "Всегда...", MenuEvent.always, false)
 
   // SCENE
 
@@ -238,89 +254,6 @@ fun main() {
   updateActions()
 
   frame.isVisible = true
-}
-
-
-fun tilemap() {
-  splitImage(imageArrays[4], 5, 7)
-  scene.add(TileMap(10, 16, 1.0, 1.0, imageArrays[4]))
-}
-
-fun snow() {
-  val flake = addClass("Снежинка")
-
-  val area = Sprite(0.0, -10.0, 10.0, 2.0, "snow gen")
-  flake.onCreate.add(SpritePositionInAreaFactory(area))
-  flake.onCreate.add(SpriteSetSizeFactory(RandomDoubleValue(0.25, 1.0)))
-  flake.onCreate.add(SpriteSetImageFactory(imageArrays[4].images[0]))
-  flake.onCreate.add(SpriteSetMovingVectorFactory(zero, RandomDoubleValue(1.0, 5.0)))
-  flake.always.add(SpriteMoveFactory())
-
-  scene.add(area)
-  actions.add(SpriteCreate(Sprite(), flake, 0.1))
-}
-
-fun asteroids() {
-  /// IMAGES
-
-  val asteroidImage = imageArrays[1]
-  splitImage(asteroidImage, 8, 4)
-
-  val bulletImage = imageArrays[2]
-  splitImage(bulletImage, 1, 16)
-  bulletImage.setCenter(43.0 / 48.0, 5.5 / 12.0)
-  bulletImage.setVisibleArea(10.5, 3.0)
-
-  val shipImage = imageArrays[3]
-  shipImage.setCenter(0.35, 0.5)
-  shipImage.setVisibleArea(1.5, 1.5)
-
-  /// SPRITES
-
-  val player = Sprite(-3.0, -5.0, 1.0, 1.0, "игрок")
-  player.image = imageArrays[4].images[0]
-
-  Key(97, user).onPressActions.add(ActionEntry(world,SpriteRotation(player, -1.5 * PI)))
-  Key(100, user).onPressActions.add(ActionEntry(world,SpriteRotation(player, 1.5 * PI)))
-  Key(119, user).onPressActions.add(ActionEntry(world,SpriteAcceleration(player, 50.0, 10.0)))
-
-  val bounds = Sprite(world.centerX, world.centerY, world.width + 2.0, world.height + 2.0, "границы поля")
-  actions.add(SpriteAcceleration(player, -15.0, 100.0))
-  actions.add(SpriteLoopArea(player, bounds))
-  actions.add(SpriteMove(player))
-
-  val bullet = addClass("Пуля")
-
-  bullet.onCreate.add(SpritePositionAsFactory(player))
-  bullet.onCreate.add(SpriteDirectAsFactory(player))
-  bullet.onCreate.add(SpriteSetSizeFactory(DoubleValue(0.15)))
-  bullet.onCreate.add(SpriteSetSpeedFactory(DoubleValue(15.0)))
-  bullet.always.add(SpriteMoveFactory())
-  bullet.always.add(SpriteAnimationFactory(imageArrays[2], DoubleValue(16.0)))
-  bullet.always.add(SpriteSetBoundsFactory(bounds))
-
-  Key(32, user).onPressActions.add(ActionEntry(world, SpriteCreate(player, bullet, 0.1)))
-
-  val asteroid = addClass("Астероид")
-  asteroid.onCreate.add(SpritePositionInAreaFactory(bounds))
-  asteroid.onCreate.add(SpriteSetSizeFactory(RandomDoubleValue(0.5, 2.0)))
-  asteroid.onCreate.add(SpriteSetSpeedFactory(DoubleValue(15.0)))
-  asteroid.always.add(SpriteAnimationFactory(imageArrays[1], RandomDirection(RandomDoubleValue(12.0, 20.0))))
-  asteroid.always.add(SpriteRotationFactory(RandomDoubleValue(-180.0, 180.0)))
-  asteroid.always.add(SpriteLoopAreaFactory(bounds))
-
-  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(), asteroid, 0.0)))
-
-  scene.add(bounds)
-  scene.add(bullet)
-  scene.add(asteroid)
-  scene.add(player)
-}
-
-fun addClass(caption: String): SpriteClass {
-  val newClass = SpriteClass(caption)
-  classes.add(newClass)
-  return newClass
 }
 
 enum class MenuEvent {

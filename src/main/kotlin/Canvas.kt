@@ -101,6 +101,10 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double, var activ
     g.drawRect(xToScreen(defaultPosition.leftX), yToScreen(defaultPosition.topY), distToScreen(defaultPosition.width), distToScreen(defaultPosition.height))
     g.color = Color.BLACK
   }
+
+  fun toggle() {
+    active = !active
+  }
 }
 fun xToScreen(fieldX: Double): Int = (fieldX * currentCanvas.k + currentCanvas.vdx).toInt()
 fun yToScreen(fieldY: Double): Int = (fieldY * currentCanvas.k + currentCanvas.vdy).toInt()
