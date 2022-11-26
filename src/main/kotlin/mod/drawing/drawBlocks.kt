@@ -14,7 +14,7 @@ object drawBlocks: Drawing {
   override fun draw(g: Graphics2D) {
     g.color = Color.white
     selectedBlock = null
-    var y = 0
+    var y = 8
     for(block in blocks) {
       if(mousesy >= y && mousesy < y + 16) {
         g.color = Color.GRAY
@@ -22,7 +22,7 @@ object drawBlocks: Drawing {
         g.color = Color.white
         selectedBlock = block
       }
-      g.drawString(block.message, 0, y + 12)
+      g.drawString(block.message, 8, y + 12)
       y += 16
     }
     g.color = Color.black

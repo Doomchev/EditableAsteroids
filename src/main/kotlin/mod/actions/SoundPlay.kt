@@ -18,7 +18,7 @@ class SoundPlayFactory(var file: File? = null): SpriteFactory() {
     return SoundPlay(sprite, file!!)
   }
 
-  override fun toString(): String = "Проиграть звук $file"
+  override fun fullText(): String = "Проиграть звук $file"
 }
 
 class SoundPlay(sprite: Sprite, var file: File): SpriteAction(sprite) {

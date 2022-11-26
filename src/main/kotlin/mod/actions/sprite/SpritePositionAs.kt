@@ -16,7 +16,7 @@ class SpritePositionAsFactory(): SpriteFactory() {
     return SpritePositionAs(sprite,)
   }
 
-  override fun toString(): String = "Переместить к родителю"
+  override fun fullText(): String = "Переместить к родителю"
 }
 
 class SpritePositionAs(sprite: Sprite): SpriteAction(sprite) {

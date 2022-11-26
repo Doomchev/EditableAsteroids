@@ -16,7 +16,8 @@ class SpritePositionInAreaFactory(private val area: Sprite = nullSprite): Sprite
     return SpritePositionInArea(sprite, area)
   }
 
-  override fun toString(): String = "Переместить в область $area"
+  override fun toString(): String = "Переместить в область"
+  override fun fullText(): String = "Переместить в область $area"
 }
 
 class SpritePositionInArea(sprite: Sprite, private val area: Sprite): SpriteAction(sprite) {

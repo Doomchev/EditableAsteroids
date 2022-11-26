@@ -73,8 +73,8 @@ fun updateActions() {
 
   for(button in buttons) {
     if(button.project != user) continue
-    showButtonActions(button, button.onClickActions, "При клике на $button", true)
-    showButtonActions(button, button.onPressActions, "При нажатии на $button", false)
+    showButtonActions(button.onClickActions, "При клике на $button", true)
+    showButtonActions(button.onPressActions, "При нажатии на $button", false)
   }
 
   for(spriteClass in classes) {
@@ -91,11 +91,11 @@ fun showClassActions(spriteClass: SpriteClass, factories: LinkedList<SpriteFacto
   if(factories.isEmpty()) return
   blocks.add(ClassBlock(factories, message))
   for(factory in factories) {
-    blocks.add(FactoryBlock(factory, factories, "  $factory", discrete))
+    blocks.add(FactoryBlock(factory, factories, "  ${factory.fullText()}", discrete))
   }
 }
 
-fun showButtonActions(button: Pushable, actions: LinkedList<ActionEntry>, message: String, discrete: Boolean) {
+fun showButtonActions(actions: LinkedList<ActionEntry>, message: String, discrete: Boolean) {
   if(actions.isEmpty()) return
   blocks.add(ButtonBlock(actions, message, discrete))
   for(entry in actions) {
@@ -106,6 +106,6 @@ fun showButtonActions(button: Pushable, actions: LinkedList<ActionEntry>, messag
 fun showCollisionActions(entry:CollisionEntry, message: String, discrete: Boolean) {
   blocks.add(CollisionBlock(entry, message))
   for(factory in entry.factories) {
-    blocks.add(FactoryBlock(factory, entry.factories,"  $factory", discrete))
+    blocks.add(FactoryBlock(factory, entry.factories,"  ${factory.fullText()}", discrete))
   }
 }

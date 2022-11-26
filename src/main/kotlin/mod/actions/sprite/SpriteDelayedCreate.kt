@@ -22,7 +22,8 @@ class SpriteDelayedCreateFactory(private val spriteClass: SpriteClass = emptyCla
     return SpriteDelayedCreate(sprite, spriteClass, delay.get())
   }
 
-  override fun toString(): String = "Создать $spriteClass через $delay"
+  override fun toString(): String = "Создать позже"
+  override fun fullText(): String = "Создать $spriteClass через $delay"
 }
 
 class SpriteDelayedCreate(sprite: Sprite, private val spriteClass: SpriteClass, private val delay: Double): SpriteAction(sprite) {

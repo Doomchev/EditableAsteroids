@@ -18,7 +18,8 @@ class SpriteSetSpeedFactory(private val speed: Formula = zero): SpriteFactory() 
     return SpriteSetSpeed(sprite, speed.get())
   }
 
-  override fun toString(): String = "Задать скорость $speed"
+  override fun toString(): String = "Задать скорость"
+  override fun fullText(): String = "Задать скорость $speed"
 }
 
 class SpriteSetSpeed(sprite: Sprite, private val speed: Double): SpriteAction(sprite) {

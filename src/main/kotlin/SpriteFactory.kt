@@ -5,6 +5,8 @@ abstract class Formula {
 abstract class SpriteFactory {
   abstract fun copy(): SpriteFactory
   abstract fun create(sprite: Sprite): SpriteAction
+  override fun toString(): String = fullText()
+  open fun fullText(): String = fullText()
 }
 
 object zero: Formula() {

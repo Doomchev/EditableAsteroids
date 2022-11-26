@@ -22,7 +22,7 @@ class SpriteSetImageFactory(val image: Image = blankImage): SpriteFactory() {
     return SpriteSetImage(sprite, image)
   }
 
-  override fun toString(): String = "Установить изображение"
+  override fun fullText(): String = "Установить изображение"
 }
 
 class SpriteSetImage(sprite: Sprite, val image: Image): SpriteAction(sprite) {

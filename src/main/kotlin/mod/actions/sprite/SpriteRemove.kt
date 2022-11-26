@@ -15,7 +15,7 @@ class SpriteRemoveFactory(): SpriteFactory() {
     return SpriteRemove(sprite)
   }
 
-  override fun toString(): String = "Удалить"
+  override fun fullText(): String = "Удалить"
 }
 
 class SpriteRemove(sprite: Sprite): SpriteAction(sprite) {

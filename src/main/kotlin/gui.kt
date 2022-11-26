@@ -33,7 +33,6 @@ import java.util.*
 import javax.swing.*
 import kotlin.random.Random
 
-
 var parentSprite = nullSprite
 val spritesToRemove = LinkedList<Sprite>()
 

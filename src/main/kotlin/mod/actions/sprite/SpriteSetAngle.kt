@@ -15,10 +15,11 @@ class SpriteSetAngleFactory(private val angle: Formula = zero): SpriteFactory() 
   }
 
   override fun create(sprite: Sprite): SpriteAction {
-    return SpriteRotation(sprite, angle.get() * PI / 180.0)
+    return SpriteSetAngle(sprite, angle.get() * PI / 180.0)
   }
 
-  override fun toString(): String = "Задать угол $angle"
+  override fun toString(): String = "Задать угол"
+  override fun fullText(): String = "Задать угол $angle"
 }
 
 class SpriteSetAngle(sprite: Sprite, private val angle: Double): SpriteAction(sprite) {

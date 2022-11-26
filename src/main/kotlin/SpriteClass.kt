@@ -60,6 +60,12 @@ class SpriteClass(var name: String): SceneElement() {
   }
 
   fun addOnCollision(spriteClass: SpriteClass, factory: SpriteFactory) {
+    for(entry in onCollision) {
+      if(entry.spriteClass == spriteClass) {
+        entry.factories.add(factory)
+        return
+      }
+    }
     onCollision.add(CollisionEntry(spriteClass, factory))
   }
 }

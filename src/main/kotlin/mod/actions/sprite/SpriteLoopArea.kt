@@ -17,7 +17,8 @@ class SpriteLoopAreaFactory(private val bounds: Sprite = nullSprite): SpriteFact
     return SpriteLoopArea(sprite, bounds)
   }
 
-  override fun toString(): String = "Зациклить пространство в $bounds"
+  override fun toString(): String = "Зациклить пространство"
+  override fun fullText(): String = "Зациклить пространство в $bounds"
 }
 
 class SpriteLoopArea(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAction(sprite) {

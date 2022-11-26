@@ -20,7 +20,8 @@ class SpriteAnimationFactory(private val array: ImageArray? = null, private val 
     return SpriteAnimation(sprite, array!!, speed.get())
   }
 
-  override fun toString(): String = "Анимировать $array со скоростью $speed"
+  override fun toString(): String = "Анимировать"
+  override fun fullText(): String = "Анимировать $array со скоростью $speed"
 }
 
 class SpriteAnimation(sprite: Sprite, private val array: ImageArray, private val speed: Double): SpriteAction(sprite) {

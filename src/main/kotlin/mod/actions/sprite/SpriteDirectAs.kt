@@ -16,7 +16,7 @@ class SpriteDirectAsFactory(): SpriteFactory() {
     return SpriteDirectAs(sprite)
   }
 
-  override fun toString(): String = "Направить как родителя"
+  override fun fullText(): String = "Направить как родителя"
 }
 class SpriteDirectAs(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {

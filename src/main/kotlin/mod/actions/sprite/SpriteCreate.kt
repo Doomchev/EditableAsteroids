@@ -18,7 +18,8 @@ class SpriteCreateFactory(private val spriteClass: SpriteClass = emptyClass): Sp
     return SpriteCreate(sprite, spriteClass)
   }
 
-  override fun toString(): String = "Создать $spriteClass"
+  override fun toString(): String = "Создать спрайт"
+  override fun fullText(): String = "Создать $spriteClass"
 }
 
 class SpriteCreate(sprite: Sprite, private val spriteClass: SpriteClass): SpriteAction(sprite) {

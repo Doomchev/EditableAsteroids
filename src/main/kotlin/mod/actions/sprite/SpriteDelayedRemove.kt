@@ -16,7 +16,8 @@ class SpriteDelayedRemoveFactory(private val delay: Double = 0.0): SpriteFactory
     return SpriteDelayedRemove(sprite, delay)
   }
 
-  override fun toString(): String = "Удалить через $delay сек."
+  override fun toString(): String = "Удалить позже"
+  override fun fullText(): String = "Удалить через $delay сек."
 }
 
 class SpriteDelayedRemove(sprite: Sprite, var delay: Double = 0.0): SpriteAction(sprite) {

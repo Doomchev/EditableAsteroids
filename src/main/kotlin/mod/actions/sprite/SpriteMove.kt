@@ -16,7 +16,7 @@ class SpriteMoveFactory: SpriteFactory() {
     return SpriteMove(sprite)
   }
 
-  override fun toString(): String = "Перемещать"
+  override fun fullText(): String = "Перемещать"
 }
 class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {

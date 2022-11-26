@@ -1,7 +1,7 @@
+import mod.actions.SoundPlayFactory
 import mod.actions.splitImage
 import mod.actions.sprite.*
 import mod.dragging.*
-import java.util.LinkedList
 import kotlin.math.PI
 
 fun tilemap() {
@@ -37,9 +37,13 @@ fun asteroids() {
   bulletImage.setCenter(43.0 / 48.0, 5.5 / 12.0)
   bulletImage.setVisibleArea(10.5, 3.0)
 
-  //val shipImage = imageArrays[3]
-  //shipImage.setCenter(0.35, 0.5)
-  //shipImage.setVisibleArea(1.5, 1.5)
+  val shipImage = imageArrays[3]
+  shipImage.setCenter(0.35, 0.5)
+  shipImage.setVisibleArea(1.5, 1.5)
+
+  val explosionImage = imageArrays[5]
+  splitImage(explosionImage, 4, 4)
+  explosionImage.setVisibleArea(1.5, 1.5)
 
   /// SPRITES
 
@@ -61,6 +65,7 @@ fun asteroids() {
   val bullet = addClass("Пуля")
 
   bullet.onCreate.apply {
+    add(SoundPlayFactory(sounds[0]))
     add(SpritePositionAsFactory())
     add(SpriteDirectAsFactory())
     add(SpriteSetSizeFactory(DoubleValue(0.15)))
@@ -89,15 +94,16 @@ fun asteroids() {
 
   Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(), asteroid)))
 
-  /*val explosion = addClass("Взрыв")
+  val explosion = addClass("Взрыв")
 
   explosion.onCreate.apply {
+    add(SoundPlayFactory(sounds[1]))
     add(SpritePositionAsFactory())
     add(SpriteSetSizeFactory(DoubleValue(2.0)))
   }
   explosion.always.apply {
-    add(SpriteAnimationFactory(imageArrays[5], DoubleValue(16.0)))
-    add(SpriteRemoveFactory(1.0))
+    add(SpriteAnimationFactory(explosionImage, DoubleValue(16.0)))
+    add(SpriteDelayedRemoveFactory(1.0))
   }
 
   bullet.apply {
@@ -105,12 +111,11 @@ fun asteroids() {
     addOnCollision(asteroid, SpriteRemoveFactory())
   }
 
-  SpriteAnimationFactory(imageArrays[4], DoubleValue(16.0))*/
-
   scene.apply {
     add(bounds)
     add(bullet)
     add(asteroid)
     add(player)
+    add(explosion)
   }
 }
