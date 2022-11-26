@@ -2,6 +2,7 @@ package mod.dragging
 
 import CollisionEntry
 import Formula
+import ImageArray
 import Key
 import MenuEvent
 import Sprite
@@ -12,6 +13,7 @@ import canvases
 import classes
 import currentCanvas
 import frame
+import imageArrays
 import listener
 import mod.actions.SoundPlayFactory
 import mod.actions.sprite.*
@@ -27,9 +29,10 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
-import java.util.LinkedList
+import java.util.*
 import javax.swing.*
 import kotlin.random.Random
+
 
 var parentSprite = nullSprite
 val spritesToRemove = LinkedList<Sprite>()
@@ -100,66 +103,65 @@ val childFrame: JFrame = JFrame("Key")
 class MenuListener(private val forClass: Boolean, private val event: MenuEvent, private val discrete: Boolean): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     val spriteClass = if(forClass) selectClass() else null
-    val factory = selectFactory(discrete)
     if(event == MenuEvent.onPress || event == MenuEvent.onClick) {
       childFrame.setSize(200, 100)
-      childFrame.addKeyListener(AnyKeyListener(spriteClass, event, factory))
+      childFrame.addKeyListener(AnyKeyListener(spriteClass, event))
       childFrame.add(Label("Нажмите клавишу для действия"))
       childFrame.pack()
       childFrame.isVisible = true
     } else {
-      menuItemAction(spriteClass, event, 0, factory)
+      menuItemAction(spriteClass, event, 0)
     }
   }
 }
 
-class AnyKeyListener(private val spriteClass: SpriteClass?, private val event: MenuEvent, private val factory: SpriteFactory): KeyListener {
+class AnyKeyListener(private val spriteClass: SpriteClass?, private val event: MenuEvent): KeyListener {
   override fun keyTyped(e: KeyEvent) {
     childFrame.removeKeyListener(this)
     childFrame.dispose()
-    menuItemAction(spriteClass, event, e.keyChar.code, factory)
+    menuItemAction(spriteClass, event, e.keyChar.code)
   }
   override fun keyPressed(e: KeyEvent) {}
   override fun keyReleased(e: KeyEvent) {}
 }
 
-private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode: Int, factory: SpriteFactory) {
+private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode: Int) {
   if(spriteClass == null) {
     if(selectedSprites.isEmpty()) {
-      applyToSprite(selectSprite(), event, keyCode, factory.copy())
+      applyToSprite(selectSprite(), event, keyCode)
     } else {
       for(sprite in selectedSprites) {
-        applyToSprite(sprite, event, keyCode, factory.copy())
+        applyToSprite(sprite, event, keyCode)
       }
     }
   } else {
     when(event) {
-      MenuEvent.onCreate -> spriteClass.onCreate.add(factory.copy())
+      MenuEvent.onCreate -> spriteClass.onCreate.add(selectFactory(true))
       MenuEvent.onClick -> {}
       MenuEvent.onPress -> {}
       MenuEvent.onCollision -> {
         val spriteClass2 = selectClass("Выберите второй класс:")
         for(entry in spriteClass.onCollision) {
           if(entry.spriteClass == spriteClass2) {
-            entry.factories.add(factory.copy())
+            entry.factories.add(selectFactory(true))
             return
           }
         }
-        spriteClass.onCollision.add(CollisionEntry(spriteClass2, factory))
+        spriteClass.onCollision.add(CollisionEntry(spriteClass2, selectFactory(true)))
       }
-      MenuEvent.always -> spriteClass.always.add(factory.copy())
+      MenuEvent.always -> spriteClass.always.add(selectFactory(false))
     }
   }
   updateActions()
 }
 
-private fun applyToSprite(sprite: Sprite, event: MenuEvent, keyCode: Int, factory: SpriteFactory) {
+private fun applyToSprite(sprite: Sprite, event: MenuEvent, keyCode: Int) {
   when(event) {
     MenuEvent.onCreate -> {}
-    MenuEvent.onClick -> Key(keyCode, user).addOnClick(world, factory.create(sprite))
-    MenuEvent.onPress -> Key(keyCode, user).addOnPress(world, factory.create(sprite))
+    MenuEvent.onClick -> Key(keyCode, user).addOnClick(world, selectFactory(true).create(sprite))
+    MenuEvent.onPress -> Key(keyCode, user).addOnPress(world, selectFactory(false).create(sprite))
     MenuEvent.onCollision -> {}
-    MenuEvent.always -> actions.add(factory.create(sprite))
+    MenuEvent.always -> actions.add(selectFactory(false).create(sprite))
   }
 }
 
@@ -222,15 +224,21 @@ fun selectClass(message:String = "Выберите класс:"): SpriteClass {
 }
 
 val discreteActions = arrayOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteDirectAsFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SoundPlayFactory(), SpriteSetImageFactory(), SpriteRemoveFactory())
-val continuousActions = arrayOf(SpriteRotationFactory(), SpriteMoveFactory(), SpriteAccelerationFactory(), SpriteAnimationFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory())
+
+val continuousActions = arrayOf(SpriteDelayedCreateFactory(), SpriteRotationFactory(), SpriteMoveFactory(), SpriteAccelerationFactory(), SpriteAnimationFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory(), SpriteDelayedRemoveFactory())
 
 fun selectFactory(discrete: Boolean): SpriteFactory {
   val factoriesArray = if(discrete) discreteActions else continuousActions
-  return factoriesArray[JOptionPane.showOptionDialog(frame, "Выберите действие:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, factoriesArray, factoriesArray[0])]
+  return (JOptionPane.showInputDialog(frame, "Выберите действие:", "", JOptionPane.QUESTION_MESSAGE, null, factoriesArray, factoriesArray[0]) as SpriteFactory).copy()
 }
 
 val spritesList = LinkedList<Sprite>()
 fun selectSprite(): Sprite {
   val options = Array(spritesList.size) { spritesList[it] }
+  return options[JOptionPane.showOptionDialog(frame, "Выберите спрайт:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
+}
+
+fun selectImageArray(): ImageArray {
+  val options = Array(imageArrays.size) { imageArrays[it] }
   return options[JOptionPane.showOptionDialog(frame, "Выберите спрайт:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
 }

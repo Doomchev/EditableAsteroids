@@ -45,7 +45,7 @@ class ButtonBlock(var entries: LinkedList<ActionEntry>, message: String, private
 
 class ActionBlock(var entry: ActionEntry, var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
-    entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectFactory(discrete).copy().create(selectSprite())))
+    entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectFactory(discrete).create(selectSprite())))
     updateActions()
   }
 
@@ -57,7 +57,7 @@ class ActionBlock(var entry: ActionEntry, var entries: LinkedList<ActionEntry>, 
 
 class CollisionBlock(private val entry: CollisionEntry, message: String) : Block(message){
   override fun addElement() {
-    entry.factories.addFirst(selectFactory(false).copy())
+    entry.factories.addFirst(selectFactory(true))
     updateActions()
   }
 

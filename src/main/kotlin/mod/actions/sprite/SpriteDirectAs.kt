@@ -16,12 +16,12 @@ class SpriteDirectAsFactory(): SpriteFactory() {
     return SpriteDirectAs(sprite)
   }
 
-  override fun toString(): String = "Повернуть как род. спр."
+  override fun toString(): String = "Направить как родителя"
 }
 class SpriteDirectAs(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
     sprite.angle = parentSprite.angle
   }
 
-  override fun toString(): String = "Повернуть как род. спр."
+  override fun toString(): String = "Направить как родителя"
 }

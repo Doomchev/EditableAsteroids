@@ -30,16 +30,16 @@ const val windowHeight = 800
 const val windowWidth = windowHeight * 9 / 16
 val frame = JFrame("Elasmotherium")
 
-val world = Canvas(0, 0, windowWidth, windowHeight - 100, 10.0, false)
+val world = Canvas(0, 0, windowWidth, windowHeight - 100, 10.0, true)
 var currentCanvas: Canvas = world
 val objectMenu = JPopupMenu()
 val imageMenu = JPopupMenu()
 val actionMenu = JPopupMenu()
 var backgroundColor = Color(9, 44, 84)
 
-val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0, false)
+val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0, true)
 
-val properties = Canvas(0, 0, windowWidth, windowHeight, 1.0, true)
+val properties = Canvas(0, 0, windowWidth, windowHeight, 1.0, false)
 
 val newActions = LinkedList<Action>()
 
@@ -49,7 +49,6 @@ val ide = Project()
 val user = Project()
 
 fun main() {
-
   world.setZoom(zoom)
   world.update()
   world.setDefaultPosition()
@@ -86,7 +85,7 @@ fun main() {
   for(imageFile in File("./").listFiles()) {
     if(!imageFile.name.endsWith(".png")) continue
     val image = Image(ImageIO.read(imageFile))
-    imageArrays.add(ImageArray(Array(1) { image }))
+    imageArrays.add(ImageArray(Array(1) { image }, imageFile.name))
   }
 
   for(soundFile in File("./").listFiles()) {
@@ -148,8 +147,7 @@ fun main() {
 
   val itemCreate = JMenuItem("Элемент")
   itemCreate.addActionListener {
-    actions.add(SpriteCreate(Sprite(), selectClass(), enterDouble(
-      "Введите интервал:").get()))
+    actions.add(SpriteCreate(Sprite(), selectClass()))
   }
   createItem.add(itemCreate)
 
@@ -206,7 +204,7 @@ fun main() {
   imageMenu.add(itemSetVisArea)
 
   blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
-  imageArrays.addFirst(ImageArray(Array(1) {blankImage}))
+  imageArrays.addFirst(ImageArray(Array(1) {blankImage}, "Пустое"))
   currentImageArray = imageArrays[0]
 
   // PROPERTIES GUI
@@ -238,7 +236,7 @@ fun main() {
   actionMenu.add(addClassEvent)
 
   addEventMenu(addClassEvent, true, "При создании...", MenuEvent.onCreate, true)
-  addEventMenu(addClassEvent, true, "При столкновении...", MenuEvent.onCollision, false)
+  addEventMenu(addClassEvent, true, "При столкновении...", MenuEvent.onCollision, true)
   addEventMenu(addClassEvent, true, "Всегда...", MenuEvent.always, false)
 
   // SCENE

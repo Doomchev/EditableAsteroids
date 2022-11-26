@@ -3,28 +3,25 @@ package mod.actions.sprite
 import Sprite
 import SpriteAction
 import SpriteFactory
-import fpsk
 import mod.dragging.enterDouble
-import mod.dragging.scene
 import mod.dragging.spritesToRemove
 
-class SpriteRemoveFactory(private val delay: Double = 0.0): SpriteFactory() {
+class SpriteRemoveFactory(): SpriteFactory() {
   override fun copy(): SpriteFactory {
-    return SpriteRemoveFactory(enterDouble("Введите задержку:").get())
+    return SpriteRemoveFactory()
   }
 
   override fun create(sprite: Sprite): SpriteAction {
-    return SpriteRemove(sprite, delay)
+    return SpriteRemove(sprite)
   }
 
-  override fun toString(): String = "Удалить через $delay сек."
+  override fun toString(): String = "Удалить"
 }
 
-class SpriteRemove(sprite: Sprite, var delay: Double = 0.0): SpriteAction(sprite) {
+class SpriteRemove(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
-    delay -= fpsk
-    if(delay <= 0) spritesToRemove.add(sprite)
+   spritesToRemove.add(sprite)
   }
 
-  override fun toString(): String = "Удалить через $delay сек."
+  override fun toString(): String = "Удалить"
 }

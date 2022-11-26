@@ -1,37 +1,29 @@
 package mod.actions.sprite
 
-import Formula
 import Sprite
 import SpriteAction
 import SpriteClass
 import SpriteFactory
 import emptyClass
-import fpsk
-import mod.dragging.RandomDoubleValue
-import mod.dragging.enterDouble
 import mod.dragging.parentSprite
 import mod.dragging.selectClass
 import newActions
-import zero
 
-class SpriteCreateFactory(private val spriteClass: SpriteClass = emptyClass, private val delay: Formula = zero): SpriteFactory() {
+class SpriteCreateFactory(private val spriteClass: SpriteClass = emptyClass): SpriteFactory() {
   override fun copy(): SpriteFactory {
-    return SpriteCreateFactory(selectClass(), enterDouble("Введите интервал (сек):"))
+    return SpriteCreateFactory(selectClass())
   }
 
   override fun create(sprite: Sprite): SpriteAction {
-    return SpriteCreate(sprite, spriteClass, delay.get())
+    return SpriteCreate(sprite, spriteClass)
   }
 
-  override fun toString(): String = "Создать $spriteClass через $delay"
+  override fun toString(): String = "Создать $spriteClass"
 }
 
-class SpriteCreate(sprite: Sprite, private val spriteClass: SpriteClass, private val delay: Double): SpriteAction(sprite) {
+class SpriteCreate(sprite: Sprite, private val spriteClass: SpriteClass): SpriteAction(sprite) {
   var time: Double = 0.0
   override fun execute() {
-    time = maxOf(0.0, time - fpsk)
-    if(time > 0.0) return
-    time = delay
     val newSprite = Sprite()
     spriteClass.add(newSprite)
     parentSprite = sprite
@@ -43,5 +35,5 @@ class SpriteCreate(sprite: Sprite, private val spriteClass: SpriteClass, private
     }
   }
 
-  override fun toString(): String = "Создать $spriteClass через $delay"
+  override fun toString(): String = "Создать $spriteClass"
 }

@@ -8,18 +8,19 @@ import SpriteFactory
 import fpsk
 import mod.dragging.RandomDoubleValue
 import mod.dragging.enterDouble
+import mod.dragging.selectImageArray
 import zero
 
 class SpriteAnimationFactory(private val array: ImageArray? = null, private val speed: Formula = zero): SpriteFactory() {
   override fun copy(): SpriteFactory {
-    return SpriteAnimationFactory(currentImageArray!!, enterDouble("Введите скорость (кадров/сек):"))
+    return SpriteAnimationFactory(selectImageArray(), enterDouble("Введите скорость (кадров/сек):"))
   }
 
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteAnimation(sprite, array!!, speed.get())
   }
 
-  override fun toString(): String = "Анимировать со скоростью $speed"
+  override fun toString(): String = "Анимировать $array со скоростью $speed"
 }
 
 class SpriteAnimation(sprite: Sprite, private val array: ImageArray, private val speed: Double): SpriteAction(sprite) {

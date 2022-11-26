@@ -22,7 +22,7 @@ fun snow() {
   flake.always.add(SpriteMoveFactory())
 
   scene.add(area)
-  actions.add(SpriteCreate(Sprite(), flake, 0.1))
+  actions.add(SpriteDelayedCreate(Sprite(), flake, 0.1))
 }
 
 fun asteroids() {
@@ -72,7 +72,7 @@ fun asteroids() {
     add(SpriteSetBoundsFactory(bounds))
   }
 
-  Key(32, user).onPressActions.add(ActionEntry(world, SpriteCreate(player, bullet, 0.1)))
+  Key(32, user).onPressActions.add(ActionEntry(world, SpriteDelayedCreate(player, bullet, 0.1)))
 
   val asteroid = addClass("Астероид")
   asteroid.onCreate.apply {
@@ -87,7 +87,7 @@ fun asteroids() {
     add(SpriteLoopAreaFactory(bounds))
   }
 
-  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(), asteroid, 0.0)))
+  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(), asteroid)))
 
   /*val explosion = addClass("Взрыв")
 
