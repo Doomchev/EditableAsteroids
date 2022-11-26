@@ -11,7 +11,9 @@ class ActionEntry(val canvas: Canvas, val action: Action) {
   }
 }
 
-val actions = LinkedList<Action>()
+val actions = LinkedList<SpriteAction>()
+val newActions = LinkedList<SpriteAction>()
+val actionsToRemove = LinkedList<SpriteAction>()
 
 abstract class SpriteAction(val sprite: Sprite): Action {
   override fun toString(): String {

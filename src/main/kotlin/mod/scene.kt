@@ -2,6 +2,8 @@ package mod.dragging
 
 import Shape
 import Sprite
+import actions
+import java.awt.Color
 import java.awt.Graphics2D
 import java.util.*
 
@@ -31,6 +33,8 @@ object scene: SceneElement() {
     for(element in elements) {
       element.draw(g)
     }
+    g.color = Color.white
+    g.drawString("${actions.size}", 300, 18)
   }
 
   override fun select(selection: Sprite, selected: LinkedList<Sprite>) {

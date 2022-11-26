@@ -10,6 +10,7 @@ var fps = 100.0
 var fpsk = 1.0 / fps
 
 val nullSprite = Sprite()
+val spritesToRemove = LinkedList<Sprite>()
 
 open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double = 1.0, height: Double = 1.0, var name:String = ""): Shape(centerX, centerY, width, height) {
   var angle: Double = 0.0

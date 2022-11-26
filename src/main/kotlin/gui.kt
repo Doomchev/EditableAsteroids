@@ -6,9 +6,11 @@ import ImageArray
 import Key
 import MenuEvent
 import Sprite
+import SpriteAction
 import SpriteClass
 import SpriteFactory
 import actions
+import actionsToRemove
 import canvases
 import classes
 import currentCanvas
@@ -19,6 +21,7 @@ import mod.actions.SoundPlayFactory
 import mod.actions.sprite.*
 import newActions
 import nullSprite
+import spritesToRemove
 import updateActions
 import user
 import world
@@ -34,7 +37,6 @@ import javax.swing.*
 import kotlin.random.Random
 
 var parentSprite = nullSprite
-val spritesToRemove = LinkedList<Sprite>()
 
 class Window: JPanel() {
   override fun paintComponent(g: Graphics) {
@@ -68,7 +70,17 @@ class Window: JPanel() {
 
     for(sprite in spritesToRemove) {
       scene.remove(sprite)
+      val it = actions.iterator()
+      while(it.hasNext()) {
+        val action = it.next()
+        if(action.sprite == sprite) it.remove()
+      }
     }
+
+    for(action in actionsToRemove) {
+      actions.remove(action)
+    }
+    actionsToRemove.clear()
 
     for(cnv in canvases) {
       cnv.draw(g2d)
@@ -92,14 +104,14 @@ fun addClass(caption: String): SpriteClass {
   return newClass
 }
 
-fun addEventMenu(spriteEvent: JMenu, forClass: Boolean, caption: String, event: MenuEvent, discrete: Boolean) {
+fun addEventMenu(spriteEvent: JMenu, forClass: Boolean, caption: String, event: MenuEvent) {
   val item = JMenuItem(caption)
-  item.addActionListener(MenuListener(forClass, event, discrete))
+  item.addActionListener(MenuListener(forClass, event))
   spriteEvent.add(item)
 }
 
 val childFrame: JFrame = JFrame("Key")
-class MenuListener(private val forClass: Boolean, private val event: MenuEvent, private val discrete: Boolean): ActionListener {
+class MenuListener(private val forClass: Boolean, private val event: MenuEvent): ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     val spriteClass = if(forClass) selectClass() else null
     if(event == MenuEvent.onPress || event == MenuEvent.onClick) {

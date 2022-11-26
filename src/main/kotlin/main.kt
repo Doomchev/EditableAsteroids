@@ -41,8 +41,6 @@ val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0, true)
 
 val properties = Canvas(0, 0, windowWidth, windowHeight, 1.0, false)
 
-val newActions = LinkedList<Action>()
-
 class Project()
 
 val ide = Project()
@@ -189,8 +187,8 @@ fun main() {
 
   val itemSetCenter = JMenuItem("Задать центр")
   itemSetCenter.addActionListener {
-    val x = enterDouble("Введите горизонтальное смещение (%):").get()
-    val y = enterDouble("Введите вертикальное смещение (%):").get()
+    val x = enterDouble("Введите горизонтальное смещение:").get()
+    val y = enterDouble("Введите вертикальное смещение:").get()
     currentImageArray!!.setCenter(x, y)
   }
   imageMenu.add(itemSetCenter)
@@ -228,16 +226,16 @@ fun main() {
   val addSpriteEvent = JMenu("Добавить событие спрайта")
   actionMenu.add(addSpriteEvent)
 
-  addEventMenu(addSpriteEvent, false, "При клике...", MenuEvent.onClick, true)
-  addEventMenu(addSpriteEvent, false, "При нажатии...", MenuEvent.onPress, false)
-  addEventMenu(addSpriteEvent, false, "Всегда...", MenuEvent.always, false)
+  addEventMenu(addSpriteEvent, false, "При клике...", MenuEvent.onClick)
+  addEventMenu(addSpriteEvent, false, "При нажатии...", MenuEvent.onPress)
+  addEventMenu(addSpriteEvent, false, "Всегда...", MenuEvent.always)
 
   val addClassEvent = JMenu("Добавить событие класса")
   actionMenu.add(addClassEvent)
 
-  addEventMenu(addClassEvent, true, "При создании...", MenuEvent.onCreate, true)
-  addEventMenu(addClassEvent, true, "При столкновении...", MenuEvent.onCollision, true)
-  addEventMenu(addClassEvent, true, "Всегда...", MenuEvent.always, false)
+  addEventMenu(addClassEvent, true, "При создании...", MenuEvent.onCreate)
+  addEventMenu(addClassEvent, true, "При столкновении...", MenuEvent.onCollision)
+  addEventMenu(addClassEvent, true, "Всегда...", MenuEvent.always)
 
   // SCENE
 

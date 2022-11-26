@@ -3,8 +3,8 @@ package mod.actions.sprite
 import Sprite
 import SpriteAction
 import SpriteFactory
-import mod.dragging.enterDouble
-import mod.dragging.spritesToRemove
+import actionsToRemove
+import spritesToRemove
 
 class SpriteRemoveFactory(): SpriteFactory() {
   override fun copy(): SpriteFactory {
@@ -20,7 +20,8 @@ class SpriteRemoveFactory(): SpriteFactory() {
 
 class SpriteRemove(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
-   spritesToRemove.add(sprite)
+    spritesToRemove.add(sprite)
+    actionsToRemove.add(this)
   }
 
   override fun toString(): String = "Удалить"
