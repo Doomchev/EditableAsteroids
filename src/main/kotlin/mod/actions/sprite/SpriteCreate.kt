@@ -9,6 +9,7 @@ import emptyClass
 import fpsk
 import mod.dragging.RandomDoubleValue
 import mod.dragging.enterDouble
+import mod.dragging.parentSprite
 import mod.dragging.selectClass
 import newActions
 import zero
@@ -33,6 +34,7 @@ class SpriteCreate(sprite: Sprite, private val spriteClass: SpriteClass, private
     time = delay
     val newSprite = Sprite()
     spriteClass.add(newSprite)
+    parentSprite = sprite
     for(factory in spriteClass.onCreate) {
       factory.create(newSprite).execute()
     }

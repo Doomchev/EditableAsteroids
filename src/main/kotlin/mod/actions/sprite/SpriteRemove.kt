@@ -6,6 +6,7 @@ import SpriteFactory
 import fpsk
 import mod.dragging.enterDouble
 import mod.dragging.scene
+import mod.dragging.spritesToRemove
 
 class SpriteRemoveFactory(private val delay: Double = 0.0): SpriteFactory() {
   override fun copy(): SpriteFactory {
@@ -22,7 +23,7 @@ class SpriteRemoveFactory(private val delay: Double = 0.0): SpriteFactory() {
 class SpriteRemove(sprite: Sprite, var delay: Double = 0.0): SpriteAction(sprite) {
   override fun execute() {
     delay -= fpsk
-    if(delay <= 0) scene.remove(sprite)
+    if(delay <= 0) spritesToRemove.add(sprite)
   }
 
   override fun toString(): String = "Удалить через $delay сек."

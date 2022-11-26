@@ -3,26 +3,28 @@ package mod.actions.sprite
 import Sprite
 import SpriteAction
 import SpriteFactory
+import mod.dragging.parentSprite
 import mod.dragging.selectedSprites
 import nullSprite
 
-class SpritePositionAsFactory(private val asSprite: Sprite = nullSprite): SpriteFactory() {
+class SpritePositionAsFactory(): SpriteFactory() {
   override fun copy(): SpriteFactory {
-    return SpriteDirectAsFactory(selectedSprites.first)
+    return SpritePositionAsFactory()
   }
 
   override fun create(sprite: Sprite): SpriteAction {
-    return SpritePositionAs(sprite, asSprite)
+    return SpritePositionAs(sprite,)
   }
 
-  override fun toString(): String = "Переместить к $asSprite"
+  override fun toString(): String = "Переместить к родителю"
 }
-class SpritePositionAs(sprite: Sprite, private val asSprite: Sprite): SpriteAction(sprite) {
+
+class SpritePositionAs(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
-    sprite.centerX = asSprite.centerX
-    sprite.centerY = asSprite.centerY
+    sprite.centerX = parentSprite.centerX
+    sprite.centerY = parentSprite.centerY
   }
 
-  override fun toString(): String = "Переместить к $asSprite"
+  override fun toString(): String = "Переместить к родителю"
 }
 

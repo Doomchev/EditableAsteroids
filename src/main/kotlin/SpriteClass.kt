@@ -5,10 +5,25 @@ import java.util.LinkedList
 val classes = LinkedList<SpriteClass>()
 val emptyClass = SpriteClass("")
 
+class CollisionEntry(var spriteClass: SpriteClass, vararg factoriesArray: SpriteFactory) {
+  val factories = LinkedList<SpriteFactory>()
+  init {
+    for(factory in factoriesArray) {
+      factories.add(factory)
+    }
+  }
+
+  override fun toString(): String {
+    return "При столкновении $spriteClass"
+  }
+}
+
 class SpriteClass(var name: String): SceneElement() {
-  private val sprites = LinkedList<Sprite>()
+  val sprites = LinkedList<Sprite>()
   val onCreate = LinkedList<SpriteFactory>()
+  val onCollision = LinkedList<CollisionEntry>()
   val always = LinkedList<SpriteFactory>()
+
   fun add(sprite: Sprite) {
     sprites.add(sprite)
   }
@@ -34,4 +49,17 @@ class SpriteClass(var name: String): SceneElement() {
   }
 
   override fun toString(): String = name
+  fun add(spriteClass2: SpriteClass, spriteFactory: SpriteFactory) {
+    for(entry in onCollision) {
+      if(spriteClass2 == entry.spriteClass) {
+        entry.factories.add(spriteFactory)
+        return
+      }
+    }
+    onCollision.add(CollisionEntry(spriteClass2, spriteFactory))
+  }
+
+  fun addOnCollision(spriteClass: SpriteClass, factory: SpriteFactory) {
+    onCollision.add(CollisionEntry(spriteClass, factory))
+  }
 }

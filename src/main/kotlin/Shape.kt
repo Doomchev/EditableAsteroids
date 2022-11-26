@@ -14,7 +14,7 @@ abstract class Shape(var centerX: Double = 0.0, var centerY: Double = 0.0,  widt
   var halfHeight: Double
 
   init {
-    halfWidth= 0.5 * width
+    halfWidth = 0.5 * width
     halfHeight = 0.5 * height
   }
 
@@ -64,6 +64,13 @@ abstract class Shape(var centerX: Double = 0.0, var centerY: Double = 0.0,  widt
 
   override fun toString(): String {
     return "${format(centerX)}, ${format(centerY)}, ${format(width)} x ${format(height)}"
+  }
+
+  fun collidesWidth(shape2: Shape): Boolean {
+    val dx = centerX - shape2.centerX
+    val dy = centerY - shape2.centerY
+    val radius = shape2.halfWidth + halfWidth
+    return dx * dx + dy * dy < radius * radius
   }
 }
 

@@ -142,7 +142,7 @@ fun main() {
 
   val classItem = JMenuItem("Класс")
   classItem.addActionListener {
-    addClass(enterString("Введите название класса:"))
+    scene.add(addClass(enterString("Введите название класса:")))
   }
   createItem.add(classItem)
 
@@ -238,6 +238,7 @@ fun main() {
   actionMenu.add(addClassEvent)
 
   addEventMenu(addClassEvent, true, "При создании...", MenuEvent.onCreate, true)
+  addEventMenu(addClassEvent, true, "При столкновении...", MenuEvent.onCollision, false)
   addEventMenu(addClassEvent, true, "Всегда...", MenuEvent.always, false)
 
   // SCENE

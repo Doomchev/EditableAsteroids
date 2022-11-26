@@ -1,5 +1,6 @@
 package mod.dragging
 
+import CollisionEntry
 import Formula
 import Key
 import MenuEvent
@@ -14,9 +15,8 @@ import frame
 import listener
 import mod.actions.SoundPlayFactory
 import mod.actions.sprite.*
-import mousesx
-import mousesy
 import newActions
+import nullSprite
 import updateActions
 import user
 import world
@@ -31,20 +31,47 @@ import java.util.LinkedList
 import javax.swing.*
 import kotlin.random.Random
 
+var parentSprite = nullSprite
+val spritesToRemove = LinkedList<Sprite>()
+
 class Window: JPanel() {
   override fun paintComponent(g: Graphics) {
     val oldCanvas = currentCanvas
     val g2d = g as Graphics2D
+
+    for(spriteClass1 in classes) {
+      for(entry in spriteClass1.onCollision) {
+        val spriteClass2 = entry.spriteClass
+        for(sprite1 in spriteClass1.sprites) {
+          parentSprite = sprite1
+          for(sprite2 in spriteClass2.sprites) {
+            if(sprite1.collidesWidth(sprite2)) {
+              for(factory in entry.factories) {
+                factory.create(sprite1).execute()
+              }
+            }
+          }
+        }
+      }
+    }
+
     for(action in actions) {
       action.execute()
     }
+
     for(action in newActions) {
       actions.add(action)
     }
     newActions.clear()
+
+    for(sprite in spritesToRemove) {
+      scene.remove(sprite)
+    }
+
     for(cnv in canvases) {
       cnv.draw(g2d)
     }
+
     currentCanvas = oldCanvas
   }
 }
@@ -80,8 +107,6 @@ class MenuListener(private val forClass: Boolean, private val event: MenuEvent, 
       childFrame.add(Label("Нажмите клавишу для действия"))
       childFrame.pack()
       childFrame.isVisible = true
-    } else if(event == MenuEvent.onCollision) {
-
     } else {
       menuItemAction(spriteClass, event, 0, factory)
     }
@@ -112,7 +137,16 @@ private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode:
       MenuEvent.onCreate -> spriteClass.onCreate.add(factory.copy())
       MenuEvent.onClick -> {}
       MenuEvent.onPress -> {}
-      MenuEvent.onCollision -> {}
+      MenuEvent.onCollision -> {
+        val spriteClass2 = selectClass("Выберите второй класс:")
+        for(entry in spriteClass.onCollision) {
+          if(entry.spriteClass == spriteClass2) {
+            entry.factories.add(factory.copy())
+            return
+          }
+        }
+        spriteClass.onCollision.add(CollisionEntry(spriteClass2, factory))
+      }
       MenuEvent.always -> spriteClass.always.add(factory.copy())
     }
   }
@@ -182,9 +216,9 @@ class RandomDirection(private val formula: Formula) : Formula() {
   }
 }
 
-fun selectClass(): SpriteClass {
+fun selectClass(message:String = "Выберите класс:"): SpriteClass {
   val classesArray = Array(classes.size) {classes[it]}
-  return classesArray[JOptionPane.showOptionDialog(frame, "Выберите класс:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, classesArray, classes.first)]
+  return classesArray[JOptionPane.showOptionDialog(frame, message, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, classesArray, classes.first)]
 }
 
 val discreteActions = arrayOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteDirectAsFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SoundPlayFactory(), SpriteSetImageFactory(), SpriteRemoveFactory())

@@ -87,6 +87,7 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double, var activ
     oldZoom = zoom
     defaultPosition = Sprite(centerX, centerY, width, height)
   }
+
   fun restorePosition() {
     centerX = defaultPosition.centerX
     centerY = defaultPosition.centerY

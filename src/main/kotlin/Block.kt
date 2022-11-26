@@ -43,7 +43,7 @@ class ButtonBlock(var entries: LinkedList<ActionEntry>, message: String, private
   }
 }
 
-class ActionEntryBlock(var entry: ActionEntry, var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
+class ActionBlock(var entry: ActionEntry, var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
     entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectFactory(discrete).copy().create(selectSprite())))
     updateActions()
@@ -55,26 +55,14 @@ class ActionEntryBlock(var entry: ActionEntry, var entries: LinkedList<ActionEnt
   }
 }
 
-class AlwaysBlock(message: String) : Block(message) {
+class CollisionBlock(private val entry: CollisionEntry, message: String) : Block(message){
   override fun addElement() {
-    actions.addFirst(selectFactory(false).copy().create(selectSprite()))
+    entry.factories.addFirst(selectFactory(false).copy())
     updateActions()
   }
 
   override fun removeElement() {
-    actions.clear()
-    updateActions()
-  }
-}
-
-class ActionBlock(val action: Action, message: String) : Block(message) {
-  override fun addElement() {
-    actions.add(actions.indexOf(action) + 1, selectFactory(false).copy().create(selectSprite()))
-    updateActions()
-  }
-
-  override fun removeElement() {
-    actions.remove(action)
+    entry.factories.clear()
     updateActions()
   }
 }
@@ -82,34 +70,42 @@ class ActionBlock(val action: Action, message: String) : Block(message) {
 val blocks = LinkedList<Block>()
 fun updateActions() {
   blocks.clear()
+
   for(button in buttons) {
     if(button.project != user) continue
-    showButtonActions(button, button.onClickActions, true, "При клике на ")
-    showButtonActions(button, button.onPressActions, false, "При нажатии на ")
-  }
-  for(spriteClass in classes) {
-    showClassActions(spriteClass, spriteClass.onCreate, true, "При создании ")
-    showClassActions(spriteClass, spriteClass.always, false, "Всегда для ")
+    showButtonActions(button, button.onClickActions, "При клике на $button", true)
+    showButtonActions(button, button.onPressActions, "При нажатии на $button", false)
   }
 
-  blocks.add(AlwaysBlock("Всегда"))
-  for(action in actions) {
-    blocks.add(ActionBlock(action, "  $action"))
+  for(spriteClass in classes) {
+    showClassActions(spriteClass, spriteClass.onCreate, "При создании $spriteClass", true)
+    showClassActions(spriteClass, spriteClass.always, "Всегда для $spriteClass", false)
+    for(entry in spriteClass.onCollision) {
+      if(entry.factories.isEmpty()) continue
+      showCollisionActions(entry, "При столкновении $spriteClass с ${entry.spriteClass} ", true)
+    }
   }
 }
 
-fun showClassActions(spriteClass: SpriteClass, factories: LinkedList<SpriteFactory>, discrete: Boolean, message: String) {
+fun showClassActions(spriteClass: SpriteClass, factories: LinkedList<SpriteFactory>, message: String, discrete: Boolean) {
   if(factories.isEmpty()) return
-  blocks.add(ClassBlock(factories, "$message$spriteClass:"))
+  blocks.add(ClassBlock(factories, message))
   for(factory in factories) {
     blocks.add(FactoryBlock(factory, factories, "  $factory", discrete))
   }
 }
 
-fun showButtonActions(button: Pushable, actions: LinkedList<ActionEntry>, discrete: Boolean, message: String) {
+fun showButtonActions(button: Pushable, actions: LinkedList<ActionEntry>, message: String, discrete: Boolean) {
   if(actions.isEmpty()) return
-  blocks.add(ButtonBlock(actions, "$message$button:", discrete))
+  blocks.add(ButtonBlock(actions, message, discrete))
   for(entry in actions) {
-    blocks.add(ActionEntryBlock(entry, actions,"  $entry", discrete))
+    blocks.add(ActionBlock(entry, actions,"  $entry", discrete))
+  }
+}
+
+fun showCollisionActions(entry:CollisionEntry, message: String, discrete: Boolean) {
+  blocks.add(CollisionBlock(entry, message))
+  for(factory in entry.factories) {
+    blocks.add(FactoryBlock(factory, entry.factories,"  $factory", discrete))
   }
 }
