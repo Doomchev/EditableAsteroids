@@ -18,7 +18,7 @@ object selectSprites: createRectangle(), Drawing {
   }
 
   override fun released() {
-    scene.select(selection, selectedSprites)
+    project.select(selection, selectedSprites)
   }
 
   override fun draw(g: Graphics2D) {

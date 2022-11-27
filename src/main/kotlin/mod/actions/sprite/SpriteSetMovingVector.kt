@@ -1,6 +1,7 @@
 package mod.actions.sprite
 
 import Formula
+import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
@@ -20,6 +21,13 @@ class SpriteSetMovingVectorFactory(private val dx: Formula = zero, private val d
 
   override fun toString(): String = "Задать движение"
   override fun fullText(): String = "Задать движение ($dx, $dy)"
+
+  override fun getClassName(): String = "SpriteSetMovingVectorFactory"
+
+  override fun store(node: Node) {
+    node.setFormula("dx", dx)
+    node.setFormula("dy", dy)
+  }
 }
 
 class SpriteSetMovingVector(sprite: Sprite, private val dx: Double, private val dy: Double): SpriteAction(sprite) {
@@ -29,4 +37,12 @@ class SpriteSetMovingVector(sprite: Sprite, private val dx: Double, private val 
   }
 
   override fun toString(): String = "Задать движение ($dx, $dy)"
+
+  override fun getClassName(): String = "SpriteSetMovingVector"
+
+  override fun store(node: Node) {
+    node.setObject("sprite", sprite)
+    node.setDouble("dx", dx)
+    node.setDouble("dy", dy)
+  }
 }

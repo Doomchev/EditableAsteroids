@@ -11,7 +11,7 @@ object selectSprite: Action {
       return
     }
     selectedSprites.clear()
-    val sprite = scene.spriteUnderCursor(mousefx, mousefy)
+    val sprite = project.spriteUnderCursor(mousefx, mousefy)
     if(sprite != null) {
       selectedSprites.add(sprite)
     }

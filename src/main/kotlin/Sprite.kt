@@ -59,6 +59,16 @@ open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double =
   override fun toString(): String {
     return if(name.isEmpty()) super.toString() else name
   }
+
+  override fun getClassName(): String = "Sprite"
+
+  override fun store(node: Node) {
+    super.store(node)
+    node.setDouble("angle", angle)
+    node.setObject("image", image!!)
+    node.setDouble("dx", dx)
+    node.setDouble("dy", dy)
+  }
 }
 
 fun spriteUnderCursor(sprites: LinkedList<Sprite>, x: Double, y: Double): Sprite? {

@@ -6,7 +6,7 @@ import kotlin.math.PI
 
 fun tilemap() {
   splitImage(imageArrays[4], 5, 7)
-  scene.add(TileMap(10, 16, 1.0, 1.0, imageArrays[4]))
+  project.add(TileMap(10, 16, 1.0, 1.0, imageArrays[4]))
 }
 
 fun snow() {
@@ -21,7 +21,7 @@ fun snow() {
   }
   flake.always.add(SpriteMoveFactory())
 
-  scene.add(area)
+  project.add(area)
   actions.add(SpriteDelayedCreate(Sprite(), flake, 0.1))
 }
 
@@ -111,7 +111,7 @@ fun asteroids() {
     addOnCollision(asteroid, SpriteRemoveFactory())
   }
 
-  scene.apply {
+  project.apply {
     add(bounds)
     add(bullet)
     add(asteroid)

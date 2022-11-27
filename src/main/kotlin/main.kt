@@ -6,7 +6,6 @@ import mod.actions.tilemap.createTileMap
 import mod.dragging.*
 import mod.drawing.*
 import java.awt.Color
-import java.awt.event.ActionListener
 import java.awt.event.MouseEvent.*
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_INT_RGB
@@ -15,7 +14,6 @@ import java.util.*
 import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.Timer
-import kotlin.math.PI
 
 var showCollisionShapes = false
 var showGrid = false
@@ -113,8 +111,8 @@ fun main() {
   val itemToTop = JMenuItem("Наверх")
   itemToTop.addActionListener {
     for(sprite in selectedSprites) {
-      scene.remove(sprite)
-      scene.add(sprite)
+      project.remove(sprite)
+      project.add(sprite)
     }
   }
   objectMenu.add(itemToTop)
@@ -122,8 +120,8 @@ fun main() {
   val itemToBottom = JMenuItem("Вниз")
   itemToBottom.addActionListener {
     for(sprite in selectedSprites.descendingIterator()) {
-      scene.remove(sprite)
-      scene.addFirst(sprite)
+      project.remove(sprite)
+      project.addFirst(sprite)
     }
   }
   objectMenu.add(itemToBottom)
@@ -139,7 +137,7 @@ fun main() {
 
   val classItem = JMenuItem("Класс")
   classItem.addActionListener {
-    scene.add(addClass(enterString("Введите название класса:")))
+    project.add(addClass(enterString("Введите название класса:")))
   }
   createItem.add(classItem)
 
@@ -151,7 +149,7 @@ fun main() {
 
   val tileMapItem = JMenuItem("Карту")
   tileMapItem.addActionListener {
-    scene.add(createTileMap())
+    project.add(createTileMap())
   }
   createItem.add(tileMapItem)
 

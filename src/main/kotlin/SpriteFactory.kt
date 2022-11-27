@@ -1,8 +1,10 @@
+import mod.dragging.Element
+
 abstract class Formula {
   abstract fun get(): Double
 }
 
-abstract class SpriteFactory {
+abstract class SpriteFactory: Element {
   abstract fun copy(): SpriteFactory
   abstract fun create(sprite: Sprite): SpriteAction
   override fun toString(): String = fullText()

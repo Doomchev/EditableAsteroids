@@ -1,6 +1,7 @@
 package mod.actions.sprite
 
 import Formula
+import Node
 import Sprite
 import SpriteAction
 import SpriteClass
@@ -24,6 +25,13 @@ class SpriteDelayedCreateFactory(private val spriteClass: SpriteClass = emptyCla
 
   override fun toString(): String = "Создать позже"
   override fun fullText(): String = "Создать $spriteClass через $delay"
+
+  override fun getClassName(): String = "SpriteDelayedCreateFactory"
+
+  override fun store(node: Node) {
+    node.setObject("spriteClass", spriteClass)
+    node.setFormula("delay", delay)
+  }
 }
 
 class SpriteDelayedCreate(sprite: Sprite, private val spriteClass: SpriteClass, private val delay: Double): SpriteAction(sprite) {
@@ -44,4 +52,12 @@ class SpriteDelayedCreate(sprite: Sprite, private val spriteClass: SpriteClass, 
   }
 
   override fun toString(): String = "Создать $spriteClass через $delay"
+
+  override fun getClassName(): String = "SpriteDelayedCreate"
+
+  override fun store(node: Node) {
+    node.setObject("spriteClass", spriteClass)
+    node.setDouble("delay", delay)
+    node.setDouble("time", time)
+  }
 }

@@ -1,6 +1,7 @@
 package mod.actions.sprite
 
 import Formula
+import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
@@ -12,8 +13,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class SpriteAccelerationFactory(private val acceleration: Formula = zero, private val limit: Formula = zero):
-  SpriteFactory() {
+class SpriteAccelerationFactory(private val acceleration: Formula = zero, private val limit: Formula = zero): SpriteFactory() {
   override fun copy(): SpriteFactory {
     return SpriteAccelerationFactory(
       enterDouble("Введите ускорение (ед/сек):")
@@ -26,6 +26,13 @@ class SpriteAccelerationFactory(private val acceleration: Formula = zero, privat
 
   override fun toString(): String = "Ускорять"
   override fun fullText(): String = "Ускорять на $acceleration до $limit"
+
+  override fun getClassName(): String = "SpriteAccelerationFactory"
+
+  override fun store(node: Node) {
+    node.setFormula("acceleration", acceleration)
+    node.setFormula("limit", limit)
+  }
 }
 
 class SpriteAcceleration(sprite: Sprite, private val acceleration: Double, private val limit: Double): SpriteAction(sprite) {
@@ -38,6 +45,14 @@ class SpriteAcceleration(sprite: Sprite, private val acceleration: Double, priva
   }
 
   override fun toString(): String = "Ускорять $sprite на $acceleration до $limit"
+
+  override fun getClassName(): String = "SpriteAcceleration"
+
+  override fun store(node: Node) {
+    node.setObject("sprite", sprite)
+    node.setDouble("acceleration", acceleration)
+    node.setDouble("limit", limit)
+  }
 }
 
 private fun vectorLength(dx: Double, dy: Double): Double {

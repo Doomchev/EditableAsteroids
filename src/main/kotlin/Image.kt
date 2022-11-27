@@ -1,13 +1,14 @@
+import mod.dragging.Element
 import java.awt.Color
  import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
-class Image(var texture: BufferedImage, var x: Int, var y: Int, var width: Int
-, var height: Int) {
+class Image(var texture: BufferedImage, var x: Int, var y: Int, var width: Int, var height: Int): Element {
    var xMul: Double = 0.5 // 43.0 / 48.0
    var yMul: Double = 0.5 // 5.5 / 12.0
    var widthMul: Double = 1.0 // 13.5
    var heightMul: Double = 1.0 // 3.0
+
   constructor(texture: BufferedImage) : this(texture, 0, 0, texture.width
     , texture.height)
 
@@ -33,9 +34,18 @@ class Image(var texture: BufferedImage, var x: Int, var y: Int, var width: Int
     }
     g.transform = oldTransform
   }
+
+  override fun getClassName(): String = "Image"
+
+  override fun store(node: Node) {
+    node.setDouble("xMul", xMul)
+    node.setDouble("yMul", yMul)
+    node.setDouble("widthMul", widthMul)
+    node.setDouble("heightMul", heightMul)
+  }
 }
 
-class ImageArray(var images: Array<Image>, private val name: String) {
+class ImageArray(var images: Array<Image>, private val name: String): Element {
   fun setCenter(x: Double, y: Double) {
     for(image in images) {
       image.xMul = x// / image.width
@@ -48,6 +58,12 @@ class ImageArray(var images: Array<Image>, private val name: String) {
       image.widthMul = xk
       image.heightMul = yk
     }
+  }
+
+  override fun getClassName(): String = "ImageArray"
+
+  override fun store(node: Node) {
+    node.setString("name", name)
   }
 
   override fun toString(): String {

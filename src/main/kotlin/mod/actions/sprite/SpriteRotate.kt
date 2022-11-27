@@ -1,6 +1,7 @@
 package mod.actions.sprite
 
 import Formula
+import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
@@ -21,6 +22,12 @@ class SpriteRotationFactory(private val speed: Formula = zero): SpriteFactory() 
 
   override fun toString(): String = "Повернуть"
   override fun fullText(): String = "Повернуть со скоростью $speed"
+
+  override fun getClassName(): String = "SpriteRotationFactory"
+
+  override fun store(node: Node) {
+    node.setFormula("speed", speed)
+  }
 }
 
 class SpriteRotation(sprite: Sprite, private val speed: Double): SpriteAction(sprite) {
@@ -29,4 +36,11 @@ class SpriteRotation(sprite: Sprite, private val speed: Double): SpriteAction(sp
   }
 
   override fun toString(): String = "Повернуть $sprite со скоростью ${format(speed)}"
+
+  override fun getClassName(): String = "SpriteRotation"
+
+  override fun store(node: Node) {
+    node.setObject("sprite", sprite)
+    node.setDouble("speed", speed)
+  }
 }

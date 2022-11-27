@@ -1,5 +1,6 @@
 package mod.actions.sprite
 
+import Node
 import Sprite
 import SpriteAction
 import SpriteClass
@@ -20,10 +21,15 @@ class SpriteCreateFactory(private val spriteClass: SpriteClass = emptyClass): Sp
 
   override fun toString(): String = "Создать спрайт"
   override fun fullText(): String = "Создать $spriteClass"
+
+  override fun getClassName(): String = "SpriteCreateFactory"
+
+  override fun store(node: Node) {
+    node.setObject("spriteClass", spriteClass)
+  }
 }
 
 class SpriteCreate(sprite: Sprite, private val spriteClass: SpriteClass): SpriteAction(sprite) {
-  var time: Double = 0.0
   override fun execute() {
     val newSprite = Sprite()
     spriteClass.add(newSprite)
@@ -37,4 +43,10 @@ class SpriteCreate(sprite: Sprite, private val spriteClass: SpriteClass): Sprite
   }
 
   override fun toString(): String = "Создать $spriteClass"
+
+  override fun getClassName(): String = "SpriteCreate"
+
+  override fun store(node: Node) {
+    node.setObject("spriteClass", spriteClass)
+  }
 }

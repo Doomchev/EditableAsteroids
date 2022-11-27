@@ -1,5 +1,6 @@
 package mod.actions.sprite
 
+import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
@@ -17,6 +18,11 @@ class SpriteMoveFactory: SpriteFactory() {
   }
 
   override fun fullText(): String = "Перемещать"
+
+  override fun getClassName(): String = "SpriteMoveFactory"
+
+  override fun store(node: Node) {
+  }
 }
 class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
@@ -25,4 +31,10 @@ class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
   }
 
   override fun toString(): String = "Перемещать"
+
+  override fun getClassName(): String = "SpriteMove"
+
+  override fun store(node: Node) {
+    node.setObject("sprite", sprite)
+  }
 }

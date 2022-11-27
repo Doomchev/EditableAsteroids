@@ -1,5 +1,6 @@
 package mod.actions.sprite
 
+import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
@@ -19,6 +20,12 @@ class SpriteLoopAreaFactory(private val bounds: Sprite = nullSprite): SpriteFact
 
   override fun toString(): String = "Зациклить пространство"
   override fun fullText(): String = "Зациклить пространство в $bounds"
+
+  override fun getClassName(): String = "SpriteLoopAreaFactory"
+
+  override fun store(node: Node) {
+    node.setField("bounds", bounds)
+  }
 }
 
 class SpriteLoopArea(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAction(sprite) {
@@ -30,4 +37,11 @@ class SpriteLoopArea(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAct
   }
 
   override fun toString(): String = "Зациклить пространство для $sprite в $bounds"
+
+  override fun getClassName(): String = "SpriteLoopArea"
+
+  override fun store(node: Node) {
+    node.setObject("sprite", sprite)
+    node.setField("bounds", bounds)
+  }
 }

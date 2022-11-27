@@ -1,5 +1,6 @@
 package mod.actions.sprite
 
+import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
@@ -18,6 +19,12 @@ class SpritePositionInAreaFactory(private val area: Sprite = nullSprite): Sprite
 
   override fun toString(): String = "Переместить в область"
   override fun fullText(): String = "Переместить в область $area"
+
+  override fun getClassName(): String = "SpritePositionInAreaFactory"
+
+  override fun store(node: Node) {
+    node.setField("area", area)
+  }
 }
 
 class SpritePositionInArea(sprite: Sprite, private val area: Sprite): SpriteAction(sprite) {
@@ -27,4 +34,11 @@ class SpritePositionInArea(sprite: Sprite, private val area: Sprite): SpriteActi
   }
 
   override fun toString(): String = "Переместить в область $area"
+
+  override fun getClassName(): String = "SpritePositionInArea"
+
+  override fun store(node: Node) {
+    node.setField("area", area)
+    node.setObject("sprite", sprite)
+  }
 }

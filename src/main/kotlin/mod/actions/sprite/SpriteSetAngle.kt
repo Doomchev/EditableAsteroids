@@ -1,6 +1,7 @@
 package mod.actions.sprite
 
 import Formula
+import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
@@ -20,6 +21,12 @@ class SpriteSetAngleFactory(private val angle: Formula = zero): SpriteFactory() 
 
   override fun toString(): String = "Задать угол"
   override fun fullText(): String = "Задать угол $angle"
+
+  override fun getClassName(): String = "SpriteSetAngleFactory"
+
+  override fun store(node: Node) {
+    node.setFormula("angle", angle)
+  }
 }
 
 class SpriteSetAngle(sprite: Sprite, private val angle: Double): SpriteAction(sprite) {
@@ -28,4 +35,11 @@ class SpriteSetAngle(sprite: Sprite, private val angle: Double): SpriteAction(sp
   }
 
   override fun toString(): String = "Задать угол $angle"
+
+  override fun getClassName(): String = "SpriteSetAngle"
+
+  override fun store(node: Node) {
+    node.setObject("sprite", sprite)
+    node.setDouble("angle", angle)
+  }
 }

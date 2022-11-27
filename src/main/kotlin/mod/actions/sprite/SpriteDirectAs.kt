@@ -1,5 +1,6 @@
 package mod.actions.sprite
 
+import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
@@ -17,6 +18,11 @@ class SpriteDirectAsFactory(): SpriteFactory() {
   }
 
   override fun fullText(): String = "Направить как родителя"
+
+  override fun getClassName(): String = "SpriteDelayedRemove"
+
+  override fun store(node: Node) {
+  }
 }
 class SpriteDirectAs(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
@@ -24,4 +30,10 @@ class SpriteDirectAs(sprite: Sprite): SpriteAction(sprite) {
   }
 
   override fun toString(): String = "Направить как родителя"
+
+  override fun getClassName(): String = "SpriteDelayedRemove"
+
+  override fun store(node: Node) {
+    node.setObject("sprite", sprite)
+  }
 }

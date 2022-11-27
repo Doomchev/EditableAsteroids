@@ -72,6 +72,15 @@ abstract class Shape(var centerX: Double = 0.0, var centerY: Double = 0.0,  widt
     val radius = shape2.halfWidth + halfWidth
     return dx * dx + dy * dy < radius * radius
   }
+
+  override fun getClassName(): String = "Shape"
+
+  override fun store(node: Node) {
+    node.setDouble("centerX", centerX)
+    node.setDouble("centerY", centerY)
+    node.setDouble("width", width)
+    node.setDouble("height", height)
+  }
 }
 
 fun drawDashedRectangle(g: Graphics2D, fx: Double, fy: Double

@@ -1,5 +1,7 @@
 package mod.dragging
 
+
+import Node
 import Shape
 import Sprite
 import actions
@@ -13,13 +15,18 @@ interface Drawing {
 
 val selectedSprites = LinkedList<Sprite>()
 
-abstract class SceneElement: Drawing {
+interface Element {
+  fun getClassName(): String
+  fun store(node: Node)
+}
+
+abstract class SceneElement: Element, Drawing {
   abstract fun select(selection: Sprite, selected: LinkedList<Sprite>)
   abstract fun remove(shape: Shape)
   abstract fun spriteUnderCursor(fx: Double, fy: Double): Sprite?
 }
 
-object scene: SceneElement() {
+object project: SceneElement() {
   private val elements = LinkedList<SceneElement>()
   fun add(element: SceneElement) {
     elements.add(element)
@@ -61,6 +68,12 @@ object scene: SceneElement() {
       if(sprite != null) return sprite
     }
     return null
+  }
+
+  override fun getClassName(): String = "Project"
+
+  override fun store(node: Node) {
+    node.setChildren(elements)
   }
 }
 

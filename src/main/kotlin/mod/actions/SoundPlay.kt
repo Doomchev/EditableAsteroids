@@ -1,5 +1,6 @@
 package mod.actions
 
+import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
@@ -19,6 +20,12 @@ class SoundPlayFactory(var file: File? = null): SpriteFactory() {
   }
 
   override fun fullText(): String = "Проиграть звук $file"
+
+  override fun getClassName(): String = "SoundPlayFactory"
+
+  override fun store(node: Node) {
+    node.setString("file", file!!.name)
+  }
 }
 
 class SoundPlay(sprite: Sprite, var file: File): SpriteAction(sprite) {
@@ -27,6 +34,12 @@ class SoundPlay(sprite: Sprite, var file: File): SpriteAction(sprite) {
     val clip = AudioSystem.getClip()
     clip.open(audioInputStream)
     clip.start()
+  }
+
+  override fun getClassName(): String = "SoundPlay"
+
+  override fun store(node: Node) {
+    node.setString("file", file!!.name)
   }
 }
 

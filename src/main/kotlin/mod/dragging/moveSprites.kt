@@ -17,7 +17,7 @@ object moveSprites: DraggingAction {
       return true
     }
     selectedSprites.clear()
-    val sprite = scene.spriteUnderCursor(mousefx, mousefy)
+    val sprite = project.spriteUnderCursor(mousefx, mousefy)
     if(sprite != null) {
       selectedSprites.add(sprite)
       return true

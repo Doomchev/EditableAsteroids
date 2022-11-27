@@ -6,11 +6,9 @@ import ImageArray
 import Key
 import MenuEvent
 import Sprite
-import SpriteAction
 import SpriteClass
 import SpriteFactory
 import actions
-import actionsToRemove
 import canvases
 import classes
 import currentCanvas
@@ -69,18 +67,13 @@ class Window: JPanel() {
     newActions.clear()
 
     for(sprite in spritesToRemove) {
-      scene.remove(sprite)
+      project.remove(sprite)
       val it = actions.iterator()
       while(it.hasNext()) {
         val action = it.next()
         if(action.sprite == sprite) it.remove()
       }
     }
-
-    for(action in actionsToRemove) {
-      actions.remove(action)
-    }
-    actionsToRemove.clear()
 
     for(cnv in canvases) {
       cnv.draw(g2d)

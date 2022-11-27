@@ -1,9 +1,9 @@
 package mod.actions.sprite
 
+import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
-import actionsToRemove
 import spritesToRemove
 
 class SpriteRemoveFactory(): SpriteFactory() {
@@ -16,13 +16,23 @@ class SpriteRemoveFactory(): SpriteFactory() {
   }
 
   override fun fullText(): String = "Удалить"
+
+  override fun getClassName(): String = "SpriteRemoveFactory"
+
+  override fun store(node: Node) {
+  }
 }
 
 class SpriteRemove(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
     spritesToRemove.add(sprite)
-    actionsToRemove.add(this)
   }
 
   override fun toString(): String = "Удалить"
+
+  override fun getClassName(): String = "SpriteRemove"
+
+  override fun store(node: Node) {
+    node.setObject("sprite", sprite)
+  }
 }

@@ -5,7 +5,7 @@ import java.util.LinkedList
 val classes = LinkedList<SpriteClass>()
 val emptyClass = SpriteClass("")
 
-class CollisionEntry(var spriteClass: SpriteClass, vararg factoriesArray: SpriteFactory) {
+class CollisionEntry(var spriteClass: SpriteClass, vararg factoriesArray: SpriteFactory): Element {
   val factories = LinkedList<SpriteFactory>()
   init {
     for(factory in factoriesArray) {
@@ -15,6 +15,13 @@ class CollisionEntry(var spriteClass: SpriteClass, vararg factoriesArray: Sprite
 
   override fun toString(): String {
     return "При столкновении $spriteClass"
+  }
+
+  override fun getClassName(): String = "CollisionEntry"
+
+  override fun store(node: Node) {
+    node.setObject("spriteClass", spriteClass)
+    node.setChildren(factories)
   }
 }
 
@@ -42,12 +49,6 @@ class SpriteClass(var name: String): SceneElement() {
     return spriteUnderCursor(sprites, fx, fy)
   }
 
-  override fun draw(g: Graphics2D) {
-    for(sprite in sprites) {
-      sprite.draw(g)
-    }
-  }
-
   override fun toString(): String = name
   fun add(spriteClass2: SpriteClass, spriteFactory: SpriteFactory) {
     for(entry in onCollision) {
@@ -67,5 +68,20 @@ class SpriteClass(var name: String): SceneElement() {
       }
     }
     onCollision.add(CollisionEntry(spriteClass, factory))
+  }
+
+  override fun getClassName(): String = "SpriteClass"
+
+  override fun store(node: Node) {
+    node.setField("sprites", sprites)
+    node.setField("onCreate", onCreate)
+    node.setField("onCollision", onCollision)
+    node.setField("always", always)
+  }
+
+  override fun draw(g: Graphics2D) {
+    for(sprite in sprites) {
+      sprite.draw(g)
+    }
   }
 }
