@@ -9,7 +9,7 @@ import mod.dragging.enterDouble
 import spritesToRemove
 
 
-class SpriteDelayedRemoveFactory(private val delay: Double = 0.0): SpriteFactory() {
+class SpriteDelayedRemoveFactory(private var delay: Double = 0.0): SpriteFactory() {
   override fun copy(): SpriteFactory {
     return SpriteDelayedRemoveFactory(enterDouble("Введите задержку:").get())
   }
@@ -26,6 +26,10 @@ class SpriteDelayedRemoveFactory(private val delay: Double = 0.0): SpriteFactory
   override fun store(node: Node) {
     node.setDouble("delay", delay)
   }
+
+  override fun load(node: Node) {
+    delay = node.getDouble("delay")
+  }
 }
 
 class SpriteDelayedRemove(sprite: Sprite, var delay: Double = 0.0): SpriteAction(sprite) {
@@ -41,7 +45,12 @@ class SpriteDelayedRemove(sprite: Sprite, var delay: Double = 0.0): SpriteAction
   override fun getClassName(): String = "SpriteDelayedRemove"
 
   override fun store(node: Node) {
-    node.setObject("sprite", sprite)
+    node.setField("sprite", sprite)
     node.setDouble("delay", delay)
+  }
+
+  override fun load(node: Node) {
+    sprite = node.getField("sprite") as Sprite
+    delay = node.getDouble("delay")
   }
 }

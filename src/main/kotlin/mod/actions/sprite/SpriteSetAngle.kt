@@ -5,12 +5,11 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
-import mod.dragging.RandomDoubleValue
 import mod.dragging.enterDouble
 import zero
 import kotlin.math.PI
 
-class SpriteSetAngleFactory(private val angle: Formula = zero): SpriteFactory() {
+class SpriteSetAngleFactory(private var angle: Formula = zero): SpriteFactory() {
   override fun copy(): SpriteFactory {
     return SpriteSetAngleFactory(enterDouble("Введите скорость поворота (град/сек):"))
   }
@@ -27,9 +26,13 @@ class SpriteSetAngleFactory(private val angle: Formula = zero): SpriteFactory() 
   override fun store(node: Node) {
     node.setFormula("angle", angle)
   }
+
+  override fun load(node: Node) {
+    angle = node.getFormula("angle")
+  }
 }
 
-class SpriteSetAngle(sprite: Sprite, private val angle: Double): SpriteAction(sprite) {
+class SpriteSetAngle(sprite: Sprite, private var angle: Double): SpriteAction(sprite) {
   override fun execute() {
     sprite.angle = angle
   }
@@ -39,7 +42,12 @@ class SpriteSetAngle(sprite: Sprite, private val angle: Double): SpriteAction(sp
   override fun getClassName(): String = "SpriteSetAngle"
 
   override fun store(node: Node) {
-    node.setObject("sprite", sprite)
+    node.setField("sprite", sprite)
     node.setDouble("angle", angle)
+  }
+
+  override fun load(node: Node) {
+    sprite = node.getField("sprite") as Sprite
+    angle = node.getDouble("angle")
   }
 }

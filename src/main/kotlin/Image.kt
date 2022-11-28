@@ -43,6 +43,10 @@ class Image(var texture: BufferedImage, var x: Int, var y: Int, var width: Int, 
     node.setDouble("widthMul", widthMul)
     node.setDouble("heightMul", heightMul)
   }
+
+  override fun load(node: Node) {
+    TODO("Not yet implemented")
+  }
 }
 
 class ImageArray(var images: Array<Image>, private val name: String): Element {
@@ -64,6 +68,10 @@ class ImageArray(var images: Array<Image>, private val name: String): Element {
 
   override fun store(node: Node) {
     node.setString("name", name)
+  }
+
+  override fun load(node: Node) {
+    TODO("Not yet implemented")
   }
 
   override fun toString(): String {

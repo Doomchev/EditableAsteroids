@@ -5,8 +5,6 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import fpsk
-import mod.dragging.enterDouble
-import mod.dragging.selectedSprites
 
 class SpriteMoveFactory: SpriteFactory() {
   override fun copy(): SpriteFactory {
@@ -23,6 +21,9 @@ class SpriteMoveFactory: SpriteFactory() {
 
   override fun store(node: Node) {
   }
+
+  override fun load(node: Node) {
+  }
 }
 class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
@@ -35,6 +36,10 @@ class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
   override fun getClassName(): String = "SpriteMove"
 
   override fun store(node: Node) {
-    node.setObject("sprite", sprite)
+    node.setField("sprite", sprite)
+  }
+
+  override fun load(node: Node) {
+    sprite = node.getField("sprite") as Sprite
   }
 }

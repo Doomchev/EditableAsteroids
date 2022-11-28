@@ -26,6 +26,10 @@ class SoundPlayFactory(var file: File? = null): SpriteFactory() {
   override fun store(node: Node) {
     node.setString("file", file!!.name)
   }
+
+  override fun load(node: Node) {
+    TODO("Not yet implemented")
+  }
 }
 
 class SoundPlay(sprite: Sprite, var file: File): SpriteAction(sprite) {
@@ -40,6 +44,10 @@ class SoundPlay(sprite: Sprite, var file: File): SpriteAction(sprite) {
 
   override fun store(node: Node) {
     node.setString("file", file!!.name)
+  }
+
+  override fun load(node: Node) {
+    TODO("Not yet implemented")
   }
 }
 

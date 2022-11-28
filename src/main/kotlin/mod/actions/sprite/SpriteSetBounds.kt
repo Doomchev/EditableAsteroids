@@ -7,7 +7,7 @@ import SpriteFactory
 import nullSprite
 import spritesToRemove
 
-class SpriteSetBoundsFactory(private val bounds: Sprite = nullSprite): SpriteFactory() {
+class SpriteSetBoundsFactory(private var bounds: Sprite = nullSprite): SpriteFactory() {
   override fun copy(): SpriteFactory {
     return SpriteSetBoundsFactory(bounds)
   }
@@ -24,6 +24,10 @@ class SpriteSetBoundsFactory(private val bounds: Sprite = nullSprite): SpriteFac
   override fun store(node: Node) {
     node.setField("bounds", bounds)
   }
+
+  override fun load(node: Node) {
+    bounds = node.getField("bounds") as Sprite
+  }
 }
 
 class SpriteSetBounds(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAction(sprite) {
@@ -38,7 +42,12 @@ class SpriteSetBounds(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAc
   override fun getClassName(): String = "SpriteSetBounds"
 
   override fun store(node: Node) {
-    node.setObject("sprite", sprite)
+    node.setField("sprite", sprite)
     node.setField("bounds", bounds)
+  }
+
+  override fun load(node: Node) {
+    sprite = node.getField("sprite") as Sprite
+    bounds = node.getField("bounds") as Sprite
   }
 }

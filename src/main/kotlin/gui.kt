@@ -12,6 +12,7 @@ import actions
 import canvases
 import classes
 import currentCanvas
+import doubleToFormula
 import frame
 import imageArrays
 import listener
@@ -32,7 +33,6 @@ import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 import java.util.*
 import javax.swing.*
-import kotlin.random.Random
 
 var parentSprite = nullSprite
 
@@ -178,48 +178,7 @@ fun enterInt(message: String): Int {
 }
 
 fun enterDouble(message: String): Formula {
-  var string = enterString(message)
-  var dir = false
-  if(string.startsWith("+-")) {
-    string = string.substring(2)
-    dir = true
-  }
-  if(string.contains("..")) {
-    val parts = string.split("..")
-    val formula = RandomDoubleValue(parts[0].toDouble(), parts[1].toDouble())
-    return if(dir) RandomDirection(formula) else formula
-  }
-  return DoubleValue(string.toDouble())
-}
-
-class DoubleValue(private val value: Double): Formula() {
-  override fun get(): Double {
-    return value
-  }
-
-  override fun toString(): String {
-    return "$value"
-  }
-}
-
-class RandomDoubleValue(private val from: Double, private val size:Double): Formula() {
-  override fun get(): Double {
-    return from + size * Random.nextDouble()
-  }
-
-  override fun toString(): String {
-    return "$from..$size"
-  }
-}
-
-class RandomDirection(private val formula: Formula) : Formula() {
-    override fun get(): Double {
-      return if(Random.nextBoolean()) -formula.get() else formula.get()
-    }
-
-  override fun toString(): String {
-    return "+-$formula"
-  }
+  return doubleToFormula(enterString(message))
 }
 
 fun selectClass(message:String = "Выберите класс:"): SpriteClass {

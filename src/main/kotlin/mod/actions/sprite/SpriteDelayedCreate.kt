@@ -14,7 +14,7 @@ import mod.dragging.selectClass
 import newActions
 import zero
 
-class SpriteDelayedCreateFactory(private val spriteClass: SpriteClass = emptyClass, private val delay: Formula = zero): SpriteFactory() {
+class SpriteDelayedCreateFactory(private var spriteClass: SpriteClass = emptyClass, private var delay: Formula = zero): SpriteFactory() {
   override fun copy(): SpriteFactory {
     return SpriteDelayedCreateFactory(selectClass(), enterDouble("Введите интервал (сек):"))
   }
@@ -29,12 +29,17 @@ class SpriteDelayedCreateFactory(private val spriteClass: SpriteClass = emptyCla
   override fun getClassName(): String = "SpriteDelayedCreateFactory"
 
   override fun store(node: Node) {
-    node.setObject("spriteClass", spriteClass)
+    node.setField("spriteClass", spriteClass)
     node.setFormula("delay", delay)
+  }
+
+  override fun load(node: Node) {
+    spriteClass = node.getField("spriteClass") as SpriteClass
+    delay = node.getFormula("delay")
   }
 }
 
-class SpriteDelayedCreate(sprite: Sprite, private val spriteClass: SpriteClass, private val delay: Double): SpriteAction(sprite) {
+class SpriteDelayedCreate(sprite: Sprite, private var spriteClass: SpriteClass, private var delay: Double): SpriteAction(sprite) {
   var time: Double = 0.0
   override fun execute() {
     time = maxOf(0.0, time - fpsk)
@@ -56,8 +61,14 @@ class SpriteDelayedCreate(sprite: Sprite, private val spriteClass: SpriteClass, 
   override fun getClassName(): String = "SpriteDelayedCreate"
 
   override fun store(node: Node) {
-    node.setObject("spriteClass", spriteClass)
+    node.setField("spriteClass", spriteClass)
     node.setDouble("delay", delay)
     node.setDouble("time", time)
+  }
+
+  override fun load(node: Node) {
+    spriteClass = node.getField("spriteClass") as SpriteClass
+    delay = node.getDouble("delay")
+    time = node.getDouble("time")
   }
 }

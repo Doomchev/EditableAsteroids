@@ -10,7 +10,7 @@ import mod.dragging.parentSprite
 import mod.dragging.selectClass
 import newActions
 
-class SpriteCreateFactory(private val spriteClass: SpriteClass = emptyClass): SpriteFactory() {
+class SpriteCreateFactory(private var spriteClass: SpriteClass = emptyClass): SpriteFactory() {
   override fun copy(): SpriteFactory {
     return SpriteCreateFactory(selectClass())
   }
@@ -25,11 +25,15 @@ class SpriteCreateFactory(private val spriteClass: SpriteClass = emptyClass): Sp
   override fun getClassName(): String = "SpriteCreateFactory"
 
   override fun store(node: Node) {
-    node.setObject("spriteClass", spriteClass)
+    node.setField("spriteClass", spriteClass)
+  }
+
+  override fun load(node: Node) {
+    spriteClass = node.getField("spriteClass") as SpriteClass
   }
 }
 
-class SpriteCreate(sprite: Sprite, private val spriteClass: SpriteClass): SpriteAction(sprite) {
+class SpriteCreate(sprite: Sprite, private var spriteClass: SpriteClass): SpriteAction(sprite) {
   override fun execute() {
     val newSprite = Sprite()
     spriteClass.add(newSprite)
@@ -47,6 +51,10 @@ class SpriteCreate(sprite: Sprite, private val spriteClass: SpriteClass): Sprite
   override fun getClassName(): String = "SpriteCreate"
 
   override fun store(node: Node) {
-    node.setObject("spriteClass", spriteClass)
+    node.setField("spriteClass", spriteClass)
+  }
+
+  override fun load(node: Node) {
+    spriteClass = node.getField("spriteClass") as SpriteClass
   }
 }

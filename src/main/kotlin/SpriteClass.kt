@@ -1,6 +1,7 @@
-import mod.dragging.*
+import mod.dragging.Element
+import mod.dragging.SceneElement
 import java.awt.Graphics2D
-import java.util.LinkedList
+import java.util.*
 
 val classes = LinkedList<SpriteClass>()
 val emptyClass = SpriteClass("")
@@ -20,8 +21,12 @@ class CollisionEntry(var spriteClass: SpriteClass, vararg factoriesArray: Sprite
   override fun getClassName(): String = "CollisionEntry"
 
   override fun store(node: Node) {
-    node.setObject("spriteClass", spriteClass)
+    node.setField("spriteClass", spriteClass)
     node.setChildren(factories)
+  }
+
+  override fun load(node: Node) {
+    TODO("Not yet implemented")
   }
 }
 
@@ -73,10 +78,23 @@ class SpriteClass(var name: String): SceneElement() {
   override fun getClassName(): String = "SpriteClass"
 
   override fun store(node: Node) {
-    node.setField("sprites", sprites)
-    node.setField("onCreate", onCreate)
-    node.setField("onCollision", onCollision)
-    node.setField("always", always)
+    val id = ids[this]
+    if(id == null) {
+      node.setString("name", name, )
+      node.setField("onCreate", onCreate)
+      node.setField("onCollision", onCollision)
+      node.setField("always", always)
+      node.setChildren(sprites)
+      lastID++
+      ids[this] = lastID
+    } else {
+      node.className = "Object"
+      node.setInt("id", id)
+    }
+  }
+
+  override fun load(node: Node) {
+    TODO("Not yet implemented")
   }
 
   override fun draw(g: Graphics2D) {

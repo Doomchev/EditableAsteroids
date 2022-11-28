@@ -1,6 +1,5 @@
 package mod.actions.sprite
 
-import Formula
 import Image
 import ImageArray
 import Node
@@ -8,13 +7,9 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import blankImage
-import mod.dragging.enterDouble
 import mod.dragging.selectImageArray
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 
-class SpriteSetImageFactory(val image: Image = blankImage): SpriteFactory() {
+class SpriteSetImageFactory(var image: Image = blankImage): SpriteFactory() {
   override fun copy(): SpriteFactory {
     return SpriteSetImageFactory(selectImageArray().images[0])
   }
@@ -28,11 +23,15 @@ class SpriteSetImageFactory(val image: Image = blankImage): SpriteFactory() {
   override fun getClassName(): String = "SpriteSetImageFactory"
 
   override fun store(node: Node) {
-    node.setObject("image", image)
+    node.setField("image", image)
+  }
+
+  override fun load(node: Node) {
+    image = node.getField("image") as Image
   }
 }
 
-class SpriteSetImage(sprite: Sprite, val image: Image): SpriteAction(sprite) {
+class SpriteSetImage(sprite: Sprite, var image: Image): SpriteAction(sprite) {
   override fun execute() {
     sprite.image = image
   }
@@ -42,7 +41,12 @@ class SpriteSetImage(sprite: Sprite, val image: Image): SpriteAction(sprite) {
   override fun getClassName(): String = "SpriteSetImage"
 
   override fun store(node: Node) {
-    node.setObject("sprite", sprite)
-    node.setObject("image", image)
+    node.setField("sprite", sprite)
+    node.setField("image", image)
+  }
+
+  override fun load(node: Node) {
+    sprite = node.getField("sprite") as Sprite
+    image = node.getField("image") as Image
   }
 }

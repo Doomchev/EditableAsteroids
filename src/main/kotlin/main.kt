@@ -10,10 +10,12 @@ import java.awt.event.MouseEvent.*
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_INT_RGB
 import java.io.File
+import java.io.FileWriter
 import java.util.*
 import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.Timer
+import kotlin.system.exitProcess
 
 var showCollisionShapes = false
 var showGrid = false
@@ -239,6 +241,13 @@ fun main() {
 
   asteroids()
   updateActions()
+
+  val node = Node("root")
+  project.store(node)
+  val writer = FileWriter("test.xml")
+  writer.write(node.getText(""))
+  writer.close()
+  exitProcess(0)
 
   frame.isVisible = true
 }

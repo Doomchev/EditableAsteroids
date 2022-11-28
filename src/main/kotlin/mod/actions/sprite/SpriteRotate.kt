@@ -11,7 +11,7 @@ import mod.dragging.enterDouble
 import zero
 import kotlin.math.PI
 
-class SpriteRotationFactory(private val speed: Formula = zero): SpriteFactory() {
+class SpriteRotationFactory(private var speed: Formula = zero): SpriteFactory() {
   override fun copy(): SpriteFactory {
     return SpriteRotationFactory(enterDouble("Введите скорость поворота (град/сек):"))
   }
@@ -28,9 +28,13 @@ class SpriteRotationFactory(private val speed: Formula = zero): SpriteFactory() 
   override fun store(node: Node) {
     node.setFormula("speed", speed)
   }
+
+  override fun load(node: Node) {
+    speed = node.getFormula("speed")
+  }
 }
 
-class SpriteRotation(sprite: Sprite, private val speed: Double): SpriteAction(sprite) {
+class SpriteRotation(sprite: Sprite, private var speed: Double): SpriteAction(sprite) {
   override fun execute() {
     sprite.angle += fpsk * speed
   }
@@ -40,7 +44,12 @@ class SpriteRotation(sprite: Sprite, private val speed: Double): SpriteAction(sp
   override fun getClassName(): String = "SpriteRotation"
 
   override fun store(node: Node) {
-    node.setObject("sprite", sprite)
+    node.setField("sprite", sprite)
     node.setDouble("speed", speed)
+  }
+
+  override fun load(node: Node) {
+    sprite = node.getField("sprite") as Sprite
+    speed = node.getDouble("speed")
   }
 }

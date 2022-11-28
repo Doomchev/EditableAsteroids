@@ -5,8 +5,6 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import mod.dragging.parentSprite
-import mod.dragging.selectedSprites
-import nullSprite
 
 class SpriteDirectAsFactory(): SpriteFactory() {
   override fun copy(): SpriteFactory {
@@ -19,9 +17,12 @@ class SpriteDirectAsFactory(): SpriteFactory() {
 
   override fun fullText(): String = "Направить как родителя"
 
-  override fun getClassName(): String = "SpriteDelayedRemove"
+  override fun getClassName(): String = "SpriteDirectAsFactory"
 
   override fun store(node: Node) {
+  }
+
+  override fun load(node: Node) {
   }
 }
 class SpriteDirectAs(sprite: Sprite): SpriteAction(sprite) {
@@ -31,9 +32,13 @@ class SpriteDirectAs(sprite: Sprite): SpriteAction(sprite) {
 
   override fun toString(): String = "Направить как родителя"
 
-  override fun getClassName(): String = "SpriteDelayedRemove"
+  override fun getClassName(): String = "SpriteDirectAs"
 
   override fun store(node: Node) {
-    node.setObject("sprite", sprite)
+    node.setField("sprite", sprite)
+  }
+
+  override fun load(node: Node) {
+    sprite = node.getField("sprite") as Sprite
   }
 }

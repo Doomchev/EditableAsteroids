@@ -19,7 +19,7 @@ open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double =
   var dy: Double = 0.0
 
   init {
-    if(!name.isEmpty()) spritesList.add(this)
+    if(name.isNotEmpty()) spritesList.add(this)
   }
 
   fun copy(): Sprite {
@@ -40,6 +40,10 @@ open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double =
 
   override fun spriteUnderCursor(fx: Double, fy: Double): Sprite? {
     return if(collidesWithPoint(fx, fy)) this else null
+  }
+
+  override fun load(node: Node) {
+    TODO("Not yet implemented")
   }
 
   override fun draw(g: Graphics2D) {
@@ -65,7 +69,7 @@ open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double =
   override fun store(node: Node) {
     super.store(node)
     node.setDouble("angle", angle)
-    node.setObject("image", image!!)
+    if(image != null) node.setField("image", image!!)
     node.setDouble("dx", dx)
     node.setDouble("dy", dy)
   }

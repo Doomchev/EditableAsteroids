@@ -4,12 +4,10 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
-import currentCanvas
-import mod.dragging.enterDouble
 import mod.dragging.selectedSprites
 import nullSprite
 
-class SpriteLoopAreaFactory(private val bounds: Sprite = nullSprite): SpriteFactory() {
+class SpriteLoopAreaFactory(private var bounds: Sprite = nullSprite): SpriteFactory() {
   override fun copy(): SpriteFactory {
     return SpriteLoopAreaFactory(selectedSprites.first)
   }
@@ -26,6 +24,10 @@ class SpriteLoopAreaFactory(private val bounds: Sprite = nullSprite): SpriteFact
   override fun store(node: Node) {
     node.setField("bounds", bounds)
   }
+
+  override fun load(node: Node) {
+    bounds = node.getField("bounds") as Sprite
+  }
 }
 
 class SpriteLoopArea(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAction(sprite) {
@@ -41,7 +43,12 @@ class SpriteLoopArea(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAct
   override fun getClassName(): String = "SpriteLoopArea"
 
   override fun store(node: Node) {
-    node.setObject("sprite", sprite)
+    node.setField("sprite", sprite)
     node.setField("bounds", bounds)
+  }
+
+  override fun load(node: Node) {
+    sprite = node.getField("sprite") as Sprite
+    bounds = node.getField("bounds") as Sprite
   }
 }

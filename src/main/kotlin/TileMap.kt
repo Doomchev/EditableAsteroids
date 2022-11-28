@@ -24,6 +24,9 @@ class TileMap(private var columns: Int, private var rows: Int, private var cellW
   override fun remove(shape: Shape) {}
 
   override fun spriteUnderCursor(fx: Double, fy: Double): Sprite? = null
+  override fun load(node: Node) {
+    TODO("Not yet implemented")
+  }
 
   override fun draw(g: Graphics2D) {
     val swidth = distToScreen(cellWidth) + 1

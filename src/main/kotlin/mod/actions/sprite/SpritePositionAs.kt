@@ -5,8 +5,6 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import mod.dragging.parentSprite
-import mod.dragging.selectedSprites
-import nullSprite
 
 class SpritePositionAsFactory(): SpriteFactory() {
   override fun copy(): SpriteFactory {
@@ -23,6 +21,9 @@ class SpritePositionAsFactory(): SpriteFactory() {
 
   override fun store(node: Node) {
   }
+
+  override fun load(node: Node) {
+  }
 }
 
 class SpritePositionAs(sprite: Sprite): SpriteAction(sprite) {
@@ -36,7 +37,11 @@ class SpritePositionAs(sprite: Sprite): SpriteAction(sprite) {
   override fun getClassName(): String = "SpritePositionAs"
 
   override fun store(node: Node) {
-    node.setObject("sprite", sprite)
+    node.setField("sprite", sprite)
+  }
+
+  override fun load(node: Node) {
+    sprite = node.getField("sprite") as Sprite
   }
 }
 

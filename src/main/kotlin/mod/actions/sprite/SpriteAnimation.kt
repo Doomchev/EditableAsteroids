@@ -7,12 +7,11 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import fpsk
-import mod.dragging.RandomDoubleValue
 import mod.dragging.enterDouble
 import mod.dragging.selectImageArray
 import zero
 
-class SpriteAnimationFactory(private val array: ImageArray? = null, private val speed: Formula = zero): SpriteFactory() {
+class SpriteAnimationFactory(private var array: ImageArray? = null, private var speed: Formula = zero): SpriteFactory() {
   override fun copy(): SpriteFactory {
     return SpriteAnimationFactory(selectImageArray(), enterDouble("Введите скорость (кадров/сек):"))
   }
@@ -27,12 +26,17 @@ class SpriteAnimationFactory(private val array: ImageArray? = null, private val 
   override fun getClassName(): String = "SpriteAnimationFactory"
 
   override fun store(node: Node) {
-    node.setObject("array", array!!)
+    node.setField("array", array!!)
     node.setFormula("speed", speed)
+  }
+
+  override fun load(node: Node) {
+    array = node.getField("array") as ImageArray
+    speed = node.getFormula("speed")
   }
 }
 
-class SpriteAnimation(sprite: Sprite, private val array: ImageArray, private val speed: Double): SpriteAction(sprite) {
+class SpriteAnimation(sprite: Sprite, private var array: ImageArray, private var speed: Double): SpriteAction(sprite) {
   var frame: Double = 0.0
 
   override fun execute() {
@@ -49,9 +53,16 @@ class SpriteAnimation(sprite: Sprite, private val array: ImageArray, private val
   override fun getClassName(): String = "SpriteAnimation"
 
   override fun store(node: Node) {
-    node.setObject("sprite", sprite)
-    node.setObject("array", array)
+    node.setField("sprite", sprite)
+    node.setField("array", array)
     node.setDouble("speed", speed)
     node.setDouble("frame", frame)
+  }
+
+  override fun load(node: Node) {
+    sprite = node.getField("sprite") as Sprite
+    array = node.getField("array") as ImageArray
+    speed = node.getDouble("speed")
+    frame = node.getDouble("frame")
   }
 }

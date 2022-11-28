@@ -21,6 +21,9 @@ class SpriteRemoveFactory(): SpriteFactory() {
 
   override fun store(node: Node) {
   }
+
+  override fun load(node: Node) {
+  }
 }
 
 class SpriteRemove(sprite: Sprite): SpriteAction(sprite) {
@@ -33,6 +36,10 @@ class SpriteRemove(sprite: Sprite): SpriteAction(sprite) {
   override fun getClassName(): String = "SpriteRemove"
 
   override fun store(node: Node) {
-    node.setObject("sprite", sprite)
+    node.setField("sprite", sprite)
+  }
+
+  override fun load(node: Node) {
+    sprite = node.getField("sprite") as Sprite
   }
 }
