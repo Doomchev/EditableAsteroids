@@ -2,6 +2,7 @@ import mod.actions.SoundPlayFactory
 import mod.actions.splitImage
 import mod.actions.sprite.*
 import mod.dragging.*
+import mod.project
 import kotlin.math.PI
 
 fun tilemap() {

@@ -19,13 +19,11 @@ class SpriteSetBoundsFactory(private var bounds: Sprite = nullSprite): SpriteFac
   override fun toString(): String = "Установить границы"
   override fun fullText(): String = "Установить границы в $bounds"
 
-  override fun getClassName(): String = "SpriteSetBoundsFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("bounds", bounds)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     bounds = node.getField("bounds") as Sprite
   }
 }
@@ -39,14 +37,12 @@ class SpriteSetBounds(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAc
 
   override fun toString(): String = "Установить границы $sprite в $bounds"
 
-  override fun getClassName(): String = "SpriteSetBounds"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setField("bounds", bounds)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
     bounds = node.getField("bounds") as Sprite
   }

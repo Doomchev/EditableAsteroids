@@ -22,13 +22,11 @@ class SpriteCreateFactory(private var spriteClass: SpriteClass = emptyClass): Sp
   override fun toString(): String = "Создать спрайт"
   override fun fullText(): String = "Создать $spriteClass"
 
-  override fun getClassName(): String = "SpriteCreateFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("spriteClass", spriteClass)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     spriteClass = node.getField("spriteClass") as SpriteClass
   }
 }
@@ -48,13 +46,11 @@ class SpriteCreate(sprite: Sprite, private var spriteClass: SpriteClass): Sprite
 
   override fun toString(): String = "Создать $spriteClass"
 
-  override fun getClassName(): String = "SpriteCreate"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("spriteClass", spriteClass)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     spriteClass = node.getField("spriteClass") as SpriteClass
   }
 }

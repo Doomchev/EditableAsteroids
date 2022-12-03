@@ -3,7 +3,7 @@ package mod.drawing
 import Block
 import blocks
 import currentCanvas
-import mod.dragging.Drawing
+import mod.Drawing
 import mousesy
 import java.awt.Color
 import java.awt.Graphics2D

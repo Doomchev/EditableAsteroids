@@ -1,12 +1,12 @@
-import mod.dragging.Element
-import mod.dragging.SceneElement
+import mod.Element
+import mod.SceneElement
 import java.awt.Graphics2D
 import java.util.*
 
-val classes = LinkedList<SpriteClass>()
 val emptyClass = SpriteClass("")
 
-class CollisionEntry(var spriteClass: SpriteClass, vararg factoriesArray: SpriteFactory): Element {
+class CollisionEntry(var spriteClass: SpriteClass, vararg factoriesArray: SpriteFactory):
+  Element {
   val factories = LinkedList<SpriteFactory>()
   init {
     for(factory in factoriesArray) {
@@ -18,14 +18,12 @@ class CollisionEntry(var spriteClass: SpriteClass, vararg factoriesArray: Sprite
     return "При столкновении $spriteClass"
   }
 
-  override fun getClassName(): String = "CollisionEntry"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("spriteClass", spriteClass)
     node.setChildren(factories)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     TODO("Not yet implemented")
   }
 }
@@ -75,26 +73,20 @@ class SpriteClass(var name: String): SceneElement() {
     onCollision.add(CollisionEntry(spriteClass, factory))
   }
 
-  override fun getClassName(): String = "SpriteClass"
-
-  override fun store(node: Node) {
-    val id = ids[this]
-    if(id == null) {
-      node.setString("name", name, )
-      node.setField("onCreate", onCreate)
-      node.setField("onCollision", onCollision)
-      node.setField("always", always)
-      node.setChildren(sprites)
-      lastID++
-      ids[this] = lastID
-    } else {
-      node.className = "Object"
-      node.setInt("id", id)
-    }
+  override fun fromNode(node: Node) {
+    name = node.getString("name")
+    node.getField("onCreate", onCreate)
+    node.getField("onCollision", onCollision)
+    node.getField("always", always)
+    node.getChildren(sprites)
   }
 
-  override fun load(node: Node) {
-    TODO("Not yet implemented")
+  override fun toNode(node: Node) {
+    node.setString("name", name, )
+    node.setField("onCreate", onCreate)
+    node.setField("onCollision", onCollision)
+    node.setField("always", always)
+    node.setChildren(sprites)
   }
 
   override fun draw(g: Graphics2D) {

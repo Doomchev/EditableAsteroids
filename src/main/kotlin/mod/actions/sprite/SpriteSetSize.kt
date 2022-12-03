@@ -21,13 +21,11 @@ class SpriteSetSizeFactory(var size: Formula = zero): SpriteFactory() {
   override fun toString(): String = "Установить размер"
   override fun fullText(): String = "Изменить размер на $size"
 
-  override fun getClassName(): String = "SpriteSetSizeFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setFormula("size", size)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     size = node.getFormula("size")
   }
 }
@@ -40,14 +38,12 @@ class SpriteSetSize(sprite: Sprite, var size: Double): SpriteAction(sprite) {
 
   override fun toString(): String = "Изменить размер на $size"
 
-  override fun getClassName(): String = "SpriteSetSize"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setDouble("size", size)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
     size = node.getDouble("size")
   }

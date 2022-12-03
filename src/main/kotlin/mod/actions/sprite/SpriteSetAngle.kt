@@ -21,13 +21,11 @@ class SpriteSetAngleFactory(private var angle: Formula = zero): SpriteFactory() 
   override fun toString(): String = "Задать угол"
   override fun fullText(): String = "Задать угол $angle"
 
-  override fun getClassName(): String = "SpriteSetAngleFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setFormula("angle", angle)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     angle = node.getFormula("angle")
   }
 }
@@ -39,14 +37,12 @@ class SpriteSetAngle(sprite: Sprite, private var angle: Double): SpriteAction(sp
 
   override fun toString(): String = "Задать угол $angle"
 
-  override fun getClassName(): String = "SpriteSetAngle"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setDouble("angle", angle)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
     angle = node.getDouble("angle")
   }

@@ -17,12 +17,10 @@ class SpriteRemoveFactory(): SpriteFactory() {
 
   override fun fullText(): String = "Удалить"
 
-  override fun getClassName(): String = "SpriteRemoveFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
   }
 }
 
@@ -33,13 +31,11 @@ class SpriteRemove(sprite: Sprite): SpriteAction(sprite) {
 
   override fun toString(): String = "Удалить"
 
-  override fun getClassName(): String = "SpriteRemove"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
   }
 }

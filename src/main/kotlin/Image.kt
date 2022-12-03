@@ -1,9 +1,10 @@
-import mod.dragging.Element
+import mod.Element
 import java.awt.Color
  import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
-class Image(var texture: BufferedImage, var x: Int, var y: Int, var width: Int, var height: Int): Element {
+class Image(var texture: BufferedImage, var x: Int, var y: Int, var width: Int, var height: Int):
+  Element {
    var xMul: Double = 0.5 // 43.0 / 48.0
    var yMul: Double = 0.5 // 5.5 / 12.0
    var widthMul: Double = 1.0 // 13.5
@@ -35,16 +36,14 @@ class Image(var texture: BufferedImage, var x: Int, var y: Int, var width: Int, 
     g.transform = oldTransform
   }
 
-  override fun getClassName(): String = "Image"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setDouble("xMul", xMul)
     node.setDouble("yMul", yMul)
     node.setDouble("widthMul", widthMul)
     node.setDouble("heightMul", heightMul)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     TODO("Not yet implemented")
   }
 }
@@ -64,13 +63,11 @@ class ImageArray(var images: Array<Image>, private val name: String): Element {
     }
   }
 
-  override fun getClassName(): String = "ImageArray"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setString("name", name)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     TODO("Not yet implemented")
   }
 

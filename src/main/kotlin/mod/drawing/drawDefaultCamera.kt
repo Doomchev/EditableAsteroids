@@ -1,6 +1,6 @@
 package mod.drawing
 
-import mod.dragging.Drawing
+import mod.Drawing
 import world
 import java.awt.Graphics2D
 

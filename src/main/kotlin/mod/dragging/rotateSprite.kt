@@ -3,6 +3,8 @@ package mod.dragging
 import DraggingAction
 import Sprite
 import distFromScreen
+import mod.Drawing
+import mod.selectedSprites
 import mousefx
 import mousefy
 import snapAngle

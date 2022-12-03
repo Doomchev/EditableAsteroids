@@ -1,4 +1,4 @@
-import mod.dragging.Drawing
+import mod.Drawing
 import java.awt.Color
 import java.awt.Graphics2D
 import kotlin.math.PI

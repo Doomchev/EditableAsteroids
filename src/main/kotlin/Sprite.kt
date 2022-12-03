@@ -42,7 +42,7 @@ open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double =
     return if(collidesWithPoint(fx, fy)) this else null
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     TODO("Not yet implemented")
   }
 
@@ -64,10 +64,8 @@ open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double =
     return if(name.isEmpty()) super.toString() else name
   }
 
-  override fun getClassName(): String = "Sprite"
-
-  override fun store(node: Node) {
-    super.store(node)
+  override fun toNode(node: Node) {
+    super.toNode(node)
     node.setDouble("angle", angle)
     if(image != null) node.setField("image", image!!)
     node.setDouble("dx", dx)

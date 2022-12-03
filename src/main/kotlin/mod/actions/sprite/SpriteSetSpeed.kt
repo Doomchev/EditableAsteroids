@@ -22,13 +22,11 @@ class SpriteSetSpeedFactory(private var speed: Formula = zero): SpriteFactory() 
   override fun toString(): String = "Задать скорость"
   override fun fullText(): String = "Задать скорость $speed"
 
-  override fun getClassName(): String = "SpriteSetSpeedFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setFormula("speed", speed)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     speed = node.getFormula("speed")
   }
 }
@@ -41,14 +39,12 @@ class SpriteSetSpeed(sprite: Sprite, private var speed: Double): SpriteAction(sp
 
   override fun toString(): String = "Задать $sprite скорость $speed"
 
-  override fun getClassName(): String = "SpriteSetAngle"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setDouble("speed", speed)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
     speed = node.getDouble("speed")
   }

@@ -1,6 +1,8 @@
 package mod.dragging
 
 import DraggingAction
+import mod.project
+import mod.selectedSprites
 import mousefx
 import mousefy
 import spriteUnderCursor

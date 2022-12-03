@@ -1,11 +1,12 @@
-package mod.dragging
+package mod
 
 
 import Node
 import Shape
 import Sprite
+import SpriteClass
 import actions
-import classes
+import toRemove
 import java.awt.Color
 import java.awt.Graphics2D
 import java.util.*
@@ -17,9 +18,8 @@ interface Drawing {
 val selectedSprites = LinkedList<Sprite>()
 
 interface Element {
-  fun getClassName(): String
-  fun store(node: Node)
-  fun load(node: Node)
+  fun toNode(node: Node)
+  fun fromNode(node: Node)
 }
 
 abstract class SceneElement: Element, Drawing {
@@ -30,6 +30,7 @@ abstract class SceneElement: Element, Drawing {
 
 object project: SceneElement() {
   private val elements = LinkedList<SceneElement>()
+  val classes = LinkedList<SpriteClass>()
 
   fun add(element: SceneElement) {
     elements.add(element)
@@ -73,20 +74,16 @@ object project: SceneElement() {
     return null
   }
 
-  override fun getClassName(): String = "Project"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("classes", classes)
     node.setChildren(elements)
+    for(node in toRemove.values) {
+      node.removeAttribute("id")
+    }
   }
 
-  override fun load(node: Node) {
-    //classes = node.getField("classes")
-    //elements = node.getChildren()
+  override fun fromNode(node: Node) {
+    node.getField("classes", classes)
+    node.getChildren(elements)
   }
 }
-
-
-
-
-

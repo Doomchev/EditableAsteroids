@@ -21,13 +21,11 @@ class SpriteDelayedRemoveFactory(private var delay: Double = 0.0): SpriteFactory
   override fun toString(): String = "Удалить позже"
   override fun fullText(): String = "Удалить через $delay сек."
 
-  override fun getClassName(): String = "SpriteDelayedRemoveFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setDouble("delay", delay)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     delay = node.getDouble("delay")
   }
 }
@@ -42,14 +40,12 @@ class SpriteDelayedRemove(sprite: Sprite, var delay: Double = 0.0): SpriteAction
 
   override fun toString(): String = "Удалить через $delay сек."
 
-  override fun getClassName(): String = "SpriteDelayedRemove"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setDouble("delay", delay)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
     delay = node.getDouble("delay")
   }

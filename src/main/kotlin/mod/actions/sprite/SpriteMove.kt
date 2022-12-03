@@ -17,12 +17,10 @@ class SpriteMoveFactory: SpriteFactory() {
 
   override fun fullText(): String = "Перемещать"
 
-  override fun getClassName(): String = "SpriteMoveFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
   }
 }
 class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
@@ -33,13 +31,11 @@ class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
 
   override fun toString(): String = "Перемещать"
 
-  override fun getClassName(): String = "SpriteMove"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
   }
 }

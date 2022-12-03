@@ -1,6 +1,7 @@
 package mod.dragging
 
 import Sprite
+import mod.Drawing
 import mousefx
 import mousefy
 import snapX

@@ -3,7 +3,7 @@ package mod.actions.sprite
 import Action
 import ImageArray
 import imageArrays
-import mod.dragging.selectedSprites
+import mod.selectedSprites
 import mousefx
 import kotlin.math.floor
 

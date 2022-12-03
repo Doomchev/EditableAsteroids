@@ -26,14 +26,12 @@ class SpriteDelayedCreateFactory(private var spriteClass: SpriteClass = emptyCla
   override fun toString(): String = "Создать позже"
   override fun fullText(): String = "Создать $spriteClass через $delay"
 
-  override fun getClassName(): String = "SpriteDelayedCreateFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("spriteClass", spriteClass)
     node.setFormula("delay", delay)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     spriteClass = node.getField("spriteClass") as SpriteClass
     delay = node.getFormula("delay")
   }
@@ -58,15 +56,13 @@ class SpriteDelayedCreate(sprite: Sprite, private var spriteClass: SpriteClass, 
 
   override fun toString(): String = "Создать $spriteClass через $delay"
 
-  override fun getClassName(): String = "SpriteDelayedCreate"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("spriteClass", spriteClass)
     node.setDouble("delay", delay)
     node.setDouble("time", time)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     spriteClass = node.getField("spriteClass") as SpriteClass
     delay = node.getDouble("delay")
     time = node.getDouble("time")

@@ -1,10 +1,15 @@
-import mod.actions.splitImage
 import mod.actions.restoreCamera
 import mod.actions.showMenu
-import mod.actions.sprite.*
+import mod.actions.splitImage
+import mod.actions.sprite.SpriteCreate
+import mod.actions.sprite.currentImageArray
+import mod.actions.sprite.deleteSprites
+import mod.actions.sprite.selectImage
 import mod.actions.tilemap.createTileMap
 import mod.dragging.*
 import mod.drawing.*
+import mod.project
+import mod.selectedSprites
 import java.awt.Color
 import java.awt.event.MouseEvent.*
 import java.awt.image.BufferedImage
@@ -243,7 +248,7 @@ fun main() {
   updateActions()
 
   val node = Node("root")
-  project.store(node)
+  project.toNode(node)
   val writer = FileWriter("test.xml")
   writer.write(node.getText(""))
   writer.close()

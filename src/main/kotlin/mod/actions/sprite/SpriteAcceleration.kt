@@ -7,6 +7,7 @@ import SpriteAction
 import SpriteFactory
 import fpsk
 import mod.dragging.enterDouble
+import nullSprite
 import zero
 import kotlin.math.cos
 import kotlin.math.sin
@@ -26,20 +27,18 @@ class SpriteAccelerationFactory(private var acceleration: Formula = zero, privat
   override fun toString(): String = "Ускорять"
   override fun fullText(): String = "Ускорять на $acceleration до $limit"
 
-  override fun getClassName(): String = "SpriteAccelerationFactory"
-
-  override fun store(node: Node) {
-    node.setFormula("acceleration", acceleration)
-    node.setFormula("limit", limit)
-  }
-
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     acceleration = node.getFormula("acceleration")
     limit = node.getFormula("limit")
   }
+
+  override fun toNode(node: Node) {
+    node.setFormula("acceleration", acceleration)
+    node.setFormula("limit", limit)
+  }
 }
 
-class SpriteAcceleration(sprite: Sprite, private var acceleration: Double, private var limit: Double): SpriteAction(sprite) {
+class SpriteAcceleration(sprite: Sprite = nullSprite, private var acceleration: Double = 0.0, private var limit: Double = 0.0): SpriteAction(sprite) {
   override fun execute() {
     var newLength = vectorLength(sprite.dx, sprite.dy) + acceleration * fpsk
     if(newLength < 0) newLength = 0.0
@@ -50,18 +49,16 @@ class SpriteAcceleration(sprite: Sprite, private var acceleration: Double, priva
 
   override fun toString(): String = "Ускорять $sprite на $acceleration до $limit"
 
-  override fun getClassName(): String = "SpriteAcceleration"
-
-  override fun store(node: Node) {
-    node.setField("sprite", sprite)
-    node.setDouble("acceleration", acceleration)
-    node.setDouble("limit", limit)
-  }
-
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
     acceleration = node.getDouble("acceleration")
     limit = node.getDouble("limit")
+  }
+
+  override fun toNode(node: Node) {
+    node.setField("sprite", sprite)
+    node.setDouble("acceleration", acceleration)
+    node.setDouble("limit", limit)
   }
 }
 

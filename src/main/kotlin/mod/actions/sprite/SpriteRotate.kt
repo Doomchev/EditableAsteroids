@@ -23,13 +23,11 @@ class SpriteRotationFactory(private var speed: Formula = zero): SpriteFactory() 
   override fun toString(): String = "Повернуть"
   override fun fullText(): String = "Повернуть со скоростью $speed"
 
-  override fun getClassName(): String = "SpriteRotationFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setFormula("speed", speed)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     speed = node.getFormula("speed")
   }
 }
@@ -41,14 +39,12 @@ class SpriteRotation(sprite: Sprite, private var speed: Double): SpriteAction(sp
 
   override fun toString(): String = "Повернуть $sprite со скоростью ${format(speed)}"
 
-  override fun getClassName(): String = "SpriteRotation"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setDouble("speed", speed)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
     speed = node.getDouble("speed")
   }

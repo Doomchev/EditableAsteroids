@@ -17,12 +17,10 @@ class SpritePositionAsFactory(): SpriteFactory() {
 
   override fun fullText(): String = "Переместить к родителю"
 
-  override fun getClassName(): String = "SpritePositionAsFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
   }
 }
 
@@ -34,13 +32,11 @@ class SpritePositionAs(sprite: Sprite): SpriteAction(sprite) {
 
   override fun toString(): String = "Переместить к родителю"
 
-  override fun getClassName(): String = "SpritePositionAs"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
   }
 }

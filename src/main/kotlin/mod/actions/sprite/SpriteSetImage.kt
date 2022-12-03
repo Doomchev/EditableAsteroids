@@ -1,7 +1,6 @@
 package mod.actions.sprite
 
 import Image
-import ImageArray
 import Node
 import Sprite
 import SpriteAction
@@ -20,13 +19,11 @@ class SpriteSetImageFactory(var image: Image = blankImage): SpriteFactory() {
 
   override fun fullText(): String = "Установить изображение"
 
-  override fun getClassName(): String = "SpriteSetImageFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("image", image)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     image = node.getField("image") as Image
   }
 }
@@ -38,14 +35,12 @@ class SpriteSetImage(sprite: Sprite, var image: Image): SpriteAction(sprite) {
 
   override fun toString(): String = "Установить изображение"
 
-  override fun getClassName(): String = "SpriteSetImage"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setField("image", image)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
     image = node.getField("image") as Image
   }

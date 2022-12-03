@@ -1,6 +1,9 @@
 package mod.dragging
 
 import Sprite
+import mod.Drawing
+import mod.project
+import mod.selectedSprites
 import java.awt.Graphics2D
 
 object selectSprites: createRectangle(), Drawing {

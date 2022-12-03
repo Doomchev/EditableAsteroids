@@ -1,11 +1,10 @@
 package mod.actions.sprite
 
 import Node
-import Shape
 import Sprite
 import SpriteAction
 import SpriteFactory
-import mod.dragging.selectedSprites
+import mod.selectedSprites
 import nullSprite
 import kotlin.random.Random
 
@@ -21,13 +20,11 @@ class SpritePositionInAreaFactory(private var area: Sprite = nullSprite): Sprite
   override fun toString(): String = "Переместить в область"
   override fun fullText(): String = "Переместить в область $area"
 
-  override fun getClassName(): String = "SpritePositionInAreaFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("area", area)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     area = node.getField("area") as Sprite
   }
 }
@@ -40,14 +37,12 @@ class SpritePositionInArea(sprite: Sprite, private var area: Sprite): SpriteActi
 
   override fun toString(): String = "Переместить в область $area"
 
-  override fun getClassName(): String = "SpritePositionInArea"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("area", area)
     node.setField("sprite", sprite)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
     area = node.getField("area") as Sprite
   }

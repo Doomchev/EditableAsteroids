@@ -17,12 +17,10 @@ class SpriteDirectAsFactory(): SpriteFactory() {
 
   override fun fullText(): String = "Направить как родителя"
 
-  override fun getClassName(): String = "SpriteDirectAsFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
   }
 }
 class SpriteDirectAs(sprite: Sprite): SpriteAction(sprite) {
@@ -32,13 +30,11 @@ class SpriteDirectAs(sprite: Sprite): SpriteAction(sprite) {
 
   override fun toString(): String = "Направить как родителя"
 
-  override fun getClassName(): String = "SpriteDirectAs"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
   }
 }

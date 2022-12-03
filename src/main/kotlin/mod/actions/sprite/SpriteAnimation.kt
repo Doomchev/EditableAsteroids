@@ -23,14 +23,12 @@ class SpriteAnimationFactory(private var array: ImageArray? = null, private var 
   override fun toString(): String = "Анимировать"
   override fun fullText(): String = "Анимировать $array со скоростью $speed"
 
-  override fun getClassName(): String = "SpriteAnimationFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("array", array!!)
     node.setFormula("speed", speed)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     array = node.getField("array") as ImageArray
     speed = node.getFormula("speed")
   }
@@ -50,16 +48,14 @@ class SpriteAnimation(sprite: Sprite, private var array: ImageArray, private var
 
   override fun toString(): String = "Анимировать со скоростью $speed"
 
-  override fun getClassName(): String = "SpriteAnimation"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setField("array", array)
     node.setDouble("speed", speed)
     node.setDouble("frame", frame)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
     array = node.getField("array") as ImageArray
     speed = node.getDouble("speed")

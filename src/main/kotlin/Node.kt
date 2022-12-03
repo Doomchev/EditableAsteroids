@@ -1,17 +1,50 @@
-import mod.dragging.Element
+import mod.Element
 import java.util.LinkedList
 import kotlin.reflect.full.createInstance
 
 //class Attribute(var name:String, var value: String)
 
 val ids = HashMap<Element, Int>()
+val toRemove = HashMap<Element, Node>()
 var lastID = 0
 
 class Node(var className: String) {
-
   private val attributes = HashMap<String, String>()
   private val fields = HashMap<String, Node>()
   private val children = LinkedList<Node>()
+
+  constructor(element: Element) : this(element.javaClass.kotlin.simpleName!!) {
+  }
+
+
+
+  private fun createObject(): Element {
+    return Class.forName(className).getDeclaredConstructor().newInstance() as Element
+  }
+
+  private fun newInstance(element: Element): Element {
+    return element.javaClass.kotlin.createInstance()
+  }
+
+  private fun setNode(element: Element): Node {
+    val id = ids[element]
+    if(id == null) {
+      val node = Node(element)
+      element.toNode(node)
+      lastID++
+      ids[element] = lastID
+      node.setInt("id", lastID)
+      toRemove[element] = node
+      return node
+    } else {
+      val node = Node("Object")
+      node.setInt("id", id)
+      toRemove.remove(element)
+      return node
+    }
+  }
+
+
 
   fun getInt(name: String): Int {
     val value = attributes[name]
@@ -40,11 +73,16 @@ class Node(var className: String) {
   }
 
   fun getFormula(name: String): Formula {
-    return Class.forName(className).kotlin.createInstance() as Formula
+    return doubleToFormula(attributes[name]!!)
   }
 
   fun setFormula(name: String, element: Formula) {
     attributes[name] = element.toString()
+  }
+
+  fun <T: Element> getField(name: String, list: LinkedList<T>) {
+    val node = fields[name]!!
+    node.getChildren(list)
   }
 
   fun <T: Element> setField(name: String, list: LinkedList<T>) {
@@ -54,38 +92,32 @@ class Node(var className: String) {
   }
 
   fun getField(name: String): Element {
-    return Class.forName(className).kotlin.createInstance() as Element
+    val node = fields[name]!!
+    val element = node.createObject()
+    element.fromNode(node)
+    return element
   }
 
   fun setField(name: String, element: Element) {
-    val id = ids[element]
-    if(id == null) {
-      val node = Node(element.getClassName())
-      element.store(node)
-      fields[name] = node
-      lastID++
-      ids[element] = lastID
-      node.setInt("id", lastID)
-    } else {
-      fields[name] = objectNode(id)
+    fields[name] = setNode(element)
+  }
+
+  fun <T: Element> getChildren(list: LinkedList<T>) {
+    for(node in children) {
+      val obj = node.createObject() as T
+      obj.fromNode(node)
+      list.add(obj)
     }
   }
 
-  /*fun <T: Element> getChildren(): LinkedList<T> {
-    val list = LinkedList<T>()
-    for(node in children) {
-      val element = element() as T
-      list.add(node.load())
-    }
-    return fields[name]!! as
-  }*/
-
   fun <T: Element> setChildren(elements: LinkedList<T>) {
     for(element in elements) {
-      val node = Node(element.getClassName())
-      element.store(node)
-      children.add(node)
+      children.add(setNode(element))
     }
+  }
+
+  fun removeAttribute(name: String) {
+    attributes.remove(name)
   }
 
   fun getText(attr: String = ""): String {
@@ -105,10 +137,4 @@ class Node(var className: String) {
     text += "</$className>"
     return text
   }
-}
-
-fun objectNode(id: Int): Node {
-  val node = Node("Object")
-  node.setInt("id", id)
-  return node
 }

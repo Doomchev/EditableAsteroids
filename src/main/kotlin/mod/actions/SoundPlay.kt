@@ -21,13 +21,11 @@ class SoundPlayFactory(var file: File? = null): SpriteFactory() {
 
   override fun fullText(): String = "Проиграть звук $file"
 
-  override fun getClassName(): String = "SoundPlayFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setString("file", file!!.name)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     TODO("Not yet implemented")
   }
 }
@@ -40,13 +38,11 @@ class SoundPlay(sprite: Sprite, var file: File): SpriteAction(sprite) {
     clip.start()
   }
 
-  override fun getClassName(): String = "SoundPlay"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setString("file", file!!.name)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     TODO("Not yet implemented")
   }
 }

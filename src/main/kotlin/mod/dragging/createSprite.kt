@@ -2,6 +2,8 @@ package mod.dragging
 
 import Sprite
 import mod.actions.sprite.currentImageArray
+import mod.project
+import mod.selectedSprites
 import mousefx
 import mousefy
 import snapX

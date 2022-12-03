@@ -4,7 +4,7 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
-import mod.dragging.selectedSprites
+import mod.selectedSprites
 import nullSprite
 
 class SpriteLoopAreaFactory(private var bounds: Sprite = nullSprite): SpriteFactory() {
@@ -19,13 +19,11 @@ class SpriteLoopAreaFactory(private var bounds: Sprite = nullSprite): SpriteFact
   override fun toString(): String = "Зациклить пространство"
   override fun fullText(): String = "Зациклить пространство в $bounds"
 
-  override fun getClassName(): String = "SpriteLoopAreaFactory"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("bounds", bounds)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     bounds = node.getField("bounds") as Sprite
   }
 }
@@ -40,14 +38,12 @@ class SpriteLoopArea(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAct
 
   override fun toString(): String = "Зациклить пространство для $sprite в $bounds"
 
-  override fun getClassName(): String = "SpriteLoopArea"
-
-  override fun store(node: Node) {
+  override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setField("bounds", bounds)
   }
 
-  override fun load(node: Node) {
+  override fun fromNode(node: Node) {
     sprite = node.getField("sprite") as Sprite
     bounds = node.getField("bounds") as Sprite
   }

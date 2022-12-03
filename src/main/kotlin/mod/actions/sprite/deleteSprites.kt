@@ -1,8 +1,8 @@
 package mod.actions.sprite
 
 import Action
-import mod.dragging.project
-import mod.dragging.selectedSprites
+import mod.project
+import mod.selectedSprites
 
 object deleteSprites: Action {
   override fun execute() {

@@ -10,7 +10,6 @@ import SpriteClass
 import SpriteFactory
 import actions
 import canvases
-import classes
 import currentCanvas
 import doubleToFormula
 import frame
@@ -18,6 +17,8 @@ import imageArrays
 import listener
 import mod.actions.SoundPlayFactory
 import mod.actions.sprite.*
+import mod.project
+import mod.selectedSprites
 import newActions
 import nullSprite
 import spritesToRemove
@@ -41,7 +42,7 @@ class Window: JPanel() {
     val oldCanvas = currentCanvas
     val g2d = g as Graphics2D
 
-    for(spriteClass1 in classes) {
+    for(spriteClass1 in project.classes) {
       for(entry in spriteClass1.onCollision) {
         val spriteClass2 = entry.spriteClass
         for(sprite1 in spriteClass1.sprites) {
@@ -93,7 +94,7 @@ object updatePanel: ActionListener {
 
 fun addClass(caption: String): SpriteClass {
   val newClass = SpriteClass(caption)
-  classes.add(newClass)
+  project.classes.add(newClass)
   return newClass
 }
 
@@ -182,8 +183,8 @@ fun enterDouble(message: String): Formula {
 }
 
 fun selectClass(message:String = "Выберите класс:"): SpriteClass {
-  val classesArray = Array(classes.size) {classes[it]}
-  return classesArray[JOptionPane.showOptionDialog(frame, message, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, classesArray, classes.first)]
+  val classesArray = Array(project.classes.size) { project.classes[it]}
+  return classesArray[JOptionPane.showOptionDialog(frame, message, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, classesArray, project.classes.first)]
 }
 
 val discreteActions = arrayOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteDirectAsFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SoundPlayFactory(), SpriteSetImageFactory(), SpriteRemoveFactory())

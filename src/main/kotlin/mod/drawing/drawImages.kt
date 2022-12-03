@@ -5,7 +5,7 @@ import distToScreen
 import drawDashedRectangle
 import imageArrays
 import mod.actions.sprite.currentImageArray
-import mod.dragging.Drawing
+import mod.Drawing
 import xToScreen
 import yToScreen
 import java.awt.Graphics2D

@@ -1,6 +1,8 @@
 package mod.dragging
 
 import Sprite
+import mod.Drawing
+import mod.selectedSprites
 import mousefx
 import mousefy
 import mousesx

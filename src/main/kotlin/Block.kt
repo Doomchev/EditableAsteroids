@@ -1,3 +1,4 @@
+import mod.project
 import mod.dragging.selectFactory
 import mod.dragging.selectSprite
 import java.util.*
@@ -77,7 +78,7 @@ fun updateActions() {
     showButtonActions(button.onPressActions, "При нажатии на $button", false)
   }
 
-  for(spriteClass in classes) {
+  for(spriteClass in project.classes) {
     showClassActions(spriteClass, spriteClass.onCreate, "При создании $spriteClass", true)
     showClassActions(spriteClass, spriteClass.always, "Всегда для $spriteClass", false)
     for(entry in spriteClass.onCollision) {

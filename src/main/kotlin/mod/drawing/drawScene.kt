@@ -1,7 +1,7 @@
 package mod.drawing
 
-import mod.dragging.Drawing
-import mod.dragging.project
+import mod.Drawing
+import mod.project
 import java.awt.Graphics2D
 
 object drawScene: Drawing {
