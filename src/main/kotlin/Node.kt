@@ -1,22 +1,20 @@
 import mod.Element
-import java.util.LinkedList
+import java.util.*
 import kotlin.reflect.full.createInstance
 
-//class Attribute(var name:String, var value: String)
 
-val ids = HashMap<Element, Int>()
-val toRemove = HashMap<Element, Node>()
-var lastID = 0
+
+private val ids = HashMap<Element, Int>()
+public val toRemove = HashMap<Element, Node>()
+private var lastID = 0
 
 class Node(var className: String) {
-  private val attributes = HashMap<String, String>()
+  val attributes = HashMap<String, String>()
   private val fields = HashMap<String, Node>()
-  private val children = LinkedList<Node>()
+  val children = LinkedList<Node>()
 
   constructor(element: Element) : this(element.javaClass.kotlin.simpleName!!) {
   }
-
-
 
   private fun createObject(): Element {
     return Class.forName(className).getDeclaredConstructor().newInstance() as Element
@@ -120,7 +118,7 @@ class Node(var className: String) {
     attributes.remove(name)
   }
 
-  fun getText(attr: String = ""): String {
+  fun toText(attr: String = ""): String {
     var text = "<${className}$attr"
     for(attribute in attributes) {
       text += " ${attribute.key}=\"${attribute.value}\""
@@ -129,12 +127,16 @@ class Node(var className: String) {
 
     text += ">"
     for(field in fields) {
-      text += field.value.getText(" field=\"${field.key}\"")
+      text += field.value.toText(" field=\"${field.key}\"")
     }
     for(node in children) {
-      text += node.getText()
+      text += node.toText()
     }
     text += "</$className>"
     return text
+  }
+
+  override fun toString(): String {
+    return "$className"
   }
 }

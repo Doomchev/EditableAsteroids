@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent.*
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_INT_RGB
 import java.io.File
+import java.io.FileReader
 import java.io.FileWriter
 import java.util.*
 import javax.imageio.ImageIO
@@ -247,10 +248,14 @@ fun main() {
   asteroids()
   updateActions()
 
-  val node = Node("root")
-  project.toNode(node)
+  val reader = FileReader("data.xml")
+  parser.text = reader.readText()
+  val node = parser.fromText()
+  reader.close()
+
+  //project.toNode(node)
   val writer = FileWriter("test.xml")
-  writer.write(node.getText(""))
+  writer.write(node!!.toText(""))
   writer.close()
   exitProcess(0)
 
