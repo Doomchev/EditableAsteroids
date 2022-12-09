@@ -13,8 +13,7 @@ object createSprite: createRectangle() {
   override fun pressed() {
     startingX = snapX(mousefx)
     startingY = snapY(mousefy)
-    sprite = Sprite(mousefx, mousefy, 0.0, 0.0)
-    sprite!!.image = if(selectedSprites.size > 0) selectedSprites.first.image else currentImageArray!!.images[0]
+    sprite = Sprite(if(selectedSprites.size > 0) selectedSprites.first.image else currentImageArray!!.images[0], mousefx, mousefy, 0.0, 0.0)
     project.add(sprite!!)
     selectedSprites.clear()
     selectedSprites.add(sprite!!)

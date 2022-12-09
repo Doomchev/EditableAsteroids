@@ -1,3 +1,5 @@
+import mod.SceneElement
+import mod.ElementSerializer
 import mod.dragging.spritesList
 import java.awt.BasicStroke
 import java.awt.Graphics2D
@@ -9,26 +11,19 @@ private val whiteStroke = BasicStroke(1f, BasicStroke.CAP_BUTT
 var fps = 100.0
 var fpsk = 1.0 / fps
 
-val nullSprite = Sprite()
 val spritesToRemove = LinkedList<Sprite>()
+val nullSprite = Sprite(blankImage)
 
-open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double = 1.0, height: Double = 1.0, var name:String = ""): Shape(centerX, centerY, width, height) {
-  var angle: Double = 0.0
-  var image: Image? = null
-  var dx: Double = 0.0
-  var dy: Double = 0.0
+object spriteSerializer: ElementSerializer {
+  override fun fromNode(node: Node): SceneElement {
+    return Sprite(node.getField("image") as Image, node.getDouble("canterX"), node.getDouble("centerY"), node.getDouble("width"), node.getDouble("height"), node.getString("name"), node.getDouble("angle"), node.getDouble("dx"), node.getDouble("dy"))
+  }
+}
+
+open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, var name:String = "", var angle: Double = 0.0, var dx: Double = 0.0, var dy: Double = 0.0): Shape(centerX, centerY, width, height) {
 
   init {
     if(name.isNotEmpty()) spritesList.add(this)
-  }
-
-  fun copy(): Sprite {
-    val sprite = Sprite()
-    sprite.centerX = centerX
-    sprite.centerY = centerY
-    sprite.width = width
-    sprite.height = height
-    return sprite
   }
 
   override fun select(selection: Sprite, selected: LinkedList<Sprite>) {
@@ -40,10 +35,6 @@ open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double =
 
   override fun spriteUnderCursor(fx: Double, fy: Double): Sprite? {
     return if(collidesWithPoint(fx, fy)) this else null
-  }
-
-  override fun fromNode(node: Node) {
-    TODO("Not yet implemented")
   }
 
   override fun draw(g: Graphics2D) {
@@ -60,16 +51,17 @@ open class Sprite(centerX: Double = 0.0, centerY: Double = 0.0, width:  Double =
     centerY += fpsk * dy
   }
 
-  override fun toString(): String {
-    return if(name.isEmpty()) super.toString() else name
-  }
-
   override fun toNode(node: Node) {
     super.toNode(node)
+    node.setString("name", name)
     node.setDouble("angle", angle)
     if(image != null) node.setField("image", image!!)
     node.setDouble("dx", dx)
     node.setDouble("dy", dy)
+  }
+
+  override fun toString(): String {
+    return name.ifEmpty { super.toString() }
   }
 }
 

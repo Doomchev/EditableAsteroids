@@ -1,12 +1,12 @@
 import mod.Element
 import mod.SceneElement
+import mod.ElementSerializer
 import java.awt.Graphics2D
 import java.util.*
 
 val emptyClass = SpriteClass("")
 
-class CollisionEntry(var spriteClass: SpriteClass, vararg factoriesArray: SpriteFactory):
-  Element {
+class CollisionEntry(var spriteClass: SpriteClass, vararg factoriesArray: SpriteFactory): Element {
   val factories = LinkedList<SpriteFactory>()
   init {
     for(factory in factoriesArray) {
@@ -22,13 +22,20 @@ class CollisionEntry(var spriteClass: SpriteClass, vararg factoriesArray: Sprite
     node.setField("spriteClass", spriteClass)
     node.setChildren(factories)
   }
+}
 
-  override fun fromNode(node: Node) {
-    TODO("Not yet implemented")
+object spriteClassSerializer: ElementSerializer {
+  override fun fromNode(node: Node): SceneElement {
+    val spriteClass = SpriteClass(node.getString("name"))
+    node.getField("onCreate", spriteClass.onCreate)
+    node.getField("onCollision", spriteClass.onCollision)
+    node.getField("always", spriteClass.always)
+    node.getChildren(spriteClass.sprites)
+    return spriteClass
   }
 }
 
-class SpriteClass(var name: String): SceneElement() {
+class SpriteClass(var name: String = ""): SceneElement() {
   val sprites = LinkedList<Sprite>()
   val onCreate = LinkedList<SpriteFactory>()
   val onCollision = LinkedList<CollisionEntry>()
@@ -53,6 +60,7 @@ class SpriteClass(var name: String): SceneElement() {
   }
 
   override fun toString(): String = name
+  
   fun add(spriteClass2: SpriteClass, spriteFactory: SpriteFactory) {
     for(entry in onCollision) {
       if(spriteClass2 == entry.spriteClass) {
@@ -73,16 +81,8 @@ class SpriteClass(var name: String): SceneElement() {
     onCollision.add(CollisionEntry(spriteClass, factory))
   }
 
-  override fun fromNode(node: Node) {
-    name = node.getString("name")
-    node.getField("onCreate", onCreate)
-    node.getField("onCollision", onCollision)
-    node.getField("always", always)
-    node.getChildren(sprites)
-  }
-
   override fun toNode(node: Node) {
-    node.setString("name", name, )
+    node.setString("name", name)
     node.setField("onCreate", onCreate)
     node.setField("onCollision", onCollision)
     node.setField("always", always)

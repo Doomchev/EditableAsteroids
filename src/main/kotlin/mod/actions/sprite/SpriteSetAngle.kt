@@ -5,15 +5,26 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
+import mod.Serializer
 import mod.dragging.enterDouble
 import zero
 import kotlin.math.PI
 
-class SpriteSetAngleFactory(private var angle: Formula = zero): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spriteSetAngleSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpriteSetAngleFactory(enterDouble("Введите скорость поворота (град/сек):"))
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpriteSetAngleFactory(node.getFormula("angle"))
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpriteSetAngle(node.getField("sprite") as Sprite, node.getDouble("angle"))
+  }
+}
+
+class SpriteSetAngleFactory(private var angle: Formula = zero): SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteSetAngle(sprite, angle.get() * PI / 180.0)
   }
@@ -23,10 +34,6 @@ class SpriteSetAngleFactory(private var angle: Formula = zero): SpriteFactory() 
 
   override fun toNode(node: Node) {
     node.setFormula("angle", angle)
-  }
-
-  override fun fromNode(node: Node) {
-    angle = node.getFormula("angle")
   }
 }
 
@@ -40,10 +47,5 @@ class SpriteSetAngle(sprite: Sprite, private var angle: Double): SpriteAction(sp
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setDouble("angle", angle)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
-    angle = node.getDouble("angle")
   }
 }

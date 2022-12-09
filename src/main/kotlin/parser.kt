@@ -38,7 +38,7 @@ object parser {
   fun getValue(): String {
     var quotes: Int = -1
     while(true) {
-      when(val c = text[textPos]) {
+      when(text[textPos]) {
         '\"' -> {
           if(quotes < 0) {
             quotes = textPos
@@ -69,6 +69,8 @@ object parser {
     throw Error()
   }
 
+  private val idMap = HashMap<Int, Node>()
+
   fun fromText(parent: Node? = null): Node? {
     while(true) {
       expect('<')
@@ -76,39 +78,42 @@ object parser {
       if(currentSymbol() == '/') {
         textPos++
         val id = getID()
-        println("/$id")
         if(id != parent!!.className) throw Error()
         expect('>')
         return null
       }
 
-      val node = Node(getID())
+      var node = Node(getID())
       parent?.children?.add(node) //println(node.className)
       while(true) {
-        val symbol = currentSymbol()
-        when(symbol) {
+        when(currentSymbol()) {
           '/' -> {
             textPos++
             expect('>')
-            println("$node/")
             break
           }
-
           '>' -> {
             textPos++
-            println("->$node")
             fromText(node)
-            println("<-$node")
             break
           }
         }
         val id = getID()
         expect('=')
         val value = getValue()
-        node.attributes[id] = value
-        println("$id = $value")
+        if(id == "id") {
+          if(node.className != "Object") {
+            idMap[value.toInt()] = node
+          }
+        } else if(parent != null && id == "field") {
+          parent.fields[value] = node
+          parent.children.remove(node)
+        } else {
+          node.attributes[id] = value
+        }
         textPos++
       }
+
       if(textPos >= text.length) return node
     }
   }

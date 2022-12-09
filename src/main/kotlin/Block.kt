@@ -1,5 +1,5 @@
 import mod.project
-import mod.dragging.selectFactory
+import mod.dragging.selectSerializer
 import mod.dragging.selectSprite
 import java.util.*
 
@@ -10,7 +10,7 @@ abstract class Block(var message:String) {
 
 class ClassBlock(var factories: LinkedList<SpriteFactory>, message: String) : Block(message) {
   override fun addElement() {
-    factories.addFirst(selectFactory(true))
+    factories.addFirst(selectSerializer(true))
     updateActions()
   }
 
@@ -22,7 +22,7 @@ class ClassBlock(var factories: LinkedList<SpriteFactory>, message: String) : Bl
 
 class FactoryBlock(var factory: SpriteFactory, var factories: LinkedList<SpriteFactory>, message: String, var discrete: Boolean) : Block(message) {
   override fun addElement() {
-    factories.add(factories.indexOf(factory) + 1, selectFactory(discrete))
+    factories.add(factories.indexOf(factory) + 1, selectSerializer(discrete))
     updateActions()
   }
 
@@ -34,7 +34,7 @@ class FactoryBlock(var factory: SpriteFactory, var factories: LinkedList<SpriteF
 
 class ButtonBlock(var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
-    entries.addFirst(ActionEntry(world, selectFactory(discrete).copy().create(selectSprite())))
+    entries.addFirst(ActionEntry(world, selectSerializer(discrete).create(selectSprite())))
     updateActions()
   }
 
@@ -46,7 +46,7 @@ class ButtonBlock(var entries: LinkedList<ActionEntry>, message: String, private
 
 class ActionBlock(var entry: ActionEntry, var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
-    entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectFactory(discrete).create(selectSprite())))
+    entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectSerializer(discrete).create(selectSprite())))
     updateActions()
   }
 
@@ -58,7 +58,7 @@ class ActionBlock(var entry: ActionEntry, var entries: LinkedList<ActionEntry>, 
 
 class CollisionBlock(private val entry: CollisionEntry, message: String) : Block(message){
   override fun addElement() {
-    entry.factories.addFirst(selectFactory(true))
+    entry.factories.addFirst(selectSerializer(true))
     updateActions()
   }
 

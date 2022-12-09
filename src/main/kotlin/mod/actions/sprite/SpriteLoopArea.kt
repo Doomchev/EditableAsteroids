@@ -4,14 +4,26 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
+import mod.Serializer
 import mod.selectedSprites
 import nullSprite
 
-class SpriteLoopAreaFactory(private var bounds: Sprite = nullSprite): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spriteLoopAreaSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpriteLoopAreaFactory(selectedSprites.first)
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpriteLoopAreaFactory(node.getField("bounds") as Sprite)
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpriteLoopArea(node.getField("sprite") as Sprite, node.getField("bounds") as Sprite)
+  }
+
+}
+
+class SpriteLoopAreaFactory(private var bounds: Sprite = nullSprite): SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteLoopArea(sprite, bounds)
   }
@@ -21,10 +33,6 @@ class SpriteLoopAreaFactory(private var bounds: Sprite = nullSprite): SpriteFact
 
   override fun toNode(node: Node) {
     node.setField("bounds", bounds)
-  }
-
-  override fun fromNode(node: Node) {
-    bounds = node.getField("bounds") as Sprite
   }
 }
 
@@ -41,10 +49,5 @@ class SpriteLoopArea(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAct
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setField("bounds", bounds)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
-    bounds = node.getField("bounds") as Sprite
   }
 }

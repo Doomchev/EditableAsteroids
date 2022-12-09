@@ -13,7 +13,7 @@ fun tilemap() {
 fun snow() {
   val flake = addClass("Снежинка")
 
-  val area = Sprite(0.0, -10.0, 10.0, 2.0, "snow gen")
+  val area = Sprite(blankImage, 0.0, -10.0, 10.0, 2.0, "snow gen")
   flake.onCreate.apply {
     add(SpritePositionInAreaFactory(area))
     add(SpriteSetSizeFactory(RandomDoubleValue(0.25, 1.0)))
@@ -23,7 +23,7 @@ fun snow() {
   flake.always.add(SpriteMoveFactory())
 
   project.add(area)
-  actions.add(SpriteDelayedCreate(Sprite(), flake, 0.1))
+  actions.add(SpriteDelayedCreate(Sprite(blankImage), flake, 0.1))
 }
 
 fun asteroids() {
@@ -48,15 +48,13 @@ fun asteroids() {
 
   /// SPRITES
 
-  val player = Sprite(-3.0, -5.0, 1.0, 1.0, "игрок")
-  player.image = imageArrays[3].images[0]
+  val player = Sprite(imageArrays[3].images[0], -3.0, -5.0, 1.0, 1.0, "игрок")
 
   Key(97, user).onPressActions.add(ActionEntry(world, SpriteRotation(player, -1.5 * PI)))
   Key(100, user).onPressActions.add(ActionEntry(world, SpriteRotation(player, 1.5 * PI)))
   Key(119, user).onPressActions.add(ActionEntry(world, SpriteAcceleration(player, 50.0, 10.0)))
 
-  val bounds = Sprite(world.centerX, world.centerY, world.width + 2.0,
-    world.height + 2.0,"границы поля")
+  val bounds = Sprite(blankImage, world.centerX, world.centerY, world.width + 2.0,world.height + 2.0, "границы поля")
   actions.apply {
     add(SpriteAcceleration(player, -15.0, 100.0))
     add(SpriteLoopArea(player, bounds))
@@ -93,7 +91,7 @@ fun asteroids() {
     add(SpriteLoopAreaFactory(bounds))
   }
 
-  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(), asteroid)))
+  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(blankImage), asteroid)))
 
   val explosion = addClass("Взрыв")
 

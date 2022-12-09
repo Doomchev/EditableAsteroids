@@ -5,15 +5,25 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import fpsk
+import mod.Serializer
 import mod.dragging.enterDouble
 import spritesToRemove
 
-
-class SpriteDelayedRemoveFactory(private var delay: Double = 0.0): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spriteDelayedRemoveSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpriteDelayedRemoveFactory(enterDouble("Введите задержку:").get())
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpriteDelayedRemoveFactory(node.getDouble("delay"))
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpriteDelayedRemove(node.getField("sprite") as Sprite, node.getDouble("delay"))
+  }
+}
+
+class SpriteDelayedRemoveFactory(private var delay: Double = 0.0): SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteDelayedRemove(sprite, delay)
   }
@@ -23,10 +33,6 @@ class SpriteDelayedRemoveFactory(private var delay: Double = 0.0): SpriteFactory
 
   override fun toNode(node: Node) {
     node.setDouble("delay", delay)
-  }
-
-  override fun fromNode(node: Node) {
-    delay = node.getDouble("delay")
   }
 }
 
@@ -43,10 +49,5 @@ class SpriteDelayedRemove(sprite: Sprite, var delay: Double = 0.0): SpriteAction
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setDouble("delay", delay)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
-    delay = node.getDouble("delay")
   }
 }

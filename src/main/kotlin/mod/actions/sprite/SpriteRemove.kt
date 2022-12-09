@@ -4,13 +4,24 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
+import mod.Serializer
 import spritesToRemove
 
-class SpriteRemoveFactory(): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spriteRemoveSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpriteRemoveFactory()
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpriteRemoveFactory()
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpriteDelayedRemove(node.getField("sprite") as Sprite)
+  }
+}
+
+class SpriteRemoveFactory: SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteRemove(sprite)
   }
@@ -18,9 +29,6 @@ class SpriteRemoveFactory(): SpriteFactory() {
   override fun fullText(): String = "Удалить"
 
   override fun toNode(node: Node) {
-  }
-
-  override fun fromNode(node: Node) {
   }
 }
 
@@ -33,9 +41,5 @@ class SpriteRemove(sprite: Sprite): SpriteAction(sprite) {
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
   }
 }

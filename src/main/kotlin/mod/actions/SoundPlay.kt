@@ -5,16 +5,30 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import frame
+import mod.Serializer
+import mod.actions.sprite.SpriteAcceleration
+import mod.actions.sprite.SpriteAccelerationFactory
 import sounds
 import java.io.File
 import javax.sound.sampled.AudioSystem
 import javax.swing.JOptionPane
 
-class SoundPlayFactory(var file: File? = null): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object soundPlaySerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SoundPlayFactory(selectSound())
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SoundPlayFactory(File(node.getString("file")))
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SoundPlay(node.getField("sprite") as Sprite,
+      File(node.getString("file")))
+  }
+}
+
+class SoundPlayFactory(var file: File? = null): SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SoundPlay(sprite, file!!)
   }
@@ -23,10 +37,6 @@ class SoundPlayFactory(var file: File? = null): SpriteFactory() {
 
   override fun toNode(node: Node) {
     node.setString("file", file!!.name)
-  }
-
-  override fun fromNode(node: Node) {
-    TODO("Not yet implemented")
   }
 }
 
@@ -39,11 +49,7 @@ class SoundPlay(sprite: Sprite, var file: File): SpriteAction(sprite) {
   }
 
   override fun toNode(node: Node) {
-    node.setString("file", file!!.name)
-  }
-
-  override fun fromNode(node: Node) {
-    TODO("Not yet implemented")
+    node.setString("file", file.name)
   }
 }
 

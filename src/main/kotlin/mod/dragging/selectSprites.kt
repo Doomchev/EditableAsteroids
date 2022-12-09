@@ -1,13 +1,14 @@
 package mod.dragging
 
 import Sprite
+import blankImage
 import mod.Drawing
 import mod.project
 import mod.selectedSprites
 import java.awt.Graphics2D
 
 object selectSprites: createRectangle(), Drawing {
-  private val selection = Sprite()
+  private val selection = Sprite(blankImage)
 
   override fun pressed() {
     sprite = selection

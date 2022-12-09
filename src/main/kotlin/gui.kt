@@ -10,12 +10,16 @@ import SpriteClass
 import SpriteFactory
 import actions
 import canvases
+import continuousActions
 import currentCanvas
+import discreteActions
 import doubleToFormula
 import frame
 import imageArrays
 import listener
-import mod.actions.SoundPlayFactory
+import mod.SceneElement
+import mod.Serializer
+import mod.actions.soundPlaySerializer
 import mod.actions.sprite.*
 import mod.project
 import mod.selectedSprites
@@ -34,6 +38,7 @@ import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 import java.util.*
 import javax.swing.*
+import kotlin.collections.HashMap
 
 var parentSprite = nullSprite
 
@@ -141,20 +146,20 @@ private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode:
     }
   } else {
     when(event) {
-      MenuEvent.onCreate -> spriteClass.onCreate.add(selectFactory(true))
+      MenuEvent.onCreate -> spriteClass.onCreate.add(selectSerializer(true))
       MenuEvent.onClick -> {}
       MenuEvent.onPress -> {}
       MenuEvent.onCollision -> {
         val spriteClass2 = selectClass("Выберите второй класс:")
         for(entry in spriteClass.onCollision) {
           if(entry.spriteClass == spriteClass2) {
-            entry.factories.add(selectFactory(true))
+            entry.factories.add(selectSerializer(true))
             return
           }
         }
-        spriteClass.onCollision.add(CollisionEntry(spriteClass2, selectFactory(true)))
+        spriteClass.onCollision.add(CollisionEntry(spriteClass2, selectSerializer(true)))
       }
-      MenuEvent.always -> spriteClass.always.add(selectFactory(false))
+      MenuEvent.always -> spriteClass.always.add(selectSerializer(false))
     }
   }
   updateActions()
@@ -163,10 +168,10 @@ private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode:
 private fun applyToSprite(sprite: Sprite, event: MenuEvent, keyCode: Int) {
   when(event) {
     MenuEvent.onCreate -> {}
-    MenuEvent.onClick -> Key(keyCode, user).addOnClick(world, selectFactory(true).create(sprite))
-    MenuEvent.onPress -> Key(keyCode, user).addOnPress(world, selectFactory(false).create(sprite))
+    MenuEvent.onClick -> Key(keyCode, user).addOnClick(world, selectSerializer(true).create(sprite))
+    MenuEvent.onPress -> Key(keyCode, user).addOnPress(world, selectSerializer(false).create(sprite))
     MenuEvent.onCollision -> {}
-    MenuEvent.always -> actions.add(selectFactory(false).create(sprite))
+    MenuEvent.always -> actions.add(selectSerializer(false).create(sprite))
   }
 }
 
@@ -187,13 +192,9 @@ fun selectClass(message:String = "Выберите класс:"): SpriteClass {
   return classesArray[JOptionPane.showOptionDialog(frame, message, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, classesArray, project.classes.first)]
 }
 
-val discreteActions = arrayOf(SpriteCreateFactory(), SpritePositionAsFactory(), SpritePositionInAreaFactory(), SpriteSetSizeFactory(), SpriteSetAngleFactory(), SpriteDirectAsFactory(), SpriteSetMovingVectorFactory(), SpriteSetSpeedFactory(), SoundPlayFactory(), SpriteSetImageFactory(), SpriteRemoveFactory())
-
-val continuousActions = arrayOf(SpriteDelayedCreateFactory(), SpriteRotationFactory(), SpriteMoveFactory(), SpriteAccelerationFactory(), SpriteAnimationFactory(), SpriteSetBoundsFactory(), SpriteLoopAreaFactory(), SpriteDelayedRemoveFactory())
-
-fun selectFactory(discrete: Boolean): SpriteFactory {
-  val factoriesArray = if(discrete) discreteActions else continuousActions
-  return (JOptionPane.showInputDialog(frame, "Выберите действие:", "", JOptionPane.QUESTION_MESSAGE, null, factoriesArray, factoriesArray[0]) as SpriteFactory).copy()
+fun selectSerializer(discrete: Boolean): SpriteFactory {
+  val serArray = if(discrete) discreteActions else continuousActions
+  return (JOptionPane.showInputDialog(frame, "Выберите действие:", "", JOptionPane.QUESTION_MESSAGE, null, serArray, serArray[0]) as Serializer).newFactory()
 }
 
 val spritesList = LinkedList<Sprite>()
@@ -204,5 +205,5 @@ fun selectSprite(): Sprite {
 
 fun selectImageArray(): ImageArray {
   val options = Array(imageArrays.size) { imageArrays[it] }
-  return options[JOptionPane.showOptionDialog(frame, "Выберите спрайт:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
+  return options[JOptionPane.showOptionDialog(frame, "Выберите изображение:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
 }

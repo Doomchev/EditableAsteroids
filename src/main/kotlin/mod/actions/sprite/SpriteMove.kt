@@ -5,12 +5,24 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import fpsk
+import mod.Serializer
 
-class SpriteMoveFactory: SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spriteMoveSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpriteMoveFactory()
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpriteMoveFactory()
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpriteMove(node.getField("sprite") as Sprite)
+  }
+
+}
+
+class SpriteMoveFactory: SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteMove(sprite)
   }
@@ -19,10 +31,8 @@ class SpriteMoveFactory: SpriteFactory() {
 
   override fun toNode(node: Node) {
   }
-
-  override fun fromNode(node: Node) {
-  }
 }
+
 class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
     sprite.centerX += fpsk * sprite.dx
@@ -33,9 +43,5 @@ class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
   }
 }

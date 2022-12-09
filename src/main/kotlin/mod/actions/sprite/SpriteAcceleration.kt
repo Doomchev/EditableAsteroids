@@ -6,20 +6,30 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import fpsk
+import mod.Serializer
 import mod.dragging.enterDouble
-import nullSprite
-import zero
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class SpriteAccelerationFactory(private var acceleration: Formula = zero, private var limit: Formula = zero): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spriteAccelerationSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpriteAccelerationFactory(
       enterDouble("Введите ускорение (ед/сек):")
       , enterDouble("Введите макс. скорость (ед/сек):"))
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpriteAccelerationFactory(node.getFormula("acceleration"), node.getFormula("limit"))
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpriteAcceleration(node.getField("sprite") as Sprite,
+    node.getDouble("acceleration"), node.getDouble("limit"))
+  }
+}
+
+class SpriteAccelerationFactory(private var acceleration: Formula, private var limit: Formula): SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteAcceleration(sprite, acceleration.get(), limit.get())
   }
@@ -27,18 +37,13 @@ class SpriteAccelerationFactory(private var acceleration: Formula = zero, privat
   override fun toString(): String = "Ускорять"
   override fun fullText(): String = "Ускорять на $acceleration до $limit"
 
-  override fun fromNode(node: Node) {
-    acceleration = node.getFormula("acceleration")
-    limit = node.getFormula("limit")
-  }
-
   override fun toNode(node: Node) {
     node.setFormula("acceleration", acceleration)
     node.setFormula("limit", limit)
   }
 }
 
-class SpriteAcceleration(sprite: Sprite = nullSprite, private var acceleration: Double = 0.0, private var limit: Double = 0.0): SpriteAction(sprite) {
+class SpriteAcceleration(sprite: Sprite, private var acceleration: Double, private var limit: Double): SpriteAction(sprite) {
   override fun execute() {
     var newLength = vectorLength(sprite.dx, sprite.dy) + acceleration * fpsk
     if(newLength < 0) newLength = 0.0
@@ -48,12 +53,6 @@ class SpriteAcceleration(sprite: Sprite = nullSprite, private var acceleration: 
   }
 
   override fun toString(): String = "Ускорять $sprite на $acceleration до $limit"
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
-    acceleration = node.getDouble("acceleration")
-    limit = node.getDouble("limit")
-  }
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)

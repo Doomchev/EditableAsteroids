@@ -4,13 +4,24 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
+import mod.Serializer
 import mod.dragging.parentSprite
 
-class SpriteDirectAsFactory(): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spriteDirectAsSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpriteDirectAsFactory()
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpriteDirectAsFactory()
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpriteDirectAs(node.getField("sprite") as Sprite)
+  }
+}
+
+class SpriteDirectAsFactory(): SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteDirectAs(sprite)
   }
@@ -19,10 +30,8 @@ class SpriteDirectAsFactory(): SpriteFactory() {
 
   override fun toNode(node: Node) {
   }
-
-  override fun fromNode(node: Node) {
-  }
 }
+
 class SpriteDirectAs(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
     sprite.angle = parentSprite.angle
@@ -32,9 +41,5 @@ class SpriteDirectAs(sprite: Sprite): SpriteAction(sprite) {
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
   }
 }

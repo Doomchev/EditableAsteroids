@@ -5,14 +5,26 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
+import mod.Serializer
 import mod.dragging.enterDouble
 import zero
 
-class SpriteSetMovingVectorFactory(private var dx: Formula = zero, private var dy: Formula = zero): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spriteSetMovingVectorSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpriteSetMovingVectorFactory(enterDouble("Введите приращение по Х:"
     ), enterDouble("Введите приращение по Y:"))
   }
+
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpriteSetMovingVectorFactory(node.getFormula("dx"), node.getFormula("dy"))
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpriteSetMovingVector(node.getField("sprite") as Sprite, node.getDouble("dx"), node.getDouble("dy"))
+  }
+}
+
+class SpriteSetMovingVectorFactory(private var dx: Formula, private var dy: Formula): SpriteFactory() {
 
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteSetMovingVector(sprite, dx.get(), dy.get())
@@ -24,11 +36,6 @@ class SpriteSetMovingVectorFactory(private var dx: Formula = zero, private var d
   override fun toNode(node: Node) {
     node.setFormula("dx", dx)
     node.setFormula("dy", dy)
-  }
-
-  override fun fromNode(node: Node) {
-    dx = node.getFormula("dx")
-    dy = node.getFormula("dy")
   }
 }
 
@@ -44,11 +51,5 @@ class SpriteSetMovingVector(sprite: Sprite, private var dx: Double, private var 
     node.setField("sprite", sprite)
     node.setDouble("dx", dx)
     node.setDouble("dy", dy)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
-    dx = node.getDouble("dx")
-    dy = node.getDouble("dy")
   }
 }

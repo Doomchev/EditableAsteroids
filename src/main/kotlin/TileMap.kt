@@ -1,12 +1,19 @@
+import mod.SceneElement
+import mod.ElementSerializer
 import java.awt.Graphics2D
 import java.util.*
 
+object tileMapSerializer: ElementSerializer {
+  override fun fromNode(node: Node): SceneElement {
+    return TileMap(node.getInt("columns"), node.getInt("rows"), node.getDouble("cellWidth"), node.getDouble("cellHeight"), node.getField("tileSet") as ImageArray)
+  }
+}
+
 class TileMap(private var columns: Int, private var rows: Int, private var cellWidth: Double = 1.0, private var cellHeight: Double = 1.0, private var tileSet: ImageArray): Shape() {
-  private var map: IntArray
-  var maxValue: Int = 0
+  private var map: IntArray = IntArray(rows * columns)
+  private var maxValue: Int = 0
 
   init {
-    map = IntArray(rows * columns)
     update()
   }
 
@@ -24,9 +31,6 @@ class TileMap(private var columns: Int, private var rows: Int, private var cellW
   override fun remove(shape: Shape) {}
 
   override fun spriteUnderCursor(fx: Double, fy: Double): Sprite? = null
-  override fun fromNode(node: Node) {
-    TODO("Not yet implemented")
-  }
 
   override fun draw(g: Graphics2D) {
     val swidth = distToScreen(cellWidth) + 1

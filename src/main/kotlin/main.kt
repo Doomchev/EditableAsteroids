@@ -28,7 +28,7 @@ var showGrid = false
 
 val canvases = LinkedList<Canvas>()
 val imageArrays = LinkedList<ImageArray>()
-var blankImage: Image = Image(BufferedImage(1, 1, TYPE_INT_RGB))
+var blankImage: Image = Image(Texture(""))
 
 val sounds = LinkedList<File>()
 
@@ -88,7 +88,7 @@ fun main() {
 
   for(imageFile in File("./").listFiles()) {
     if(!imageFile.name.endsWith(".png")) continue
-    val image = Image(ImageIO.read(imageFile))
+    val image = Image(Texture(imageFile.name))
     imageArrays.add(ImageArray(Array(1) { image }, imageFile.name))
   }
 
@@ -151,7 +151,7 @@ fun main() {
 
   val itemCreate = JMenuItem("Элемент")
   itemCreate.addActionListener {
-    actions.add(SpriteCreate(Sprite(), selectClass()))
+    actions.add(SpriteCreate(Sprite(currentImageArray!!.images[0]), selectClass()))
   }
   createItem.add(itemCreate)
 
@@ -207,7 +207,7 @@ fun main() {
   }
   imageMenu.add(itemSetVisArea)
 
-  blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0)
+  blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0)
   imageArrays.addFirst(ImageArray(Array(1) {blankImage}, "Пустое"))
   currentImageArray = imageArrays[0]
 
@@ -245,15 +245,18 @@ fun main() {
 
   // SCENE
 
+  registerSerializers()
   asteroids()
   updateActions()
 
-  val reader = FileReader("data.xml")
+  /*val reader = FileReader("data.xml")
   parser.text = reader.readText()
   val node = parser.fromText()
-  reader.close()
+  project.fromNode(node!!)
+  reader.close()*/
 
-  //project.toNode(node)
+  val node = Node("root")
+  project.toNode(node)
   val writer = FileWriter("test.xml")
   writer.write(node!!.toText(""))
   writer.close()

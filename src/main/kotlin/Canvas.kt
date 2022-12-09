@@ -7,7 +7,7 @@ import java.util.*
 import kotlin.math.pow
 
 class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double, var active: Boolean)
-  : Sprite(0.0, 0.0, fwidth.toDouble() / scale, fheight.toDouble() / scale) {
+  : Sprite(blankImage, 0.0, 0.0, fwidth.toDouble() / scale, fheight.toDouble() / scale) {
   var vdx: Double = 1.0
   var vdy: Double = 1.0
   var k: Double = 1.0
@@ -85,7 +85,7 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double, var activ
   var defaultPosition: Sprite = this
   fun setDefaultPosition() {
     oldZoom = zoom
-    defaultPosition = Sprite(centerX, centerY, width, height)
+    defaultPosition = Sprite(blankImage, centerX, centerY, width, height)
   }
 
   fun restorePosition() {

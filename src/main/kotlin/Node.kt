@@ -1,27 +1,16 @@
 import mod.Element
 import java.util.*
-import kotlin.reflect.full.createInstance
-
-
 
 private val ids = HashMap<Element, Int>()
-public val toRemove = HashMap<Element, Node>()
+val toRemove = HashMap<Element, Node>()
 private var lastID = 0
 
 class Node(var className: String) {
   val attributes = HashMap<String, String>()
-  private val fields = HashMap<String, Node>()
+  val fields = HashMap<String, Node>()
   val children = LinkedList<Node>()
 
   constructor(element: Element) : this(element.javaClass.kotlin.simpleName!!) {
-  }
-
-  private fun createObject(): Element {
-    return Class.forName(className).getDeclaredConstructor().newInstance() as Element
-  }
-
-  private fun newInstance(element: Element): Element {
-    return element.javaClass.kotlin.createInstance()
   }
 
   private fun setNode(element: Element): Node {
@@ -41,8 +30,6 @@ class Node(var className: String) {
       return node
     }
   }
-
-
 
   fun getInt(name: String): Int {
     val value = attributes[name]
@@ -90,21 +77,26 @@ class Node(var className: String) {
   }
 
   fun getField(name: String): Element {
-    val node = fields[name]!!
-    val element = node.createObject()
-    element.fromNode(node)
-    return element
+    return fields[name]!!.createObject()
   }
 
   fun setField(name: String, element: Element) {
     fields[name] = setNode(element)
   }
 
+  private fun createObject(): Element {
+    if(className.endsWith("Factory")) {
+      return factorySerializers[className]!!.factoryFromNode(this)
+    }
+    if(actionSerializers.contains(className)) {
+      return actionSerializers[className]!!.actionFromNode(this)
+    }
+    return Class.forName(className).getDeclaredConstructor().newInstance() as Element
+  }
+
   fun <T: Element> getChildren(list: LinkedList<T>) {
     for(node in children) {
-      val obj = node.createObject() as T
-      obj.fromNode(node)
-      list.add(obj)
+      list.add(node.createObject() as T)
     }
   }
 
@@ -137,6 +129,6 @@ class Node(var className: String) {
   }
 
   override fun toString(): String {
-    return "$className"
+    return className
   }
 }

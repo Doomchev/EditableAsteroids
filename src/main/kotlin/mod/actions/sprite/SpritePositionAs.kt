@@ -4,13 +4,25 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
+import mod.Serializer
 import mod.dragging.parentSprite
 
-class SpritePositionAsFactory(): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spritePositionAsSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpritePositionAsFactory()
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpritePositionAsFactory()
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpritePositionAs(node.getField("sprite") as Sprite)
+  }
+
+}
+
+class SpritePositionAsFactory: SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpritePositionAs(sprite,)
   }
@@ -18,9 +30,6 @@ class SpritePositionAsFactory(): SpriteFactory() {
   override fun fullText(): String = "Переместить к родителю"
 
   override fun toNode(node: Node) {
-  }
-
-  override fun fromNode(node: Node) {
   }
 }
 
@@ -34,10 +43,6 @@ class SpritePositionAs(sprite: Sprite): SpriteAction(sprite) {
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
   }
 }
 

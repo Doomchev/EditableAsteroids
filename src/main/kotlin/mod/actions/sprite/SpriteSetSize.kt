@@ -5,14 +5,26 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
+import mod.Serializer
 import mod.dragging.enterDouble
 import zero
 
-class SpriteSetSizeFactory(var size: Formula = zero): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spriteSetSizeSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpriteSetSizeFactory(enterDouble("Введите ширину/высоту:"))
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpriteSetSizeFactory(node.getFormula("size"))
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpriteSetSize(node.getField("sprite") as Sprite, node.getDouble("size"))
+  }
+
+}
+
+class SpriteSetSizeFactory(var size: Formula = zero): SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     val value = size.get()
     return SpriteSetSize(sprite, value)
@@ -23,10 +35,6 @@ class SpriteSetSizeFactory(var size: Formula = zero): SpriteFactory() {
 
   override fun toNode(node: Node) {
     node.setFormula("size", size)
-  }
-
-  override fun fromNode(node: Node) {
-    size = node.getFormula("size")
   }
 }
 
@@ -41,10 +49,5 @@ class SpriteSetSize(sprite: Sprite, var size: Double): SpriteAction(sprite) {
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setDouble("size", size)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
-    size = node.getDouble("size")
   }
 }

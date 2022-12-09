@@ -2,6 +2,7 @@ package mod.dragging
 
 import DraggingAction
 import Sprite
+import blankImage
 import distFromScreen
 import mod.Drawing
 import mod.selectedSprites
@@ -18,7 +19,7 @@ import kotlin.math.sin
 
 object rotateSprite: DraggingAction, Drawing {
   private const val cursorSize = 8
-  private val block = Sprite()
+  private val block = Sprite(blankImage)
   var currentSprite: Sprite? = null
 
   override fun conditions(): Boolean {

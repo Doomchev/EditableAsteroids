@@ -5,16 +5,27 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
+import mod.Serializer
 import mod.dragging.enterDouble
 import zero
 import kotlin.math.cos
 import kotlin.math.sin
 
-class SpriteSetSpeedFactory(private var speed: Formula = zero): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spriteSetSpeedSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpriteSetSpeedFactory(enterDouble("Введите скорость:"))
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpriteSetSpeedFactory(node.getFormula("speed"))
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpriteSetSpeed(node.getField("sprite") as Sprite, node.getDouble("speed"))
+  }
+}
+
+class SpriteSetSpeedFactory(private var speed: Formula): SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteSetSpeed(sprite, speed.get())
   }
@@ -24,10 +35,6 @@ class SpriteSetSpeedFactory(private var speed: Formula = zero): SpriteFactory() 
 
   override fun toNode(node: Node) {
     node.setFormula("speed", speed)
-  }
-
-  override fun fromNode(node: Node) {
-    speed = node.getFormula("speed")
   }
 }
 
@@ -42,10 +49,5 @@ class SpriteSetSpeed(sprite: Sprite, private var speed: Double): SpriteAction(sp
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setDouble("speed", speed)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
-    speed = node.getDouble("speed")
   }
 }

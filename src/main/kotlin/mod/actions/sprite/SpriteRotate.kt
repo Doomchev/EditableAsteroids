@@ -7,15 +7,26 @@ import SpriteAction
 import SpriteFactory
 import format
 import fpsk
+import mod.Serializer
 import mod.dragging.enterDouble
 import zero
 import kotlin.math.PI
 
-class SpriteRotationFactory(private var speed: Formula = zero): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spriteRotateSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpriteRotationFactory(enterDouble("Введите скорость поворота (град/сек):"))
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpriteRotationFactory(node.getFormula("speed"))
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpriteRotation(node.getField("sprite") as Sprite, node.getDouble("speed"))
+  }
+}
+
+class SpriteRotationFactory(private var speed: Formula): SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteRotation(sprite, speed.get() * PI / 180.0)
   }
@@ -25,10 +36,6 @@ class SpriteRotationFactory(private var speed: Formula = zero): SpriteFactory() 
 
   override fun toNode(node: Node) {
     node.setFormula("speed", speed)
-  }
-
-  override fun fromNode(node: Node) {
-    speed = node.getFormula("speed")
   }
 }
 
@@ -42,10 +49,5 @@ class SpriteRotation(sprite: Sprite, private var speed: Double): SpriteAction(sp
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setDouble("speed", speed)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
-    speed = node.getDouble("speed")
   }
 }

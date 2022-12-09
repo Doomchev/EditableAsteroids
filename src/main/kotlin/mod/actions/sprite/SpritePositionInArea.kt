@@ -4,15 +4,26 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
+import mod.Serializer
 import mod.selectedSprites
 import nullSprite
 import kotlin.random.Random
 
-class SpritePositionInAreaFactory(private var area: Sprite = nullSprite): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spritePositionInAreaSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpritePositionInAreaFactory(selectedSprites.first)
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpritePositionInAreaFactory(node.getField("area") as Sprite)
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpritePositionInArea(node.getField("sprite") as Sprite, node.getField("area") as Sprite)
+  }
+}
+
+class SpritePositionInAreaFactory(private var area: Sprite): SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpritePositionInArea(sprite, area)
   }
@@ -22,10 +33,6 @@ class SpritePositionInAreaFactory(private var area: Sprite = nullSprite): Sprite
 
   override fun toNode(node: Node) {
     node.setField("area", area)
-  }
-
-  override fun fromNode(node: Node) {
-    area = node.getField("area") as Sprite
   }
 }
 
@@ -40,10 +47,5 @@ class SpritePositionInArea(sprite: Sprite, private var area: Sprite): SpriteActi
   override fun toNode(node: Node) {
     node.setField("area", area)
     node.setField("sprite", sprite)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
-    area = node.getField("area") as Sprite
   }
 }

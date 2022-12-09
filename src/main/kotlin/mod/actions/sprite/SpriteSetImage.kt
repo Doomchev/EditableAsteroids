@@ -6,13 +6,24 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import blankImage
+import mod.Serializer
 import mod.dragging.selectImageArray
 
-class SpriteSetImageFactory(var image: Image = blankImage): SpriteFactory() {
-  override fun copy(): SpriteFactory {
+object spriteSetImageSerializer: Serializer {
+  override fun newFactory(): SpriteFactory {
     return SpriteSetImageFactory(selectImageArray().images[0])
   }
 
+  override fun factoryFromNode(node: Node): SpriteFactory {
+    return SpriteSetImageFactory(node.getField("image") as Image)
+  }
+
+  override fun actionFromNode(node: Node): SpriteAction {
+    return SpriteSetImage(node.getField("sprite") as Sprite, node.getField("image") as Image)
+  }
+}
+
+class SpriteSetImageFactory(var image: Image = blankImage): SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteSetImage(sprite, image)
   }
@@ -21,10 +32,6 @@ class SpriteSetImageFactory(var image: Image = blankImage): SpriteFactory() {
 
   override fun toNode(node: Node) {
     node.setField("image", image)
-  }
-
-  override fun fromNode(node: Node) {
-    image = node.getField("image") as Image
   }
 }
 
@@ -38,10 +45,5 @@ class SpriteSetImage(sprite: Sprite, var image: Image): SpriteAction(sprite) {
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)
     node.setField("image", image)
-  }
-
-  override fun fromNode(node: Node) {
-    sprite = node.getField("sprite") as Sprite
-    image = node.getField("image") as Image
   }
 }
