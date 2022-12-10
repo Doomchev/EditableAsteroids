@@ -4,6 +4,20 @@ import java.util.*
 import javax.swing.JOptionPane
 import kotlin.random.Random
 
+abstract class Formula {
+  abstract fun get(): Double
+}
+
+object zero: Formula() {
+  override fun get(): Double {
+    return 0.0
+  }
+
+  override fun toString(): String {
+    return "0"
+  }
+}
+
 fun doubleToFormula(string: String): Formula {
   var dir = false
   var s = string

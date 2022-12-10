@@ -5,8 +5,7 @@ import Sprite
 import SpriteAction
 import SpriteClass
 import SpriteFactory
-import emptyClass
-import mod.Serializer
+import Serializer
 import mod.dragging.parentSprite
 import mod.dragging.selectClass
 import newActions

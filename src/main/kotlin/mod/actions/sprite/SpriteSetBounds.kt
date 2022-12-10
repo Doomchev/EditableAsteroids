@@ -4,7 +4,7 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
-import mod.Serializer
+import Serializer
 import mod.selectedSprites
 import nullSprite
 import spritesToRemove

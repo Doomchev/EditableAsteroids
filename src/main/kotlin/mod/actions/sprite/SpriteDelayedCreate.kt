@@ -9,7 +9,7 @@ import SpriteFactory
 import blankImage
 import emptyClass
 import fpsk
-import mod.Serializer
+import Serializer
 import mod.dragging.enterDouble
 import mod.dragging.parentSprite
 import mod.dragging.selectClass
@@ -64,6 +64,7 @@ class SpriteDelayedCreate(sprite: Sprite, private var spriteClass: SpriteClass, 
   override fun toString(): String = "Создать $spriteClass через $delay"
 
   override fun toNode(node: Node) {
+    node.setField("sprite", sprite)
     node.setField("spriteClass", spriteClass)
     node.setDouble("delay", delay)
     node.setDouble("time", time)

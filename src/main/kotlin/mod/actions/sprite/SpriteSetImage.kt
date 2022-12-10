@@ -6,7 +6,7 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import blankImage
-import mod.Serializer
+import Serializer
 import mod.dragging.selectImageArray
 
 object spriteSetImageSerializer: Serializer {

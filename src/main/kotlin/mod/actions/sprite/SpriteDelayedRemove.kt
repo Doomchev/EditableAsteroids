@@ -5,7 +5,7 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import fpsk
-import mod.Serializer
+import Serializer
 import mod.dragging.enterDouble
 import spritesToRemove
 

@@ -5,9 +5,8 @@ import Node
 import Sprite
 import SpriteAction
 import SpriteFactory
-import mod.Serializer
+import Serializer
 import mod.dragging.enterDouble
-import zero
 
 object spriteSetMovingVectorSerializer: Serializer {
   override fun newFactory(): SpriteFactory {

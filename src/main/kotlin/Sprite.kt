@@ -1,5 +1,5 @@
+import mod.Element
 import mod.SceneElement
-import mod.ElementSerializer
 import mod.dragging.spritesList
 import java.awt.BasicStroke
 import java.awt.Graphics2D
@@ -18,6 +18,12 @@ object spriteSerializer: ElementSerializer {
   override fun fromNode(node: Node): SceneElement {
     return Sprite(node.getField("image") as Image, node.getDouble("canterX"), node.getDouble("centerY"), node.getDouble("width"), node.getDouble("height"), node.getString("name"), node.getDouble("angle"), node.getDouble("dx"), node.getDouble("dy"))
   }
+}
+
+abstract class SpriteFactory: Element {
+  abstract fun create(sprite: Sprite): SpriteAction
+  override fun toString(): String = fullText()
+  open fun fullText(): String = fullText()
 }
 
 open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, var name:String = "", var angle: Double = 0.0, var dx: Double = 0.0, var dy: Double = 0.0): Shape(centerX, centerY, width, height) {
@@ -55,7 +61,7 @@ open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0
     super.toNode(node)
     node.setString("name", name)
     node.setDouble("angle", angle)
-    if(image != null) node.setField("image", image!!)
+    node.setField("image", image!!)
     node.setDouble("dx", dx)
     node.setDouble("dy", dy)
   }

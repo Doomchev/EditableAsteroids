@@ -1,3 +1,4 @@
+import mod.Element
 import mod.actions.restoreCamera
 import mod.actions.showMenu
 import mod.actions.splitImage
@@ -47,7 +48,10 @@ val assets = Canvas(0, windowHeight - 100, windowWidth,100, 64.0, true)
 
 val properties = Canvas(0, 0, windowWidth, windowHeight, 1.0, false)
 
-class Project()
+class Project(): Element {
+  override fun toNode(node: Node) {
+  }
+}
 
 val ide = Project()
 val user = Project()
@@ -246,22 +250,24 @@ fun main() {
   // SCENE
 
   registerSerializers()
-  asteroids()
+
+  if(true) {
+    val reader = FileReader("test.xml")
+    parser.text = reader.readText()
+    val node = parser.fromText()
+    project.fromNode(node!!)
+    reader.close()
+  } else {
+    asteroids()
+    val node = Node("root")
+    project.toNode(node)
+    val writer = FileWriter("test.xml")
+    writer.write(node.toText(""))
+    writer.close()
+    exitProcess(0)
+  }
+
   updateActions()
-
-  /*val reader = FileReader("data.xml")
-  parser.text = reader.readText()
-  val node = parser.fromText()
-  project.fromNode(node!!)
-  reader.close()*/
-
-  val node = Node("root")
-  project.toNode(node)
-  val writer = FileWriter("test.xml")
-  writer.write(node!!.toText(""))
-  writer.close()
-  exitProcess(0)
-
   frame.isVisible = true
 }
 

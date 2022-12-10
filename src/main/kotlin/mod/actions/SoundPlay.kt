@@ -5,9 +5,7 @@ import Sprite
 import SpriteAction
 import SpriteFactory
 import frame
-import mod.Serializer
-import mod.actions.sprite.SpriteAcceleration
-import mod.actions.sprite.SpriteAccelerationFactory
+import Serializer
 import sounds
 import java.io.File
 import javax.sound.sampled.AudioSystem

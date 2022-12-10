@@ -1,17 +1,23 @@
 import mod.Element
 import mod.SceneElement
-import mod.ElementSerializer
 import java.awt.Graphics2D
 import java.util.*
 
 val emptyClass = SpriteClass("")
 
-class CollisionEntry(var spriteClass: SpriteClass, vararg factoriesArray: SpriteFactory): Element {
+object collisionEntrySerializer: ElementSerializer {
+  override fun fromNode(node: Node): Element {
+    val entry = CollisionEntry(node.getField("spriteClass") as SpriteClass)
+    node.getChildren(entry.factories)
+    return entry
+  }
+}
+
+class CollisionEntry(var spriteClass: SpriteClass): Element {
   val factories = LinkedList<SpriteFactory>()
-  init {
-    for(factory in factoriesArray) {
-      factories.add(factory)
-    }
+
+  constructor(spriteClass: SpriteClass, factory: SpriteFactory) : this(spriteClass) {
+    factories.add(factory)
   }
 
   override fun toString(): String {
@@ -58,8 +64,6 @@ class SpriteClass(var name: String = ""): SceneElement() {
   override fun spriteUnderCursor(fx: Double, fy: Double): Sprite? {
     return spriteUnderCursor(sprites, fx, fy)
   }
-
-  override fun toString(): String = name
   
   fun add(spriteClass2: SpriteClass, spriteFactory: SpriteFactory) {
     for(entry in onCollision) {
@@ -94,4 +98,6 @@ class SpriteClass(var name: String = ""): SceneElement() {
       sprite.draw(g)
     }
   }
+
+  override fun toString(): String = name
 }

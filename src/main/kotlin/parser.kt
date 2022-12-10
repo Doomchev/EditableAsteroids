@@ -83,7 +83,7 @@ object parser {
         return null
       }
 
-      var node = Node(getID())
+      val node = Node(getID())
       parent?.children?.add(node) //println(node.className)
       while(true) {
         when(currentSymbol()) {
@@ -105,6 +105,7 @@ object parser {
           if(node.className != "Object") {
             idMap[value.toInt()] = node
           }
+          node.attributes[id] = value
         } else if(parent != null && id == "field") {
           parent.fields[value] = node
           parent.children.remove(node)

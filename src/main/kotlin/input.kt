@@ -1,9 +1,10 @@
+import mod.Element
 import java.awt.Graphics2D
 import java.awt.event.*
 import java.util.*
 import kotlin.math.abs
 
-abstract class Pushable(val project: Project) {
+abstract class Pushable(val project: Project): Element {
   init {
     buttons.add(this)
   }
@@ -30,14 +31,38 @@ abstract class Pushable(val project: Project) {
   }
 }
 
+object keySerializer: ElementSerializer {
+  override fun fromNode(node: Node): Element {
+    val key = Key(node.getInt("code"), user)
+    node.getField("onClick", key.onClickActions)
+    node.getField("onPress", key.onPressActions)
+    return key
+  }
+}
+
 val buttons = LinkedList<Pushable>()
 class Key(private var code: Int, project: Project): Pushable(project) {
   override fun correspondsTo(e: KeyEvent): Boolean {
     return e.keyChar.code == code || e.keyCode == code
   }
 
+  override fun toNode(node: Node) {
+    node.setInt("code", code)
+    node.setField("onClick", onClickActions)
+    node.setField("onPress", onPressActions)
+  }
+
   override fun toString(): String {
     return "клавишу ${Char(code)} ($code)"
+  }
+}
+
+object mouseButtonSerializer: ElementSerializer {
+  override fun fromNode(node: Node): Element {
+    val key = Key(node.getInt("code"), user)
+    node.getField("onClick", key.onClickActions)
+    node.getField("onPress", key.onPressActions)
+    return key
   }
 }
 
@@ -46,9 +71,17 @@ class MouseButton(private var button: Int, project: Project): Pushable(project) 
     return e.button == button
   }
 
+  override fun toNode(node: Node) {
+    node.setInt("button", button)
+  }
+
   override fun toString(): String {
     return "кнопку мыши $button"
   }
+}
+
+object mouseWheelUpSerializer: ElementSerializer {
+  override fun fromNode(node: Node): Element = mouseWheelUp(user)
 }
 
 class mouseWheelUp(project: Project): Pushable(project) {
@@ -56,14 +89,24 @@ class mouseWheelUp(project: Project): Pushable(project) {
     return e.wheelRotation < 0
   }
 
+  override fun toNode(node: Node) {
+  }
+
   override fun toString(): String {
     return "колесо вверх"
   }
 }
 
+object mouseWheelDownSerializer: ElementSerializer {
+  override fun fromNode(node: Node): Element = mouseWheelDown(user)
+}
+
 class mouseWheelDown(project: Project): Pushable(project) {
   override fun correspondsTo(e: MouseWheelEvent): Boolean {
     return e.wheelRotation > 0
+  }
+
+  override fun toNode(node: Node) {
   }
 
   override fun toString(): String {
@@ -109,8 +152,8 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     pressedEvent = e
   }
 
-  var currentDraggingAction: DraggingAction? = null
-  var currentDraggingCanvas: Canvas? = null
+  private var currentDraggingAction: DraggingAction? = null
+  private var currentDraggingCanvas: Canvas? = null
 
   override fun mouseDragged(e: MouseEvent) {
     updateMouse(e.x, e.y)

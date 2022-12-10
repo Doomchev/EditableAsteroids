@@ -17,10 +17,7 @@ import doubleToFormula
 import frame
 import imageArrays
 import listener
-import mod.SceneElement
-import mod.Serializer
-import mod.actions.soundPlaySerializer
-import mod.actions.sprite.*
+import Serializer
 import mod.project
 import mod.selectedSprites
 import newActions
@@ -38,7 +35,6 @@ import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 import java.util.*
 import javax.swing.*
-import kotlin.collections.HashMap
 
 var parentSprite = nullSprite
 

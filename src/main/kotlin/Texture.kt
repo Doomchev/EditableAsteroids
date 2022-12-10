@@ -1,7 +1,4 @@
 import mod.Element
-import mod.ElementSerializer
-import mod.SceneElement
-import mod.Serializer
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage.TYPE_INT_RGB
 import java.io.File

@@ -7,12 +7,11 @@ import SpriteAction
 import SpriteFactory
 import format
 import fpsk
-import mod.Serializer
+import Serializer
 import mod.dragging.enterDouble
-import zero
 import kotlin.math.PI
 
-object spriteRotateSerializer: Serializer {
+object spriteRotationSerializer: Serializer {
   override fun newFactory(): SpriteFactory {
     return SpriteRotationFactory(enterDouble("Введите скорость поворота (град/сек):"))
   }

@@ -1,11 +1,7 @@
 import mod.Element
-import mod.ElementSerializer
 import java.awt.Color
  import java.awt.Graphics2D
-import java.awt.image.BufferedImage
-import java.io.File
 import java.util.*
-import javax.imageio.ImageIO
 
 object imageSerializer: ElementSerializer {
   override fun fromNode(node: Node): Element {
@@ -15,7 +11,7 @@ object imageSerializer: ElementSerializer {
 
 class Image(var texture: Texture, var x: Int, var y: Int, var width: Int, var height: Int, var xMul: Double = 0.5, var yMul: Double = 0.5, var widthMul: Double = 1.0, var heightMul: Double = 1.0): Element {
 
-  constructor(texture: Texture) : this(texture, 0, 0, texture.image.width, texture.image.height, 0.5, 0.5, 1.0, 1.0)
+  constructor(texture: Texture) : this(texture, 0, 0, texture.image.width, texture.image.height)
 
   fun draw(g: Graphics2D, sx: Int, sy: Int, swidth: Int, sheight: Int) {
     g.drawImage(texture.image, sx, sy, sx + swidth, sy + sheight, x, y, x + width, y + height, null)
@@ -56,11 +52,7 @@ object imageArraySerializer: ElementSerializer {
   override fun fromNode(node: Node): Element {
     val list = LinkedList<Image>()
     node.getChildren(list)
-    val images = Array(list.size) { list[it] }
-    for(i in images.indices) {
-      images[i] = list[i]
-    }
-    return ImageArray(images, node.getString("name"))
+    return ImageArray(Array(list.size) { list[it] }, node.getString("name"))
   }
 }
 

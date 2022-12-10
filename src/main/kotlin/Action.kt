@@ -1,12 +1,23 @@
 import mod.Element
 import java.util.*
 
-interface Action {
+interface Action : Element {
   fun conditions(): Boolean = true
   open fun execute() {}
+  override fun toNode(node: Node) {}
 }
 
-class ActionEntry(val canvas: Canvas, val action: Action) {
+object actionEntrySerializer: ElementSerializer {
+  override fun fromNode(node: Node): Element {
+    return ActionEntry(world, node.getField("action") as Action)
+  }
+}
+
+class ActionEntry(val canvas: Canvas, val action: Action): Element {
+  override fun toNode(node: Node) {
+    node.setField("action", action)
+  }
+
   override fun toString(): String {
     return action.toString()
   }

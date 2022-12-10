@@ -1,25 +1,27 @@
 import mod.Element
+import java.lang.Error
 import java.util.*
 
-private val ids = HashMap<Element, Int>()
+private val idForElement = HashMap<Element, Int>()
+private val elementForId = HashMap<Int, Element>()
 val toRemove = HashMap<Element, Node>()
 private var lastID = 0
 
 class Node(var className: String) {
-  val attributes = HashMap<String, String>()
-  val fields = HashMap<String, Node>()
+  val attributes = LinkedHashMap<String, String>()
+  val fields = LinkedHashMap<String, Node>()
   val children = LinkedList<Node>()
 
-  constructor(element: Element) : this(element.javaClass.kotlin.simpleName!!) {
+  constructor(element: Element): this(element.javaClass.kotlin.simpleName!!) {
   }
 
   private fun setNode(element: Element): Node {
-    val id = ids[element]
+    val id = idForElement[element]
     if(id == null) {
       val node = Node(element)
       element.toNode(node)
       lastID++
-      ids[element] = lastID
+      idForElement[element] = lastID
       node.setInt("id", lastID)
       toRemove[element] = node
       return node
@@ -85,13 +87,24 @@ class Node(var className: String) {
   }
 
   private fun createObject(): Element {
+    if(className == "Object") {
+      return elementForId[getInt("id")]!!
+    }
+    var element: Element? = null
     if(className.endsWith("Factory")) {
-      return factorySerializers[className]!!.factoryFromNode(this)
+      element = factorySerializers[className]!!.factoryFromNode(this)
     }
     if(actionSerializers.contains(className)) {
-      return actionSerializers[className]!!.actionFromNode(this)
+      element = actionSerializers[className]!!.actionFromNode(this)
     }
-    return Class.forName(className).getDeclaredConstructor().newInstance() as Element
+    if(elementSerializers.contains(className)) {
+      element = elementSerializers[className]!!.fromNode(this)
+    }
+    if(element == null) throw Error()
+    if(attributes.contains("id")) {
+      elementForId[getInt("id")] = element
+    }
+    return element
   }
 
   fun <T: Element> getChildren(list: LinkedList<T>) {

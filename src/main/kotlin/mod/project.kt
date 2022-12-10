@@ -2,13 +2,15 @@ package mod
 
 
 import Node
+import Pushable
 import Shape
 import Sprite
-import SpriteAction
 import SpriteClass
-import SpriteFactory
 import actions
+import buttons
+import ide
 import toRemove
+import user
 import java.awt.Color
 import java.awt.Graphics2D
 import java.util.*
@@ -21,16 +23,6 @@ val selectedSprites = LinkedList<Sprite>()
 
 interface Element {
   fun toNode(node: Node)
-}
-
-interface Serializer {
-  fun newFactory(): SpriteFactory
-  fun factoryFromNode(node: Node): SpriteFactory
-  fun actionFromNode(node: Node): SpriteAction
-}
-
-interface ElementSerializer {
-  fun fromNode(node: Node): Element
 }
 
 abstract class SceneElement: Element, Drawing {
@@ -87,11 +79,19 @@ object project: SceneElement() {
 
   fun fromNode(node: Node) {
     node.getField("classes", classes)
+    node.getField("buttons", LinkedList<Pushable>())
+    node.getField("actions", actions)
     node.getChildren(elements)
   }
 
   override fun toNode(node: Node) {
     node.setField("classes", classes)
+    val list = LinkedList<Pushable>()
+    for(button in buttons) {
+      if(button.project == user) list.add(button)
+    }
+    node.setField("buttons", list)
+    node.setField("actions", actions)
     node.setChildren(elements)
     for(node2 in toRemove.values) {
       node2.removeAttribute("id")
