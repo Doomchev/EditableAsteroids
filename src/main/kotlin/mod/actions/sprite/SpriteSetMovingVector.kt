@@ -21,6 +21,8 @@ object spriteSetMovingVectorSerializer: Serializer {
   override fun actionFromNode(node: Node): SpriteAction {
     return SpriteSetMovingVector(node.getField("sprite") as Sprite, node.getDouble("dx"), node.getDouble("dy"))
   }
+
+  override fun toString(): String = "Задать движение"
 }
 
 class SpriteSetMovingVectorFactory(private var dx: Formula, private var dy: Formula): SpriteFactory() {

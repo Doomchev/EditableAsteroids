@@ -27,6 +27,8 @@ object spriteAccelerationSerializer: Serializer {
     return SpriteAcceleration(node.getField("sprite") as Sprite,
     node.getDouble("acceleration"), node.getDouble("limit"))
   }
+
+  override fun toString(): String = "Ускорять"
 }
 
 class SpriteAccelerationFactory(private var acceleration: Formula, private var limit: Formula): SpriteFactory() {

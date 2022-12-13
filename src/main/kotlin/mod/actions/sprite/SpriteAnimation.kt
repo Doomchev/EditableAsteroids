@@ -23,6 +23,8 @@ object spriteAnimationSerializer: Serializer {
   override fun actionFromNode(node: Node): SpriteAction {
     return SpriteAnimation(node.getField("sprite") as Sprite, node.getField("array") as ImageArray, node.getDouble("speed"), node.getDouble("frame"))
   }
+
+  override fun toString(): String = "Анимировать"
 }
 
 class SpriteAnimationFactory(private var array: ImageArray, private var speed: Formula): SpriteFactory() {

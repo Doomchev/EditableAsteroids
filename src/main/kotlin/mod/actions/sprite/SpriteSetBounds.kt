@@ -21,6 +21,8 @@ object spriteSetBoundsSerializer: Serializer {
   override fun actionFromNode(node: Node): SpriteAction {
     return SpriteSetBounds(node.getField("sprite") as Sprite, node.getField("bounds") as Sprite)
   }
+
+  override fun toString(): String = "Установить границы"
 }
 
 class SpriteSetBoundsFactory(private var bounds: Sprite): SpriteFactory() {

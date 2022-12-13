@@ -20,6 +20,7 @@ object spritePositionAsSerializer: Serializer {
     return SpritePositionAs(node.getField("sprite") as Sprite)
   }
 
+  override fun toString(): String = "Переместить к родителю"
 }
 
 class SpritePositionAsFactory: SpriteFactory() {
@@ -27,7 +28,7 @@ class SpritePositionAsFactory: SpriteFactory() {
     return SpritePositionAs(sprite,)
   }
 
-  override fun fullText(): String = "Переместить к родителю"
+  override fun toString(): String = "Переместить к родителю"
 
   override fun toNode(node: Node) {
   }

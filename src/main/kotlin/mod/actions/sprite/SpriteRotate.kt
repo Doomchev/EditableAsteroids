@@ -23,6 +23,8 @@ object spriteRotationSerializer: Serializer {
   override fun actionFromNode(node: Node): SpriteAction {
     return SpriteRotation(node.getField("sprite") as Sprite, node.getDouble("speed"))
   }
+
+  override fun toString(): String = "Повернуть"
 }
 
 class SpriteRotationFactory(private var speed: Formula): SpriteFactory() {

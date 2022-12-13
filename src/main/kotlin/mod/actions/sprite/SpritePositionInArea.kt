@@ -20,6 +20,8 @@ object spritePositionInAreaSerializer: Serializer {
   override fun actionFromNode(node: Node): SpriteAction {
     return SpritePositionInArea(node.getField("sprite") as Sprite, node.getField("area") as Sprite)
   }
+
+  override fun toString(): String = "Переместить в область"
 }
 
 class SpritePositionInAreaFactory(private var area: Sprite): SpriteFactory() {

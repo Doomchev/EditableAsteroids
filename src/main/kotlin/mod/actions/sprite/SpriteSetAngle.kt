@@ -22,6 +22,8 @@ object spriteSetAngleSerializer: Serializer {
   override fun actionFromNode(node: Node): SpriteAction {
     return SpriteSetAngle(node.getField("sprite") as Sprite, node.getDouble("angle"))
   }
+
+  override fun toString(): String = "Задать угол"
 }
 
 class SpriteSetAngleFactory(private var angle: Formula = zero): SpriteFactory() {

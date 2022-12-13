@@ -29,6 +29,8 @@ object spriteDelayedCreateSerializer: Serializer {
     return SpriteDelayedCreate(node.getField("sprite") as Sprite,
     node.getField("spriteClass") as SpriteClass, node.getDouble("delay"), node.getDouble("time"))
   }
+
+  override fun toString(): String = "Создать позже"
 }
 
 class SpriteDelayedCreateFactory(private var spriteClass: SpriteClass = emptyClass, private var delay: Formula = zero): SpriteFactory() {

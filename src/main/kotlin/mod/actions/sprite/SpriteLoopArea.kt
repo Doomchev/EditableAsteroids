@@ -21,6 +21,7 @@ object spriteLoopAreaSerializer: Serializer {
     return SpriteLoopArea(node.getField("sprite") as Sprite, node.getField("bounds") as Sprite)
   }
 
+  override fun toString(): String = "Зациклить пространство"
 }
 
 class SpriteLoopAreaFactory(private var bounds: Sprite = nullSprite): SpriteFactory() {

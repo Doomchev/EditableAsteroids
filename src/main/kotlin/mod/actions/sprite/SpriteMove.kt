@@ -20,6 +20,7 @@ object spriteMoveSerializer: Serializer {
     return SpriteMove(node.getField("sprite") as Sprite)
   }
 
+  override fun toString(): String = "Перемещать"
 }
 
 class SpriteMoveFactory: SpriteFactory() {
@@ -27,7 +28,7 @@ class SpriteMoveFactory: SpriteFactory() {
     return SpriteMove(sprite)
   }
 
-  override fun fullText(): String = "Перемещать"
+  override fun toString(): String = "Перемещать"
 
   override fun toNode(node: Node) {
   }

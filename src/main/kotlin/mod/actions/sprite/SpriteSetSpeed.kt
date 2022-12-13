@@ -22,6 +22,8 @@ object spriteSetSpeedSerializer: Serializer {
   override fun actionFromNode(node: Node): SpriteAction {
     return SpriteSetSpeed(node.getField("sprite") as Sprite, node.getDouble("speed"))
   }
+
+  override fun toString(): String = "Задать скорость"
 }
 
 class SpriteSetSpeedFactory(private var speed: Formula): SpriteFactory() {

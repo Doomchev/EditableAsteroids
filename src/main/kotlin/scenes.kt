@@ -100,6 +100,7 @@ fun asteroids() {
     add(SpritePositionAsFactory())
     add(SpriteSetSizeFactory(DoubleValue(2.0)))
   }
+  
   explosion.always.apply {
     add(SpriteAnimationFactory(explosionImage, DoubleValue(16.0)))
     add(SpriteDelayedRemoveFactory(1.0))

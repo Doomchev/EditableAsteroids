@@ -9,6 +9,7 @@ import SpriteClass
 import actions
 import buttons
 import ide
+import imageArrays
 import toRemove
 import user
 import java.awt.Color
@@ -78,6 +79,7 @@ object project: SceneElement() {
   }
 
   fun fromNode(node: Node) {
+    node.getField("images", imageArrays)
     node.getField("classes", classes)
     node.getField("buttons", LinkedList<Pushable>())
     node.getField("actions", actions)
@@ -85,6 +87,7 @@ object project: SceneElement() {
   }
 
   override fun toNode(node: Node) {
+    node.setField("images", imageArrays)
     node.setField("classes", classes)
     val list = LinkedList<Pushable>()
     for(button in buttons) {

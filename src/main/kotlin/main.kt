@@ -252,11 +252,13 @@ fun main() {
   registerSerializers()
 
   if(true) {
+    imageArrays.clear()
     val reader = FileReader("test.xml")
     parser.text = reader.readText()
     val node = parser.fromText()
     project.fromNode(node!!)
     reader.close()
+    blankImage = imageArrays[0].images[0]
   } else {
     asteroids()
     val node = Node("root")

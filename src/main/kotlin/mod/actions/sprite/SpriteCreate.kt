@@ -22,6 +22,8 @@ object spriteCreateSerializer: Serializer {
   override fun actionFromNode(node: Node): SpriteAction {
     return SpriteCreate(node.getField("sprite") as Sprite, node.getField("spriteClass") as SpriteClass)
   }
+
+  override fun toString(): String = "Создать спрайт"
 }
 
 class SpriteCreateFactory(private var spriteClass: SpriteClass): SpriteFactory() {

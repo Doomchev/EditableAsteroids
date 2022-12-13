@@ -22,8 +22,7 @@ object spriteSerializer: ElementSerializer {
 
 abstract class SpriteFactory: Element {
   abstract fun create(sprite: Sprite): SpriteAction
-  override fun toString(): String = fullText()
-  open fun fullText(): String = fullText()
+  open fun fullText(): String = toString()
 }
 
 open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, var name:String = "", var angle: Double = 0.0, var dx: Double = 0.0, var dy: Double = 0.0): Shape(centerX, centerY, width, height) {

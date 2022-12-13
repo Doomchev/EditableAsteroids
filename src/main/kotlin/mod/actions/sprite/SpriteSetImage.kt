@@ -21,6 +21,8 @@ object spriteSetImageSerializer: Serializer {
   override fun actionFromNode(node: Node): SpriteAction {
     return SpriteSetImage(node.getField("sprite") as Sprite, node.getField("image") as Image)
   }
+
+  override fun toString(): String = "Установить изображение"
 }
 
 class SpriteSetImageFactory(var image: Image = blankImage): SpriteFactory() {
@@ -28,7 +30,7 @@ class SpriteSetImageFactory(var image: Image = blankImage): SpriteFactory() {
     return SpriteSetImage(sprite, image)
   }
 
-  override fun fullText(): String = "Установить изображение"
+  override fun toString(): String = "Установить изображение"
 
   override fun toNode(node: Node) {
     node.setField("image", image)

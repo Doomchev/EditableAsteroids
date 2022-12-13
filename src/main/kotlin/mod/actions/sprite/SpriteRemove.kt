@@ -19,6 +19,8 @@ object spriteRemoveSerializer: Serializer {
   override fun actionFromNode(node: Node): SpriteAction {
     return SpriteDelayedRemove(node.getField("sprite") as Sprite)
   }
+
+  override fun toString(): String = "Удалить"
 }
 
 class SpriteRemoveFactory: SpriteFactory() {
@@ -26,7 +28,7 @@ class SpriteRemoveFactory: SpriteFactory() {
     return SpriteRemove(sprite)
   }
 
-  override fun fullText(): String = "Удалить"
+  override fun toString(): String = "Удалить"
 
   override fun toNode(node: Node) {
   }

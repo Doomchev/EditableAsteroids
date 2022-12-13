@@ -21,6 +21,8 @@ object spriteDelayedRemoveSerializer: Serializer {
   override fun actionFromNode(node: Node): SpriteAction {
     return SpriteDelayedRemove(node.getField("sprite") as Sprite, node.getDouble("delay"))
   }
+
+  override fun toString(): String = "Удалить позже"
 }
 
 class SpriteDelayedRemoveFactory(private var delay: Double = 0.0): SpriteFactory() {

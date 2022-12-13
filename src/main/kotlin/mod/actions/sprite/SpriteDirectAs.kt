@@ -19,6 +19,8 @@ object spriteDirectAsSerializer: Serializer {
   override fun actionFromNode(node: Node): SpriteAction {
     return SpriteDirectAs(node.getField("sprite") as Sprite)
   }
+
+  override fun toString(): String = "Направить как родителя"
 }
 
 class SpriteDirectAsFactory(): SpriteFactory() {
@@ -26,7 +28,7 @@ class SpriteDirectAsFactory(): SpriteFactory() {
     return SpriteDirectAs(sprite)
   }
 
-  override fun fullText(): String = "Направить как родителя"
+  override fun toString(): String = "Направить как родителя"
 
   override fun toNode(node: Node) {
   }

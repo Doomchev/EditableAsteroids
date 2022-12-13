@@ -22,6 +22,7 @@ object spriteSetSizeSerializer: Serializer {
     return SpriteSetSize(node.getField("sprite") as Sprite, node.getDouble("size"))
   }
 
+  override fun toString(): String = "Установить размер"
 }
 
 class SpriteSetSizeFactory(var size: Formula = zero): SpriteFactory() {
