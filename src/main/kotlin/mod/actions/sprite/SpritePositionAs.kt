@@ -25,7 +25,7 @@ object spritePositionAsSerializer: Serializer {
 
 class SpritePositionAsFactory: SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
-    return SpritePositionAs(sprite,)
+    return SpritePositionAs(sprite)
   }
 
   override fun toString(): String = "Переместить к родителю"

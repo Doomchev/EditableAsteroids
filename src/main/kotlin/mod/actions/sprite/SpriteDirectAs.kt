@@ -23,7 +23,7 @@ object spriteDirectAsSerializer: Serializer {
   override fun toString(): String = "Направить как родителя"
 }
 
-class SpriteDirectAsFactory(): SpriteFactory() {
+class SpriteDirectAsFactory: SpriteFactory() {
   override fun create(sprite: Sprite): SpriteAction {
     return SpriteDirectAs(sprite)
   }
