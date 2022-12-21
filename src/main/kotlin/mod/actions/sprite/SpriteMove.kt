@@ -2,33 +2,36 @@ package mod.actions.sprite
 
 import Node
 import Sprite
-import SpriteAction
-import SpriteFactory
+import Action
+import SpriteActionFactory
 import fpsk
 import Serializer
+import SpriteAction
+import mod.dragging.SpriteEntry
+import mod.dragging.selectSprite
 
 object spriteMoveSerializer: Serializer {
-  override fun newFactory(): SpriteFactory {
-    return SpriteMoveFactory()
+  override fun newFactory(): SpriteActionFactory {
+    return SpriteMoveFactory(selectSprite())
   }
 
-  override fun factoryFromNode(node: Node): SpriteFactory {
-    return SpriteMoveFactory()
+  override fun factoryFromNode(node: Node): SpriteActionFactory {
+    return SpriteMoveFactory(node.getField("spriteentry") as SpriteEntry)
   }
 
-  override fun actionFromNode(node: Node): SpriteAction {
+  override fun actionFromNode(node: Node): Action {
     return SpriteMove(node.getField("sprite") as Sprite)
   }
 
   override fun toString(): String = "Перемещать"
 }
 
-class SpriteMoveFactory: SpriteFactory() {
-  override fun create(sprite: Sprite): SpriteAction {
-    return SpriteMove(sprite)
+class SpriteMoveFactory(spriteEntry: SpriteEntry): SpriteActionFactory(spriteEntry) {
+  override fun create(): SpriteAction {
+    return SpriteMove(spriteEntry.resolve())
   }
 
-  override fun toString(): String = "Перемещать"
+  override fun toString(): String = "Перемещать $spriteEntry"
 
   override fun toNode(node: Node) {
   }
@@ -40,9 +43,5 @@ class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
     sprite.centerY += fpsk * sprite.dy
   }
 
-  override fun toString(): String = "Перемещать"
-
-  override fun toNode(node: Node) {
-    node.setField("sprite", sprite)
-  }
+  override fun toString(): String = "Перемещать $sprite"
 }

@@ -3,37 +3,40 @@ package mod.actions.sprite
 import Formula
 import Node
 import Sprite
-import SpriteAction
-import SpriteFactory
+import Action
+import SpriteActionFactory
 import format
 import fpsk
 import Serializer
+import SpriteAction
+import mod.dragging.SpriteEntry
 import mod.dragging.enterDouble
+import mod.dragging.selectSprite
 import kotlin.math.PI
 
 object spriteRotationSerializer: Serializer {
-  override fun newFactory(): SpriteFactory {
-    return SpriteRotationFactory(enterDouble("Введите скорость поворота (град/сек):"))
+  override fun newFactory(): SpriteActionFactory {
+    return SpriteRotationFactory(selectSprite(), enterDouble("Введите скорость поворота (град/сек):"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteFactory {
-    return SpriteRotationFactory(node.getFormula("speed"))
+  override fun factoryFromNode(node: Node): SpriteActionFactory {
+    return SpriteRotationFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("speed"))
   }
 
-  override fun actionFromNode(node: Node): SpriteAction {
+  override fun actionFromNode(node: Node): Action {
     return SpriteRotation(node.getField("sprite") as Sprite, node.getDouble("speed"))
   }
 
-  override fun toString(): String = "Повернуть"
+  override fun toString(): String = "Вращать"
 }
 
-class SpriteRotationFactory(private var speed: Formula): SpriteFactory() {
-  override fun create(sprite: Sprite): SpriteAction {
-    return SpriteRotation(sprite, speed.get() * PI / 180.0)
+class SpriteRotationFactory(spriteEntry: SpriteEntry, private var speed: Formula): SpriteActionFactory(spriteEntry) {
+  override fun create(): SpriteAction {
+    return SpriteRotation(spriteEntry.resolve(), speed.get() * PI / 180.0)
   }
 
-  override fun toString(): String = "Повернуть"
-  override fun fullText(): String = "Повернуть со скоростью $speed"
+  override fun toString(): String = "Вращать"
+  override fun fullText(): String = "Вращать $spriteEntry со скоростью $speed"
 
   override fun toNode(node: Node) {
     node.setFormula("speed", speed)

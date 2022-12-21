@@ -3,9 +3,9 @@ import mod.actions.soundPlaySerializer
 import mod.actions.sprite.*
 
 interface Serializer {
-  fun newFactory(): SpriteFactory
-  fun factoryFromNode(node: Node): SpriteFactory
-  fun actionFromNode(node: Node): SpriteAction
+  fun newFactory(): SpriteActionFactory
+  fun factoryFromNode(node: Node): SpriteActionFactory
+  fun actionFromNode(node: Node): Action
 }
 
 interface ElementSerializer {

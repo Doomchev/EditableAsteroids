@@ -2,48 +2,51 @@ package mod.actions.sprite
 
 import Node
 import Sprite
-import SpriteAction
-import SpriteFactory
+import Action
+import SpriteActionFactory
 import Serializer
-import mod.dragging.parentSprite
+import SpriteAction
+import mod.dragging.SpriteEntry
+import mod.dragging.selectSprite
 
 object spritePositionAsSerializer: Serializer {
-  override fun newFactory(): SpriteFactory {
-    return SpritePositionAsFactory()
+  override fun newFactory(): SpriteActionFactory {
+    return SpritePositionAsFactory(selectSprite("Выберите спрайт, который перемещается:"), selectSprite("Выберите спрайт, к которому перемещается:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteFactory {
-    return SpritePositionAsFactory()
+  override fun factoryFromNode(node: Node): SpriteActionFactory {
+    return SpritePositionAsFactory(node.getField("spriteentry") as SpriteEntry, node.getField("destination") as SpriteEntry)
   }
 
-  override fun actionFromNode(node: Node): SpriteAction {
-    return SpritePositionAs(node.getField("sprite") as Sprite)
+  override fun actionFromNode(node: Node): Action {
+    return SpritePositionAs(node.getField("source") as Sprite, node.getField("destination") as Sprite)
   }
 
-  override fun toString(): String = "Переместить к родителю"
+  override fun toString(): String = "Переместить"
 }
 
-class SpritePositionAsFactory: SpriteFactory() {
-  override fun create(sprite: Sprite): SpriteAction {
-    return SpritePositionAs(sprite)
+class SpritePositionAsFactory(spriteEntry: SpriteEntry, private var destination: SpriteEntry): SpriteActionFactory(spriteEntry) {
+  override fun create(): SpriteAction {
+    return SpritePositionAs(spriteEntry.resolve(), destination.resolve())
   }
 
-  override fun toString(): String = "Переместить к родителю"
+  override fun toString(): String = "Переместить $spriteEntry к $destination"
 
   override fun toNode(node: Node) {
+    node.setField("destination", destination)
   }
 }
 
-class SpritePositionAs(sprite: Sprite): SpriteAction(sprite) {
+class SpritePositionAs(sprite: Sprite, private var destination: Sprite): SpriteAction(sprite) {
   override fun execute() {
-    sprite.centerX = parentSprite.centerX
-    sprite.centerY = parentSprite.centerY
+    sprite.centerX = destination.centerX
+    sprite.centerY = destination.centerY
   }
 
-  override fun toString(): String = "Переместить к родителю"
+  override fun toString(): String = "Переместить $sprite к $destination"
 
   override fun toNode(node: Node) {
-    node.setField("sprite", sprite)
+    node.setField("destination", destination)
   }
 }
 

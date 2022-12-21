@@ -3,36 +3,39 @@ package mod.actions.sprite
 import Formula
 import Node
 import Sprite
-import SpriteAction
-import SpriteFactory
+import Action
+import SpriteActionFactory
 import Serializer
+import SpriteAction
+import mod.dragging.SpriteEntry
 import mod.dragging.enterDouble
+import mod.dragging.selectSprite
 
 object spriteSetMovingVectorSerializer: Serializer {
-  override fun newFactory(): SpriteFactory {
-    return SpriteSetMovingVectorFactory(enterDouble("Введите приращение по Х:"
+  override fun newFactory(): SpriteActionFactory {
+    return SpriteSetMovingVectorFactory(
+      selectSprite(), enterDouble("Введите приращение по Х:"
     ), enterDouble("Введите приращение по Y:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteFactory {
-    return SpriteSetMovingVectorFactory(node.getFormula("dx"), node.getFormula("dy"))
+  override fun factoryFromNode(node: Node): SpriteActionFactory {
+    return SpriteSetMovingVectorFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("dx"), node.getFormula("dy"))
   }
 
-  override fun actionFromNode(node: Node): SpriteAction {
+  override fun actionFromNode(node: Node): Action {
     return SpriteSetMovingVector(node.getField("sprite") as Sprite, node.getDouble("dx"), node.getDouble("dy"))
   }
 
   override fun toString(): String = "Задать движение"
 }
 
-class SpriteSetMovingVectorFactory(private var dx: Formula, private var dy: Formula): SpriteFactory() {
-
-  override fun create(sprite: Sprite): SpriteAction {
-    return SpriteSetMovingVector(sprite, dx.get(), dy.get())
+class SpriteSetMovingVectorFactory(spriteEntry: SpriteEntry, private var dx: Formula, private var dy: Formula): SpriteActionFactory(spriteEntry) {
+  override fun create(): SpriteAction {
+    return SpriteSetMovingVector(spriteEntry.resolve(), dx.get(), dy.get())
   }
 
   override fun toString(): String = "Задать движение"
-  override fun fullText(): String = "Задать движение ($dx, $dy)"
+  override fun fullText(): String = "Задать движение $spriteEntry на вектор  ($dx, $dy)"
 
   override fun toNode(node: Node) {
     node.setFormula("dx", dx)
@@ -46,10 +49,9 @@ class SpriteSetMovingVector(sprite: Sprite, private var dx: Double, private var 
     sprite.dy += dy
   }
 
-  override fun toString(): String = "Задать движение ($dx, $dy)"
+  override fun toString(): String = "Задать движение $sprite на вектор ($dx, $dy)"
 
   override fun toNode(node: Node) {
-    node.setField("sprite", sprite)
     node.setDouble("dx", dx)
     node.setDouble("dy", dy)
   }

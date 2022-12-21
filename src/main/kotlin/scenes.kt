@@ -1,7 +1,9 @@
 import mod.actions.SoundPlayFactory
 import mod.actions.splitImage
 import mod.actions.sprite.*
+import mod.currentEntry
 import mod.dragging.*
+import mod.parentEntry
 import mod.project
 import kotlin.math.PI
 
@@ -13,17 +15,17 @@ fun tilemap() {
 fun snow() {
   val flake = addClass("Снежинка")
 
-  val area = Sprite(blankImage, 0.0, -10.0, 10.0, 2.0, "snow gen")
+  val area = SpriteEntry("snow gen", Sprite(blankImage, 0.0, -10.0, 10.0, 2.0))
   flake.onCreate.apply {
-    add(SpritePositionInAreaFactory(area))
-    add(SpriteSetSizeFactory(RandomDoubleValue(0.25, 1.0)))
-    add(SpriteSetImageFactory(imageArrays[4].images[0]))
-    add(SpriteSetMovingVectorFactory(zero, RandomDoubleValue(1.0, 5.0)))
+    add(SpritePositionInAreaFactory(currentEntry, area))
+    add(SpriteSetSizeFactory(currentEntry, RandomDoubleValue(0.25, 1.0)))
+    add(SpriteSetImageFactory(currentEntry, imageArrays[4].images[0]))
+    add(SpriteSetMovingVectorFactory(currentEntry, zero, RandomDoubleValue(1.0, 5.0)))
   }
-  flake.always.add(SpriteMoveFactory())
+  flake.always.add(SpriteMoveFactory(currentEntry))
 
-  project.add(area)
-  actions.add(SpriteDelayedCreate(Sprite(blankImage), flake, 0.1))
+  project.add(area.sprite!!)
+  actions.add(SpriteDelayedCreate(nullSprite, flake, 0.1))
 }
 
 fun asteroids() {
@@ -48,16 +50,18 @@ fun asteroids() {
 
   /// SPRITES
 
-  val player = Sprite(imageArrays[3].images[0], -3.0, -5.0, 1.0, 1.0, "игрок")
+  val player = Sprite(imageArrays[3].images[0], -3.0, -5.0, 1.0, 1.0)
+  player.setName("игрок")
 
   Key(97, user).onPressActions.add(ActionEntry(world, SpriteRotation(player, -1.5 * PI)))
   Key(100, user).onPressActions.add(ActionEntry(world, SpriteRotation(player, 1.5 * PI)))
   Key(119, user).onPressActions.add(ActionEntry(world, SpriteAcceleration(player, 50.0, 10.0)))
 
-  val bounds = Sprite(blankImage, world.centerX, world.centerY, world.width + 2.0,world.height + 2.0, "границы поля")
+  val bounds = SpriteEntry("границы поля", Sprite(blankImage, world.centerX, world.centerY, world.width + 2.0,world.height + 2.0))
+
   actions.apply {
     add(SpriteAcceleration(player, -15.0, 100.0))
-    add(SpriteLoopArea(player, bounds))
+    add(SpriteLoopArea(player, bounds.sprite!!))
     add(SpriteMove(player))
   }
 
@@ -65,30 +69,30 @@ fun asteroids() {
 
   bullet.onCreate.apply {
     add(SoundPlayFactory(sounds[0]))
-    add(SpritePositionAsFactory())
-    add(SpriteDirectAsFactory())
-    add(SpriteSetSizeFactory(DoubleValue(0.15)))
-    add(SpriteSetSpeedFactory(DoubleValue(15.0)))
+    add(SpritePositionAsFactory(currentEntry, parentEntry))
+    add(SpriteDirectAsFactory(currentEntry, parentEntry))
+    add(SpriteSetSizeFactory(currentEntry, DoubleValue(0.15)))
+    add(SpriteSetSpeedFactory(currentEntry, DoubleValue(15.0)))
   }
   bullet.always.apply {
-    add(SpriteMoveFactory())
-    add(SpriteAnimationFactory(imageArrays[2], DoubleValue(16.0)))
-    add(SpriteSetBoundsFactory(bounds))
+    add(SpriteMoveFactory(currentEntry))
+    add(SpriteAnimationFactory(currentEntry, imageArrays[2], DoubleValue(16.0)))
+    add(SpriteSetBoundsFactory(currentEntry, bounds))
   }
 
   Key(32, user).onPressActions.add(ActionEntry(world, SpriteDelayedCreate(player, bullet, 0.1)))
 
   val asteroid = addClass("Астероид")
   asteroid.onCreate.apply {
-    add(SpritePositionInAreaFactory(bounds))
-    add(SpriteSetSizeFactory(RandomDoubleValue(0.5, 2.0)))
-    add(SpriteSetSpeedFactory(DoubleValue(15.0)))
+    add(SpritePositionInAreaFactory(currentEntry, bounds))
+    add(SpriteSetSizeFactory(currentEntry, RandomDoubleValue(0.5, 2.0)))
+    add(SpriteSetSpeedFactory(currentEntry, DoubleValue(15.0)))
   }
 
   asteroid.always.apply {
-    add(SpriteAnimationFactory(imageArrays[1], RandomDirection(RandomDoubleValue(12.0, 20.0))))
-    add(SpriteRotationFactory(RandomDoubleValue(-180.0, 180.0)))
-    add(SpriteLoopAreaFactory(bounds))
+    add(SpriteAnimationFactory(currentEntry, imageArrays[1], RandomDirection(RandomDoubleValue(12.0, 20.0))))
+    add(SpriteRotationFactory(currentEntry, RandomDoubleValue(-180.0, 180.0)))
+    add(SpriteLoopAreaFactory(currentEntry, bounds))
   }
 
   Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(blankImage), asteroid)))
@@ -97,22 +101,22 @@ fun asteroids() {
 
   explosion.onCreate.apply {
     add(SoundPlayFactory(sounds[1]))
-    add(SpritePositionAsFactory())
-    add(SpriteSetSizeFactory(DoubleValue(2.0)))
+    add(SpritePositionAsFactory(currentEntry, parentEntry))
+    add(SpriteSetSizeFactory(currentEntry, DoubleValue(2.0)))
   }
   
   explosion.always.apply {
-    add(SpriteAnimationFactory(explosionImage, DoubleValue(16.0)))
-    add(SpriteDelayedRemoveFactory(1.0))
+    add(SpriteAnimationFactory(currentEntry, explosionImage, DoubleValue(16.0)))
+    add(SpriteDelayedRemoveFactory(currentEntry, DoubleValue(1.0)))
   }
 
   bullet.apply {
-    addOnCollision(asteroid, SpriteCreateFactory(explosion))
-    addOnCollision(asteroid, SpriteRemoveFactory())
+    addOnCollision(asteroid, SpriteCreateFactory(currentEntry, explosion))
+    addOnCollision(asteroid, SpriteRemoveFactory(currentEntry))
   }
 
   project.apply {
-    add(bounds)
+    add(bounds.sprite!!)
     add(bullet)
     add(asteroid)
     add(player)

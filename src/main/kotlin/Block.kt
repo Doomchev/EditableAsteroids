@@ -8,7 +8,7 @@ abstract class Block(var message:String) {
   abstract fun removeElement()
 }
 
-class ClassBlock(var factories: LinkedList<SpriteFactory>, message: String) : Block(message) {
+class ClassBlock(var factories: LinkedList<SpriteActionFactory>, message: String) : Block(message) {
   override fun addElement() {
     factories.addFirst(selectSerializer(true))
     updateActions()
@@ -20,7 +20,7 @@ class ClassBlock(var factories: LinkedList<SpriteFactory>, message: String) : Bl
   }
 }
 
-class FactoryBlock(var factory: SpriteFactory, var factories: LinkedList<SpriteFactory>, message: String, var discrete: Boolean) : Block(message) {
+class FactoryBlock(var factory: SpriteActionFactory, var factories: LinkedList<SpriteActionFactory>, message: String, var discrete: Boolean) : Block(message) {
   override fun addElement() {
     factories.add(factories.indexOf(factory) + 1, selectSerializer(discrete))
     updateActions()
@@ -32,9 +32,11 @@ class FactoryBlock(var factory: SpriteFactory, var factories: LinkedList<SpriteF
   }
 }
 
-class ButtonBlock(var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
+class ButtonBlock(private var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
-    entries.addFirst(ActionEntry(world, selectSerializer(discrete).create(selectSprite())))
+    val action = selectSerializer(discrete).create()
+    action.sprite = selectSprite().resolve()
+    entries.addFirst(ActionEntry(world, action))
     updateActions()
   }
 
@@ -44,9 +46,9 @@ class ButtonBlock(var entries: LinkedList<ActionEntry>, message: String, private
   }
 }
 
-class ActionBlock(var entry: ActionEntry, var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
+class ActionBlock(private var entry: ActionEntry, private var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
-    entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectSerializer(discrete).create(selectSprite())))
+    entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectSerializer(discrete).create(selectSprite().resolve())))
     updateActions()
   }
 
@@ -88,7 +90,7 @@ fun updateActions() {
   }
 }
 
-fun showClassActions(spriteClass: SpriteClass, factories: LinkedList<SpriteFactory>, message: String, discrete: Boolean) {
+fun showClassActions(spriteClass: SpriteClass, factories: LinkedList<SpriteActionFactory>, message: String, discrete: Boolean) {
   if(factories.isEmpty()) return
   blocks.add(ClassBlock(factories, message))
   for(factory in factories) {

@@ -1,4 +1,5 @@
 import mod.Element
+import mod.dragging.SpriteEntry
 import java.lang.Error
 import java.util.*
 
@@ -20,6 +21,8 @@ class Node(var className: String) {
     if(id == null) {
       val node = Node(element)
       element.toNode(node)
+      if(element is SpriteAction) node.setField("sprite", element.sprite)
+      if(element is SpriteActionFactory) node.setField("spriteentry", element.spriteEntry)
       lastID++
       idForElement[element] = lastID
       node.setInt("id", lastID)
@@ -48,7 +51,7 @@ class Node(var className: String) {
   }
 
   fun setDouble(name: String, value: Double) {
-    attributes[name] = value.toString()
+    attributes[name] = format(value)
   }
 
   fun getString(name: String): String {
@@ -92,7 +95,9 @@ class Node(var className: String) {
     }
     var element: Element? = null
     if(className.endsWith("Factory")) {
-      element = factorySerializers[className]!!.factoryFromNode(this)
+      val factory = factorySerializers[className]!!.factoryFromNode(this)
+      factory.spriteEntry = getField("spriteEntry") as SpriteEntry
+      element = factory
     }
     if(actionSerializers.contains(className)) {
       element = actionSerializers[className]!!.actionFromNode(this)

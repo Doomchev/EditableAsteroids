@@ -23,11 +23,7 @@ class ActionEntry(val canvas: Canvas, val action: Action): Element {
   }
 }
 
+abstract class SpriteAction(var sprite: Sprite): Action, Element
+
 val actions = LinkedList<SpriteAction>()
 val newActions = LinkedList<SpriteAction>()
-
-abstract class SpriteAction(var sprite: Sprite): Action, Element {
-  override fun toString(): String {
-    return sprite.name
-  }
-}

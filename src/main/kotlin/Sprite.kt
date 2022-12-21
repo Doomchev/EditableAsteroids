@@ -1,6 +1,7 @@
 import mod.Element
 import mod.SceneElement
-import mod.dragging.spritesList
+import mod.dragging.SpriteEntry
+import mod.dragging.objectsList
 import java.awt.BasicStroke
 import java.awt.Graphics2D
 import java.util.*
@@ -16,20 +17,21 @@ val nullSprite = Sprite(blankImage)
 
 object spriteSerializer: ElementSerializer {
   override fun fromNode(node: Node): SceneElement {
-    return Sprite(node.getField("image") as Image, node.getDouble("canterX"), node.getDouble("centerY"), node.getDouble("width"), node.getDouble("height"), node.getString("name"), node.getDouble("angle"), node.getDouble("dx"), node.getDouble("dy"))
+    return Sprite(node.getField("image") as Image, node.getDouble("centerX"), node.getDouble("centerY"), node.getDouble("width"), node.getDouble("height"), node.getDouble("angle"), node.getDouble("dx"), node.getDouble("dy"))
   }
 }
 
-abstract class SpriteFactory: Element {
-  abstract fun create(sprite: Sprite): SpriteAction
+abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): Element {
+  abstract fun create(): SpriteAction
+  fun create(sprite: Sprite): SpriteAction {
+    val action: SpriteAction = create()
+    action.sprite = sprite
+    return action
+  }
   open fun fullText(): String = toString()
 }
 
-open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, var name:String = "", var angle: Double = 0.0, var dx: Double = 0.0, var dy: Double = 0.0): Shape(centerX, centerY, width, height) {
-
-  init {
-    if(name.isNotEmpty()) spritesList.add(this)
-  }
+open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, var angle: Double = 0.0, var dx: Double = 0.0, var dy: Double = 0.0): Shape(centerX, centerY, width, height) {
 
   override fun select(selection: Sprite, selected: LinkedList<Sprite>) {
     if(selection.overlaps(this)) selected.add(this)
@@ -46,7 +48,7 @@ open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0
     if(image == blankImage) {
       drawDashedRectangle(g, leftX, topY, width, height, 1f)
     } else {
-      image?.draw(g, xToScreen(leftX), yToScreen(topY), distToScreen(width),
+      image.draw(g, xToScreen(leftX), yToScreen(topY), distToScreen(width),
         distToScreen(height), angle, false)
     }
   }
@@ -58,15 +60,14 @@ open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0
 
   override fun toNode(node: Node) {
     super.toNode(node)
-    node.setString("name", name)
     node.setDouble("angle", angle)
-    node.setField("image", image!!)
+    node.setField("image", image)
     node.setDouble("dx", dx)
     node.setDouble("dy", dy)
   }
 
-  override fun toString(): String {
-    return name.ifEmpty { super.toString() }
+  fun setName(name: String) {
+    objectsList.add(SpriteEntry(name, this))
   }
 }
 

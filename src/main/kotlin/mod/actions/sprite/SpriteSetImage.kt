@@ -3,31 +3,34 @@ package mod.actions.sprite
 import Image
 import Node
 import Sprite
-import SpriteAction
-import SpriteFactory
+import Action
+import SpriteActionFactory
 import blankImage
 import Serializer
+import SpriteAction
+import mod.dragging.SpriteEntry
 import mod.dragging.selectImageArray
+import mod.dragging.selectSprite
 
 object spriteSetImageSerializer: Serializer {
-  override fun newFactory(): SpriteFactory {
-    return SpriteSetImageFactory(selectImageArray().images[0])
+  override fun newFactory(): SpriteActionFactory {
+    return SpriteSetImageFactory(selectSprite(), selectImageArray().images[0])
   }
 
-  override fun factoryFromNode(node: Node): SpriteFactory {
-    return SpriteSetImageFactory(node.getField("image") as Image)
+  override fun factoryFromNode(node: Node): SpriteActionFactory {
+    return SpriteSetImageFactory(node.getField("spriteentry") as SpriteEntry, node.getField("image") as Image)
   }
 
-  override fun actionFromNode(node: Node): SpriteAction {
+  override fun actionFromNode(node: Node): Action {
     return SpriteSetImage(node.getField("sprite") as Sprite, node.getField("image") as Image)
   }
 
-  override fun toString(): String = "Установить изображение"
+  override fun toString(): String = "Установить изображение "
 }
 
-class SpriteSetImageFactory(var image: Image = blankImage): SpriteFactory() {
-  override fun create(sprite: Sprite): SpriteAction {
-    return SpriteSetImage(sprite, image)
+class SpriteSetImageFactory(spriteEntry: SpriteEntry, var image: Image = blankImage): SpriteActionFactory(spriteEntry) {
+  override fun create(): SpriteAction {
+    return SpriteSetImage(spriteEntry.resolve(), image)
   }
 
   override fun toString(): String = "Установить изображение"

@@ -2,42 +2,44 @@ package mod.actions.sprite
 
 import Node
 import Sprite
-import SpriteAction
-import SpriteFactory
+import Action
+import SpriteActionFactory
 import Serializer
-import mod.selectedSprites
+import SpriteAction
+import mod.dragging.SpriteEntry
+import mod.dragging.selectSprite
 import nullSprite
 
 object spriteLoopAreaSerializer: Serializer {
-  override fun newFactory(): SpriteFactory {
-    return SpriteLoopAreaFactory(selectedSprites.first)
+  override fun newFactory(): SpriteActionFactory {
+    return SpriteLoopAreaFactory(selectSprite(), selectSprite("Выберите границу"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteFactory {
-    return SpriteLoopAreaFactory(node.getField("bounds") as Sprite)
+  override fun factoryFromNode(node: Node): SpriteActionFactory {
+    return SpriteLoopAreaFactory(node.getField("spriteentry") as SpriteEntry, node.getField("bounds") as SpriteEntry)
   }
 
-  override fun actionFromNode(node: Node): SpriteAction {
+  override fun actionFromNode(node: Node): Action {
     return SpriteLoopArea(node.getField("sprite") as Sprite, node.getField("bounds") as Sprite)
   }
 
   override fun toString(): String = "Зациклить пространство"
 }
 
-class SpriteLoopAreaFactory(private var bounds: Sprite = nullSprite): SpriteFactory() {
-  override fun create(sprite: Sprite): SpriteAction {
-    return SpriteLoopArea(sprite, bounds)
+class SpriteLoopAreaFactory(spriteEntry: SpriteEntry, private var bounds: SpriteEntry): SpriteActionFactory(spriteEntry) {
+  override fun create(): SpriteAction {
+    return SpriteLoopArea(spriteEntry.resolve(), bounds.resolve())
   }
 
   override fun toString(): String = "Зациклить пространство"
-  override fun fullText(): String = "Зациклить пространство в $bounds"
+  override fun fullText(): String = "Зациклить пространство в $bounds для $spriteEntry"
 
   override fun toNode(node: Node) {
     node.setField("bounds", bounds)
   }
 }
 
-class SpriteLoopArea(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAction(sprite) {
+class SpriteLoopArea(sprite: Sprite, private var bounds: Sprite = nullSprite): SpriteAction(sprite) {
   override fun execute() {
     if(sprite.centerX < bounds.leftX) sprite.centerX += bounds.width
     if(sprite.centerX >= bounds.rightX) sprite.centerX -= bounds.width
@@ -48,7 +50,6 @@ class SpriteLoopArea(sprite: Sprite, var bounds: Sprite = nullSprite): SpriteAct
   override fun toString(): String = "Зациклить пространство для $sprite в $bounds"
 
   override fun toNode(node: Node) {
-    node.setField("sprite", sprite)
     node.setField("bounds", bounds)
   }
 }

@@ -1,38 +1,46 @@
 package mod.actions.sprite
 
+import Formula
 import Node
+import Serializer
 import Sprite
+import Action
 import SpriteAction
 import SpriteClass
-import SpriteFactory
-import Serializer
-import mod.dragging.parentSprite
-import mod.dragging.selectClass
+import SpriteActionFactory
+import blankImage
+import emptyClass
+import fpsk
+import mod.dragging.*
+import mod.parentEntry
+import mod.project
 import newActions
+import nullSprite
+import zero
 
 object spriteCreateSerializer: Serializer {
-  override fun newFactory(): SpriteFactory {
-    return SpriteCreateFactory(selectClass())
+  override fun newFactory(): SpriteActionFactory {
+    return SpriteCreateFactory(selectSprite("Выберите родительский спрайт:"),  selectClass())
   }
 
-  override fun factoryFromNode(node: Node): SpriteFactory {
-    return SpriteCreateFactory(node.getField("spriteClass") as SpriteClass)
+  override fun factoryFromNode(node: Node): SpriteActionFactory {
+    return SpriteCreateFactory(node.getField("spriteentry") as SpriteEntry, node.getField("spriteClass") as SpriteClass)
   }
 
-  override fun actionFromNode(node: Node): SpriteAction {
+  override fun actionFromNode(node: Node): Action {
     return SpriteCreate(node.getField("sprite") as Sprite, node.getField("spriteClass") as SpriteClass)
   }
 
-  override fun toString(): String = "Создать спрайт"
+  override fun toString(): String = "Создать позже"
 }
 
-class SpriteCreateFactory(private var spriteClass: SpriteClass): SpriteFactory() {
-  override fun create(sprite: Sprite): SpriteAction {
-    return SpriteCreate(sprite, spriteClass)
-  }
+class SpriteCreateFactory(spriteEntry: SpriteEntry, private var spriteClass: SpriteClass): SpriteActionFactory(spriteEntry) {
+  override fun toString(): String = "Создать"
+  override fun fullText(): String = "Создать $spriteClass на основе $spriteEntry"
 
-  override fun toString(): String = "Создать спрайт"
-  override fun fullText(): String = "Создать $spriteClass"
+  override fun create(): SpriteAction {
+    return SpriteCreate(spriteEntry.resolve(), spriteClass)
+  }
 
   override fun toNode(node: Node) {
     node.setField("spriteClass", spriteClass)
@@ -41,9 +49,9 @@ class SpriteCreateFactory(private var spriteClass: SpriteClass): SpriteFactory()
 
 class SpriteCreate(sprite: Sprite, private var spriteClass: SpriteClass): SpriteAction(sprite) {
   override fun execute() {
-    val newSprite = Sprite(currentImageArray!!.images[0])
+    val newSprite = Sprite(blankImage)
     spriteClass.add(newSprite)
-    parentSprite = sprite
+    parentEntry.sprite = sprite
     for(factory in spriteClass.onCreate) {
       factory.create(newSprite).execute()
     }
@@ -52,7 +60,7 @@ class SpriteCreate(sprite: Sprite, private var spriteClass: SpriteClass): Sprite
     }
   }
 
-  override fun toString(): String = "Создать $spriteClass"
+  override fun toString(): String = "Создать $spriteClass "
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)

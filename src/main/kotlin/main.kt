@@ -13,13 +13,10 @@ import mod.project
 import mod.selectedSprites
 import java.awt.Color
 import java.awt.event.MouseEvent.*
-import java.awt.image.BufferedImage
-import java.awt.image.BufferedImage.TYPE_INT_RGB
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.util.*
-import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.Timer
 import kotlin.system.exitProcess
@@ -251,7 +248,7 @@ fun main() {
 
   registerSerializers()
 
-  if(true) {
+  if(false) {
     imageArrays.clear()
     val reader = FileReader("test.xml")
     parser.text = reader.readText()
@@ -266,7 +263,7 @@ fun main() {
     val writer = FileWriter("test.xml")
     writer.write(node.toText(""))
     writer.close()
-    exitProcess(0)
+    //exitProcess(0)
   }
 
   updateActions()

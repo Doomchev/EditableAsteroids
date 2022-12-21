@@ -3,32 +3,35 @@ package mod.actions.sprite
 import Formula
 import Node
 import Sprite
-import SpriteAction
-import SpriteFactory
+import Action
+import SpriteActionFactory
 import Serializer
+import SpriteAction
+import mod.dragging.SpriteEntry
 import mod.dragging.enterDouble
+import mod.dragging.selectSprite
 import zero
 import kotlin.math.PI
 
 object spriteSetAngleSerializer: Serializer {
-  override fun newFactory(): SpriteFactory {
-    return SpriteSetAngleFactory(enterDouble("Введите скорость поворота (град/сек):"))
+  override fun newFactory(): SpriteActionFactory {
+    return SpriteSetAngleFactory(selectSprite(), enterDouble("Введите скорость поворота (град/сек):"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteFactory {
-    return SpriteSetAngleFactory(node.getFormula("angle"))
+  override fun factoryFromNode(node: Node): SpriteActionFactory {
+    return SpriteSetAngleFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("angle"))
   }
 
-  override fun actionFromNode(node: Node): SpriteAction {
+  override fun actionFromNode(node: Node): Action {
     return SpriteSetAngle(node.getField("sprite") as Sprite, node.getDouble("angle"))
   }
 
   override fun toString(): String = "Задать угол"
 }
 
-class SpriteSetAngleFactory(private var angle: Formula = zero): SpriteFactory() {
-  override fun create(sprite: Sprite): SpriteAction {
-    return SpriteSetAngle(sprite, angle.get() * PI / 180.0)
+class SpriteSetAngleFactory(spriteEntry: SpriteEntry, private var angle: Formula = zero): SpriteActionFactory(spriteEntry) {
+  override fun create(): SpriteAction {
+    return SpriteSetAngle(spriteEntry.resolve(), angle.get() * PI / 180.0)
   }
 
   override fun toString(): String = "Задать угол"
@@ -44,7 +47,7 @@ class SpriteSetAngle(sprite: Sprite, private var angle: Double): SpriteAction(sp
     sprite.angle = angle
   }
 
-  override fun toString(): String = "Задать угол $angle"
+  override fun toString(): String = "Задать $sprite угол $angle"
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)

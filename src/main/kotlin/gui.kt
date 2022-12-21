@@ -5,9 +5,10 @@ import Formula
 import ImageArray
 import Key
 import MenuEvent
+import Node
 import Sprite
 import SpriteClass
-import SpriteFactory
+import SpriteActionFactory
 import actions
 import canvases
 import continuousActions
@@ -18,10 +19,8 @@ import frame
 import imageArrays
 import listener
 import Serializer
-import mod.project
-import mod.selectedSprites
+import mod.*
 import newActions
-import nullSprite
 import spritesToRemove
 import updateActions
 import user
@@ -36,8 +35,6 @@ import java.awt.event.KeyListener
 import java.util.*
 import javax.swing.*
 
-var parentSprite = nullSprite
-
 class Window: JPanel() {
   override fun paintComponent(g: Graphics) {
     val oldCanvas = currentCanvas
@@ -47,9 +44,10 @@ class Window: JPanel() {
       for(entry in spriteClass1.onCollision) {
         val spriteClass2 = entry.spriteClass
         for(sprite1 in spriteClass1.sprites) {
-          parentSprite = sprite1
           for(sprite2 in spriteClass2.sprites) {
             if(sprite1.collidesWidth(sprite2)) {
+              sprite1Entry.sprite = sprite1
+              sprite2Entry.sprite = sprite2
               for(factory in entry.factories) {
                 factory.create(sprite1).execute()
               }
@@ -60,6 +58,7 @@ class Window: JPanel() {
     }
 
     for(action in actions) {
+      currentEntry.sprite = action.sprite
       action.execute()
     }
 
@@ -76,6 +75,7 @@ class Window: JPanel() {
         if(action.sprite == sprite) it.remove()
       }
     }
+    spritesToRemove.clear()
 
     for(cnv in canvases) {
       cnv.draw(g2d)
@@ -134,7 +134,7 @@ class AnyKeyListener(private val spriteClass: SpriteClass?, private val event: M
 private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode: Int) {
   if(spriteClass == null) {
     if(selectedSprites.isEmpty()) {
-      applyToSprite(selectSprite(), event, keyCode)
+      applyToSprite(selectSprite().resolve(), event, keyCode)
     } else {
       for(sprite in selectedSprites) {
         applyToSprite(sprite, event, keyCode)
@@ -188,18 +188,36 @@ fun selectClass(message:String = "Выберите класс:"): SpriteClass {
   return classesArray[JOptionPane.showOptionDialog(frame, message, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, classesArray, project.classes.first)]
 }
 
-fun selectSerializer(discrete: Boolean): SpriteFactory {
+fun selectSerializer(discrete: Boolean): SpriteActionFactory {
   val serArray = if(discrete) discreteActions else continuousActions
   return (JOptionPane.showInputDialog(frame, "Выберите действие:", "", JOptionPane.QUESTION_MESSAGE, null, serArray, serArray[0]) as Serializer).newFactory()
-}
-
-val spritesList = LinkedList<Sprite>()
-fun selectSprite(): Sprite {
-  val options = Array(spritesList.size) { spritesList[it] }
-  return options[JOptionPane.showOptionDialog(frame, "Выберите спрайт:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
 }
 
 fun selectImageArray(): ImageArray {
   val options = Array(imageArrays.size) { imageArrays[it] }
   return options[JOptionPane.showOptionDialog(frame, "Выберите изображение:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
+}
+
+val nullSpriteEntry = SpriteEntry("")
+
+open class SpriteEntry(private var caption: String, var sprite: Sprite? = null): Element {
+  fun resolve(): Sprite = sprite!!
+  override fun toString() = caption
+  override fun toNode(node: Node) {
+    node.setString("caption", caption)
+  }
+}
+
+val objectsList = LinkedList<SpriteEntry>()
+fun selectSprite(message:String = "Выберите спрайт:"): SpriteEntry {
+  val options = Array(objectsList.size + 4) {
+    when(it) {
+      0 -> currentEntry
+      1 -> parentEntry
+      2 -> sprite1Entry
+      3 -> sprite2Entry
+      else -> objectsList[it - 4]
+    }
+  }
+  return options[JOptionPane.showOptionDialog(frame, message, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
 }

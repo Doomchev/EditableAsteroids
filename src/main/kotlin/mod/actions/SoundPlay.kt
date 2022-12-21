@@ -2,43 +2,48 @@ package mod.actions
 
 import Node
 import Sprite
-import SpriteAction
-import SpriteFactory
+import Action
+import SpriteActionFactory
 import frame
 import Serializer
+import SpriteAction
+import mod.dragging.SpriteEntry
+import mod.dragging.nullSpriteEntry
+import mod.dragging.selectSprite
+import nullSprite
 import sounds
 import java.io.File
 import javax.sound.sampled.AudioSystem
 import javax.swing.JOptionPane
 
 object soundPlaySerializer: Serializer {
-  override fun newFactory(): SpriteFactory {
+  override fun newFactory(): SpriteActionFactory {
     return SoundPlayFactory(selectSound())
   }
 
-  override fun factoryFromNode(node: Node): SpriteFactory {
+  override fun factoryFromNode(node: Node): SpriteActionFactory {
     return SoundPlayFactory(File(node.getString("file")))
   }
 
-  override fun actionFromNode(node: Node): SpriteAction {
-    return SoundPlay(node.getField("sprite") as Sprite,
-      File(node.getString("file")))
+  override fun actionFromNode(node: Node): Action {
+    return SoundPlay(File(node.getString("file")))
   }
 }
 
-class SoundPlayFactory(var file: File? = null): SpriteFactory() {
-  override fun create(sprite: Sprite): SpriteAction {
-    return SoundPlay(sprite, file!!)
+class SoundPlayFactory(private var file: File): SpriteActionFactory(
+  nullSpriteEntry) {
+  override fun create(): SpriteAction {
+    return SoundPlay(file)
   }
 
   override fun fullText(): String = "Проиграть звук $file"
 
   override fun toNode(node: Node) {
-    node.setString("file", file!!.name)
+    node.setString("file", file.name)
   }
 }
 
-class SoundPlay(sprite: Sprite, var file: File): SpriteAction(sprite) {
+class SoundPlay(private var file: File): SpriteAction(nullSprite) {
   override fun execute() {
     val audioInputStream = AudioSystem.getAudioInputStream(file.absoluteFile)
     val clip = AudioSystem.getClip()

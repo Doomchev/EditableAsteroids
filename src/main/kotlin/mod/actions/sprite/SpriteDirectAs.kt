@@ -2,46 +2,50 @@ package mod.actions.sprite
 
 import Node
 import Sprite
-import SpriteAction
-import SpriteFactory
+import Action
+import SpriteActionFactory
 import Serializer
-import mod.dragging.parentSprite
+import SpriteAction
+import mod.dragging.SpriteEntry
+import mod.dragging.selectSprite
 
 object spriteDirectAsSerializer: Serializer {
-  override fun newFactory(): SpriteFactory {
-    return SpriteDirectAsFactory()
+  override fun newFactory(): SpriteActionFactory {
+    return SpriteDirectAsFactory(selectSprite(), selectSprite("Направить как:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteFactory {
-    return SpriteDirectAsFactory()
+  override fun factoryFromNode(node: Node): SpriteActionFactory {
+    return SpriteDirectAsFactory(node.getField("spriteentry") as SpriteEntry, node.getField("template") as SpriteEntry)
   }
 
-  override fun actionFromNode(node: Node): SpriteAction {
-    return SpriteDirectAs(node.getField("sprite") as Sprite)
+  override fun actionFromNode(node: Node): Action {
+    return SpriteDirectAs(node.getField("sprite") as Sprite, node.getField("template") as Sprite)
   }
 
-  override fun toString(): String = "Направить как родителя"
+  override fun toString(): String = "Направить как"
 }
 
-class SpriteDirectAsFactory: SpriteFactory() {
-  override fun create(sprite: Sprite): SpriteAction {
-    return SpriteDirectAs(sprite)
+class SpriteDirectAsFactory(spriteEntry: SpriteEntry, private var template: SpriteEntry): SpriteActionFactory(spriteEntry) {
+  override fun create(): SpriteAction {
+    return SpriteDirectAs(spriteEntry.resolve(), template.resolve())
   }
 
-  override fun toString(): String = "Направить как родителя"
+  override fun toString(): String = "Направить $spriteEntry как $template"
 
   override fun toNode(node: Node) {
+    node.setField("template", template)
   }
 }
 
-class SpriteDirectAs(sprite: Sprite): SpriteAction(sprite) {
+class SpriteDirectAs(sprite: Sprite, private var template: Sprite): SpriteAction(sprite) {
   override fun execute() {
-    sprite.angle = parentSprite.angle
+    sprite.angle = template.angle
   }
 
-  override fun toString(): String = "Направить как родителя"
+  override fun toString(): String = "Направить $sprite как $template"
 
   override fun toNode(node: Node) {
-    node.setField("sprite", sprite)
+    node.setField("template", template)
   }
 }
+

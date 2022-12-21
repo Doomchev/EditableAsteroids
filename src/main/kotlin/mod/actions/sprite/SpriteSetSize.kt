@@ -3,36 +3,38 @@ package mod.actions.sprite
 import Formula
 import Node
 import Sprite
-import SpriteAction
-import SpriteFactory
+import Action
+import SpriteActionFactory
 import Serializer
+import SpriteAction
+import mod.dragging.SpriteEntry
 import mod.dragging.enterDouble
+import mod.dragging.selectSprite
 import zero
 
 object spriteSetSizeSerializer: Serializer {
-  override fun newFactory(): SpriteFactory {
-    return SpriteSetSizeFactory(enterDouble("Введите ширину/высоту:"))
+  override fun newFactory(): SpriteActionFactory {
+    return SpriteSetSizeFactory(selectSprite(), enterDouble("Введите ширину/высоту:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteFactory {
-    return SpriteSetSizeFactory(node.getFormula("size"))
+  override fun factoryFromNode(node: Node): SpriteActionFactory {
+    return SpriteSetSizeFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("size"))
   }
 
-  override fun actionFromNode(node: Node): SpriteAction {
+  override fun actionFromNode(node: Node): Action {
     return SpriteSetSize(node.getField("sprite") as Sprite, node.getDouble("size"))
   }
 
   override fun toString(): String = "Установить размер"
 }
 
-class SpriteSetSizeFactory(var size: Formula = zero): SpriteFactory() {
-  override fun create(sprite: Sprite): SpriteAction {
-    val value = size.get()
-    return SpriteSetSize(sprite, value)
+class SpriteSetSizeFactory(spriteEntry: SpriteEntry, var size: Formula = zero): SpriteActionFactory(spriteEntry) {
+  override fun create(): SpriteAction {
+    return SpriteSetSize(spriteEntry.resolve(), size.get())
   }
 
   override fun toString(): String = "Установить размер"
-  override fun fullText(): String = "Изменить размер на $size"
+  override fun fullText(): String = "Установить размер $size для $spriteEntry"
 
   override fun toNode(node: Node) {
     node.setFormula("size", size)
@@ -45,7 +47,7 @@ class SpriteSetSize(sprite: Sprite, var size: Double): SpriteAction(sprite) {
     sprite.height = size
   }
 
-  override fun toString(): String = "Изменить размер на $size"
+  override fun toString(): String = "Установить размер $size для $sprite"
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)

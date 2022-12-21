@@ -14,9 +14,9 @@ object collisionEntrySerializer: ElementSerializer {
 }
 
 class CollisionEntry(var spriteClass: SpriteClass): Element {
-  val factories = LinkedList<SpriteFactory>()
+  val factories = LinkedList<SpriteActionFactory>()
 
-  constructor(spriteClass: SpriteClass, factory: SpriteFactory) : this(spriteClass) {
+  constructor(spriteClass: SpriteClass, factory: SpriteActionFactory) : this(spriteClass) {
     factories.add(factory)
   }
 
@@ -43,9 +43,9 @@ object spriteClassSerializer: ElementSerializer {
 
 class SpriteClass(var name: String = ""): SceneElement() {
   val sprites = LinkedList<Sprite>()
-  val onCreate = LinkedList<SpriteFactory>()
+  val onCreate = LinkedList<SpriteActionFactory>()
   val onCollision = LinkedList<CollisionEntry>()
-  val always = LinkedList<SpriteFactory>()
+  val always = LinkedList<SpriteActionFactory>()
 
   fun add(sprite: Sprite) {
     sprites.add(sprite)
@@ -65,7 +65,7 @@ class SpriteClass(var name: String = ""): SceneElement() {
     return spriteUnderCursor(sprites, fx, fy)
   }
   
-  fun add(spriteClass2: SpriteClass, spriteFactory: SpriteFactory) {
+  fun add(spriteClass2: SpriteClass, spriteFactory: SpriteActionFactory) {
     for(entry in onCollision) {
       if(spriteClass2 == entry.spriteClass) {
         entry.factories.add(spriteFactory)
@@ -75,7 +75,7 @@ class SpriteClass(var name: String = ""): SceneElement() {
     onCollision.add(CollisionEntry(spriteClass2, spriteFactory))
   }
 
-  fun addOnCollision(spriteClass: SpriteClass, factory: SpriteFactory) {
+  fun addOnCollision(spriteClass: SpriteClass, factory: SpriteActionFactory) {
     for(entry in onCollision) {
       if(entry.spriteClass == spriteClass) {
         entry.factories.add(factory)
