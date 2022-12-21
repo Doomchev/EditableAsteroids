@@ -7,7 +7,7 @@ import Action
 import SpriteActionFactory
 import Serializer
 import SpriteAction
-import mod.dragging.SpriteEntry
+import SpriteEntry
 import mod.dragging.enterDouble
 import mod.dragging.selectSprite
 import zero

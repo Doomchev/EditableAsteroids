@@ -6,11 +6,10 @@ import Pushable
 import Shape
 import Sprite
 import SpriteClass
+import SpriteEntry
 import actions
 import buttons
-import ide
 import imageArrays
-import mod.dragging.SpriteEntry
 import mod.dragging.objectsList
 import toRemove
 import user

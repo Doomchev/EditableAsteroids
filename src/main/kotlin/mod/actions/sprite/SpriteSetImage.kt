@@ -8,7 +8,7 @@ import SpriteActionFactory
 import blankImage
 import Serializer
 import SpriteAction
-import mod.dragging.SpriteEntry
+import SpriteEntry
 import mod.dragging.selectImageArray
 import mod.dragging.selectSprite
 

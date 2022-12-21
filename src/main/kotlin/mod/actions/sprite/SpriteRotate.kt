@@ -9,7 +9,7 @@ import format
 import fpsk
 import Serializer
 import SpriteAction
-import mod.dragging.SpriteEntry
+import SpriteEntry
 import mod.dragging.enterDouble
 import mod.dragging.selectSprite
 import kotlin.math.PI

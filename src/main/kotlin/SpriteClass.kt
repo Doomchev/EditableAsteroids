@@ -41,7 +41,7 @@ object spriteClassSerializer: ElementSerializer {
   }
 }
 
-class SpriteClass(var name: String = ""): SceneElement() {
+class SpriteClass(private var name: String = ""): SceneElement() {
   val sprites = LinkedList<Sprite>()
   val onCreate = LinkedList<SpriteActionFactory>()
   val onCollision = LinkedList<CollisionEntry>()

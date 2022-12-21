@@ -1,14 +1,14 @@
 package mod.actions.sprite
 
+import Action
 import Formula
 import Node
-import Sprite
-import Action
-import SpriteActionFactory
-import fpsk
 import Serializer
+import Sprite
 import SpriteAction
-import mod.dragging.SpriteEntry
+import SpriteActionFactory
+import SpriteEntry
+import fpsk
 import mod.dragging.enterDouble
 import mod.dragging.selectSprite
 import spritesToRemove

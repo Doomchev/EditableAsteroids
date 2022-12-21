@@ -17,6 +17,7 @@ import mod.project
 import newActions
 import nullSprite
 import zero
+import SpriteEntry
 
 object spriteCreateSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {

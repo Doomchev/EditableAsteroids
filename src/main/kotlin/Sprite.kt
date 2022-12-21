@@ -1,6 +1,5 @@
 import mod.Element
 import mod.SceneElement
-import mod.dragging.SpriteEntry
 import mod.dragging.objectsList
 import java.awt.BasicStroke
 import java.awt.Graphics2D

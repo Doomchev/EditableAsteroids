@@ -19,6 +19,7 @@ import frame
 import imageArrays
 import listener
 import Serializer
+import SpriteEntry
 import mod.*
 import newActions
 import spritesToRemove
@@ -196,16 +197,6 @@ fun selectSerializer(discrete: Boolean): SpriteActionFactory {
 fun selectImageArray(): ImageArray {
   val options = Array(imageArrays.size) { imageArrays[it] }
   return options[JOptionPane.showOptionDialog(frame, "Выберите изображение:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
-}
-
-val nullSpriteEntry = SpriteEntry("")
-
-open class SpriteEntry(private var caption: String, var sprite: Sprite? = null): Element {
-  fun resolve(): Sprite = sprite!!
-  override fun toString() = caption
-  override fun toNode(node: Node) {
-    node.setString("caption", caption)
-  }
 }
 
 val objectsList = LinkedList<SpriteEntry>()

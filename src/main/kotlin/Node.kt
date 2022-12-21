@@ -1,6 +1,4 @@
 import mod.Element
-import mod.dragging.SpriteEntry
-import java.lang.Error
 import java.util.*
 
 private val idForElement = HashMap<Element, Int>()
@@ -13,8 +11,7 @@ class Node(var className: String) {
   val fields = LinkedHashMap<String, Node>()
   val children = LinkedList<Node>()
 
-  constructor(element: Element): this(element.javaClass.kotlin.simpleName!!) {
-  }
+  constructor(element: Element): this(element.javaClass.kotlin.simpleName!!)
 
   private fun setNode(element: Element): Node {
     val id = idForElement[element]
@@ -68,6 +65,10 @@ class Node(var className: String) {
 
   fun setFormula(name: String, element: Formula) {
     attributes[name] = element.toString()
+  }
+
+  fun hasField(name: String): Boolean {
+    return fields[name] != null
   }
 
   fun <T: Element> getField(name: String, list: LinkedList<T>) {

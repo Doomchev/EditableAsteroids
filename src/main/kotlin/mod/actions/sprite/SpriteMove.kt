@@ -7,7 +7,7 @@ import SpriteActionFactory
 import fpsk
 import Serializer
 import SpriteAction
-import mod.dragging.SpriteEntry
+import SpriteEntry
 import mod.dragging.selectSprite
 
 object spriteMoveSerializer: Serializer {

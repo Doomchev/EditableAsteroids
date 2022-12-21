@@ -16,7 +16,7 @@ val discreteActions = arrayOf(spriteCreateSerializer, spritePositionAsSerializer
 
 val continuousActions = arrayOf(spriteDelayedCreateSerializer, spriteRotationSerializer, spriteMoveSerializer, spriteAccelerationSerializer, spriteAnimationSerializer, spriteSetBoundsSerializer, spriteLoopAreaSerializer, spriteDelayedRemoveSerializer)
 
-val elements = listOf(imageSerializer, imageArraySerializer, textureSerializer, spriteSerializer, spriteClassSerializer, collisionEntrySerializer, keySerializer, mouseButtonSerializer, mouseWheelUpSerializer, mouseWheelDownSerializer, actionEntrySerializer)
+val elements = listOf(imageSerializer, imageArraySerializer, textureSerializer, spriteSerializer, spriteClassSerializer, collisionEntrySerializer, keySerializer, mouseButtonSerializer, mouseWheelUpSerializer, mouseWheelDownSerializer, actionEntrySerializer, spriteEntrySerializer)
 
 val actionSerializers = HashMap<String, Serializer>()
 val factorySerializers = HashMap<String, Serializer>()
