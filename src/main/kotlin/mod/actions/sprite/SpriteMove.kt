@@ -1,13 +1,13 @@
 package mod.actions.sprite
 
-import Node
-import Sprite
 import Action
-import SpriteActionFactory
-import fpsk
+import Node
 import Serializer
+import Sprite
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
+import fpsk
 import mod.dragging.selectSprite
 
 object spriteMoveSerializer: Serializer {
@@ -31,7 +31,7 @@ class SpriteMoveFactory(spriteEntry: SpriteEntry): SpriteActionFactory(spriteEnt
     return SpriteMove(spriteEntry.resolve())
   }
 
-  override fun toString(): String = "Перемещать $spriteEntry"
+  override fun toString(): String = "Перемещать$caption"
 
   override fun toNode(node: Node) {
   }

@@ -1,12 +1,12 @@
 package mod.actions.sprite
 
+import Action
 import Formula
 import Node
-import Sprite
-import Action
-import SpriteActionFactory
 import Serializer
+import Sprite
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.enterDouble
 import mod.dragging.selectSprite
@@ -35,7 +35,7 @@ class SpriteSetMovingVectorFactory(spriteEntry: SpriteEntry, private var dx: For
   }
 
   override fun toString(): String = "Задать движение"
-  override fun fullText(): String = "Задать движение $spriteEntry на вектор  ($dx, $dy)"
+  override fun fullText(): String = "Задать движение$caption на вектор ($dx, $dy)"
 
   override fun toNode(node: Node) {
     node.setFormula("dx", dx)

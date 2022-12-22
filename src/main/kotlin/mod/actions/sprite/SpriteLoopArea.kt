@@ -1,11 +1,11 @@
 package mod.actions.sprite
 
-import Node
-import Sprite
 import Action
-import SpriteActionFactory
+import Node
 import Serializer
+import Sprite
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.selectSprite
 import nullSprite
@@ -32,7 +32,7 @@ class SpriteLoopAreaFactory(spriteEntry: SpriteEntry, private var bounds: Sprite
   }
 
   override fun toString(): String = "Зациклить пространство"
-  override fun fullText(): String = "Зациклить пространство в $bounds для $spriteEntry"
+  override fun fullText(): String = "Зациклить пространство в $bounds$forCaption"
 
   override fun toNode(node: Node) {
     node.setField("bounds", bounds)

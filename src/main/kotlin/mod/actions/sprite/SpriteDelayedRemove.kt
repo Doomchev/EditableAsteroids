@@ -35,7 +35,7 @@ class SpriteDelayedRemoveFactory(spriteEntry: SpriteEntry, private var delay: Fo
   }
 
   override fun toString(): String = "Удалить позже"
-  override fun fullText(): String = "Удалить через $delay сек."
+  override fun fullText(): String = "Удалить$caption через $delay сек."
 
   override fun toNode(node: Node) {
     node.setFormula("delay", delay)

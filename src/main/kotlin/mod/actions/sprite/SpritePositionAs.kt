@@ -1,11 +1,11 @@
 package mod.actions.sprite
 
-import Node
-import Sprite
 import Action
-import SpriteActionFactory
+import Node
 import Serializer
+import Sprite
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.selectSprite
 
@@ -30,7 +30,7 @@ class SpritePositionAsFactory(spriteEntry: SpriteEntry, private var destination:
     return SpritePositionAs(spriteEntry.resolve(), destination.resolve())
   }
 
-  override fun toString(): String = "Переместить $spriteEntry к $destination"
+  override fun toString(): String = "Переместить$caption к $destination"
 
   override fun toNode(node: Node) {
     node.setField("destination", destination)

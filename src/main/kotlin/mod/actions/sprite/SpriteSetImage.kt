@@ -45,7 +45,7 @@ class SpriteSetImage(sprite: Sprite, var image: Image): SpriteAction(sprite) {
     sprite.image = image
   }
 
-  override fun toString(): String = "Установить изображение"
+  override fun toString(): String = "Установить изображение $image"
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)

@@ -1,5 +1,6 @@
 import mod.Element
 import mod.SceneElement
+import mod.currentEntry
 import mod.dragging.objectsList
 import java.awt.BasicStroke
 import java.awt.Graphics2D
@@ -28,6 +29,9 @@ abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): Element {
     return action
   }
   open fun fullText(): String = toString()
+  private fun entryCaption(prefix: String = ""): String = if(spriteEntry == currentEntry) "" else " $prefix$spriteEntry"
+  val caption get() = entryCaption("")
+  val forCaption get() = entryCaption("для ")
 }
 
 open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, var angle: Double = 0.0, var dx: Double = 0.0, var dy: Double = 0.0): Shape(centerX, centerY, width, height) {
@@ -67,6 +71,10 @@ open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0
 
   fun setName(name: String) {
     objectsList.add(SpriteEntry(name, this))
+  }
+
+  override fun toString(): String {
+    return spriteName(this)
   }
 }
 

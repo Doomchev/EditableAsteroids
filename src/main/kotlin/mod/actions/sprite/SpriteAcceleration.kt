@@ -38,7 +38,7 @@ class SpriteAccelerationFactory(spriteEntry: SpriteEntry, private var accelerati
   }
 
   override fun toString(): String = "Ускорять"
-  override fun fullText(): String = "Ускорять $spriteEntry на $acceleration до $limit"
+  override fun fullText(): String = "Ускорять$caption на $acceleration до $limit"
 
   override fun toNode(node: Node) {
     node.setFormula("acceleration", acceleration)

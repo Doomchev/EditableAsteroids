@@ -68,7 +68,7 @@ class Node(var className: String) {
   }
 
   fun hasField(name: String): Boolean {
-    return fields[name] != null
+    return fields.contains(name)
   }
 
   fun <T: Element> getField(name: String, list: LinkedList<T>) {

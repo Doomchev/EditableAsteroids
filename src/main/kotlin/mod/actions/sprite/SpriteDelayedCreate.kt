@@ -37,7 +37,7 @@ object spriteDelayedCreateSerializer: Serializer {
 
 class SpriteDelayedCreateFactory(spriteEntry: SpriteEntry, private var spriteClass: SpriteClass = emptyClass, private var delay: Formula = zero): SpriteActionFactory(spriteEntry) {
   override fun toString(): String = "Создать позже"
-  override fun fullText(): String = "Создать $spriteClass через $delay на основе $spriteEntry"
+  override fun fullText(): String = "Создать $spriteClass через $delay сек. на основе $spriteEntry"
 
   override fun create(): SpriteAction {
     return SpriteDelayedCreate(spriteEntry.resolve(), spriteClass, delay.get())
@@ -65,7 +65,7 @@ class SpriteDelayedCreate(sprite: Sprite, private var spriteClass: SpriteClass, 
     }
   }
 
-  override fun toString(): String = "Создать $spriteClass через $delay на основе $sprite"
+  override fun toString(): String = "Создать $spriteClass через $delay сек. на основе $sprite"
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)

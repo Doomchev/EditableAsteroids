@@ -1,12 +1,12 @@
 package mod.actions.sprite
 
+import Action
 import Formula
 import Node
-import Sprite
-import Action
-import SpriteActionFactory
 import Serializer
+import Sprite
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.enterDouble
 import mod.dragging.selectSprite
@@ -34,7 +34,7 @@ class SpriteSetSizeFactory(spriteEntry: SpriteEntry, var size: Formula = zero): 
   }
 
   override fun toString(): String = "Установить размер"
-  override fun fullText(): String = "Установить размер $size для $spriteEntry"
+  override fun fullText(): String = "Установить размер $size$forCaption"
 
   override fun toNode(node: Node) {
     node.setFormula("size", size)

@@ -1,11 +1,11 @@
 package mod.actions.sprite
 
-import Node
-import Sprite
 import Action
-import SpriteActionFactory
+import Node
 import Serializer
+import Sprite
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.selectSprite
 import nullSprite
@@ -33,7 +33,7 @@ class SpriteSetBoundsFactory(spriteEntry: SpriteEntry, private var bounds: Sprit
   }
 
   override fun toString(): String = "Установить границы"
-  override fun fullText(): String = "Установить границы $spriteEntry в $bounds"
+  override fun fullText(): String = "Установить границы$forCaption в $bounds"
 
   override fun toNode(node: Node) {
     node.setField("bounds", bounds)

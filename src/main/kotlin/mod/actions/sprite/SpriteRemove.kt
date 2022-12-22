@@ -1,11 +1,11 @@
 package mod.actions.sprite
 
-import Node
-import Sprite
 import Action
-import SpriteActionFactory
+import Node
 import Serializer
+import Sprite
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.selectSprite
 import spritesToRemove
@@ -31,7 +31,7 @@ class SpriteRemoveFactory(spriteEntry: SpriteEntry): SpriteActionFactory(spriteE
     return SpriteRemove(spriteEntry.resolve())
   }
 
-  override fun toString(): String = "Удалить $spriteEntry"
+  override fun toString(): String = "Удалить$caption"
 
   override fun toNode(node: Node) {
   }

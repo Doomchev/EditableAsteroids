@@ -1,15 +1,15 @@
 package mod.actions.sprite
 
+import Action
 import Formula
 import Node
+import Serializer
 import Sprite
-import Action
+import SpriteAction
 import SpriteActionFactory
+import SpriteEntry
 import format
 import fpsk
-import Serializer
-import SpriteAction
-import SpriteEntry
 import mod.dragging.enterDouble
 import mod.dragging.selectSprite
 import kotlin.math.PI
@@ -36,7 +36,7 @@ class SpriteRotationFactory(spriteEntry: SpriteEntry, private var speed: Formula
   }
 
   override fun toString(): String = "Вращать"
-  override fun fullText(): String = "Вращать $spriteEntry со скоростью $speed"
+  override fun fullText(): String = "Вращать$caption со скоростью $speed"
 
   override fun toNode(node: Node) {
     node.setFormula("speed", speed)

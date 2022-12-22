@@ -8,7 +8,7 @@ abstract class Block(var message:String) {
   abstract fun removeElement()
 }
 
-class ClassBlock(var factories: LinkedList<SpriteActionFactory>, message: String) : Block(message) {
+class ClassBlock(private var factories: LinkedList<SpriteActionFactory>, message: String) : Block(message) {
   override fun addElement() {
     factories.addFirst(selectSerializer(true))
     updateActions()
@@ -20,7 +20,7 @@ class ClassBlock(var factories: LinkedList<SpriteActionFactory>, message: String
   }
 }
 
-class FactoryBlock(var factory: SpriteActionFactory, var factories: LinkedList<SpriteActionFactory>, message: String, var discrete: Boolean) : Block(message) {
+class FactoryBlock(private var factory: SpriteActionFactory, private var factories: LinkedList<SpriteActionFactory>, message: String, private var discrete: Boolean) : Block(message) {
   override fun addElement() {
     factories.add(factories.indexOf(factory) + 1, selectSerializer(discrete))
     updateActions()

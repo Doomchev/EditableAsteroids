@@ -35,7 +35,7 @@ class SpriteSetSpeedFactory(spriteEntry: SpriteEntry, private var speed: Formula
   }
 
   override fun toString(): String = "Задать скорость"
-  override fun fullText(): String = "Задать скорость $speed для $spriteEntry"
+  override fun fullText(): String = "Задать скорость $speed$forCaption"
 
   override fun toNode(node: Node) {
     node.setFormula("speed", speed)

@@ -59,8 +59,8 @@ object imageArraySerializer: ElementSerializer {
 class ImageArray(var images: Array<Image>, private val name: String): Element {
   fun setCenter(x: Double, y: Double) {
     for(image in images) {
-      image.xMul = x// / image.width
-      image.yMul = y// / image.height
+      image.xMul = x // / image.width
+      image.yMul = y // / image.height
     }
   }
 

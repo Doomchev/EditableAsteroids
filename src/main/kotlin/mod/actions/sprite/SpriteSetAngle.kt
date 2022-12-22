@@ -1,12 +1,12 @@
 package mod.actions.sprite
 
+import Action
 import Formula
 import Node
-import Sprite
-import Action
-import SpriteActionFactory
 import Serializer
+import Sprite
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.enterDouble
 import mod.dragging.selectSprite
@@ -35,7 +35,7 @@ class SpriteSetAngleFactory(spriteEntry: SpriteEntry, private var angle: Formula
   }
 
   override fun toString(): String = "Задать угол"
-  override fun fullText(): String = "Задать угол $angle"
+  override fun fullText(): String = "Задать угол $angle$forCaption"
 
   override fun toNode(node: Node) {
     node.setFormula("angle", angle)

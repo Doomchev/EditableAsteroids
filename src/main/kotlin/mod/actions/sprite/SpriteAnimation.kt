@@ -1,15 +1,15 @@
 package mod.actions.sprite
 
+import Action
 import Formula
 import ImageArray
 import Node
-import Sprite
-import Action
-import SpriteActionFactory
-import fpsk
 import Serializer
+import Sprite
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
+import fpsk
 import mod.dragging.enterDouble
 import mod.dragging.selectImageArray
 import mod.dragging.selectSprite
@@ -36,7 +36,7 @@ class SpriteAnimationFactory(spriteEntry: SpriteEntry, private var array: ImageA
   }
 
   override fun toString(): String = "Анимировать"
-  override fun fullText(): String = "Анимировать $spriteEntry используя $array со скоростью $speed"
+  override fun fullText(): String = "Анимировать$caption используя $array со скоростью $speed"
 
   override fun toNode(node: Node) {
     node.setField("array", array)

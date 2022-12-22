@@ -1,11 +1,11 @@
 package mod.actions.sprite
 
-import Node
-import Sprite
 import Action
-import SpriteActionFactory
+import Node
 import Serializer
+import Sprite
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.selectSprite
 import kotlin.random.Random
@@ -32,7 +32,7 @@ class SpritePositionInAreaFactory(spriteEntry: SpriteEntry, private var area: Sp
   }
 
   override fun toString(): String = "Переместить в область"
-  override fun fullText(): String = "Переместить $spriteEntry в область $area"
+  override fun fullText(): String = "Переместить$caption в область $area"
 
   override fun toNode(node: Node) {
     node.setField("area", area)

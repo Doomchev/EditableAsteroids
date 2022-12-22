@@ -1,11 +1,11 @@
 package mod.actions.sprite
 
-import Node
-import Sprite
 import Action
-import SpriteActionFactory
+import Node
 import Serializer
+import Sprite
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.selectSprite
 
@@ -30,7 +30,7 @@ class SpriteDirectAsFactory(spriteEntry: SpriteEntry, private var template: Spri
     return SpriteDirectAs(spriteEntry.resolve(), template.resolve())
   }
 
-  override fun toString(): String = "Направить $spriteEntry как $template"
+  override fun toString(): String = "Направить$caption как $template"
 
   override fun toNode(node: Node) {
     node.setField("template", template)
