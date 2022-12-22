@@ -21,10 +21,3 @@ open class SpriteEntry(var caption: String, var sprite: Sprite? = null):
     if(sprite != null) node.setField("sprite", sprite!!)
   }
 }
-
-fun spriteName(sprite: Sprite): String {
-  for(entry in objectsList) {
-    if(entry.sprite == sprite) return entry.caption
-  }
-  throw Error()
-}

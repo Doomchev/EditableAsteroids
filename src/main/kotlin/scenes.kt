@@ -1,10 +1,8 @@
+import mod.*
 import mod.actions.SoundPlayFactory
 import mod.actions.splitImage
 import mod.actions.sprite.*
-import mod.currentEntry
 import mod.dragging.*
-import mod.parentEntry
-import mod.project
 import kotlin.math.PI
 
 fun tilemap() {
@@ -111,8 +109,10 @@ fun asteroids() {
   }
 
   bullet.apply {
-    addOnCollision(asteroid, SpriteCreateFactory(currentEntry, explosion))
-    addOnCollision(asteroid, SpriteRemoveFactory(currentEntry))
+    addOnCollision(asteroid, SpriteCreateFactory(sprite1Entry, explosion))
+    addOnCollision(asteroid, SpriteRemoveFactory(sprite1Entry))
+    addOnCollision(asteroid, SpriteCreateFactory(sprite2Entry, explosion))
+    addOnCollision(asteroid, SpriteRemoveFactory(sprite2Entry))
   }
 
   project.apply {

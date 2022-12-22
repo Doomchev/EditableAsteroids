@@ -42,7 +42,7 @@ class SpriteDelayedRemoveFactory(spriteEntry: SpriteEntry, private var delay: Fo
   }
 }
 
-class SpriteDelayedRemove(sprite: Sprite, private var delay: Double = 0.0): SpriteAction(sprite) {
+class SpriteDelayedRemove(sprite: Sprite, private var delay: Double): SpriteAction(sprite) {
   override fun execute() {
     delay -= fpsk
     if(delay <= 0) {

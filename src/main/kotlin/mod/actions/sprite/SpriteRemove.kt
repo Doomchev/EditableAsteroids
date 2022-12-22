@@ -8,6 +8,8 @@ import SpriteAction
 import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.selectSprite
+import mod.sprite1Entry
+import mod.sprite2Entry
 import spritesToRemove
 
 object spriteRemoveSerializer: Serializer {
@@ -20,7 +22,7 @@ object spriteRemoveSerializer: Serializer {
   }
 
   override fun actionFromNode(node: Node): Action {
-    return SpriteDelayedRemove(node.getField("sprite") as Sprite)
+    return SpriteRemove(node.getField("sprite") as Sprite)
   }
 
   override fun toString(): String = "Удалить"
@@ -28,7 +30,7 @@ object spriteRemoveSerializer: Serializer {
 
 class SpriteRemoveFactory(spriteEntry: SpriteEntry): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
-    return SpriteRemove(spriteEntry.resolve())
+     return SpriteRemove(spriteEntry.resolve())
   }
 
   override fun toString(): String = "Удалить$caption"
@@ -45,6 +47,5 @@ class SpriteRemove(sprite: Sprite): SpriteAction(sprite) {
   override fun toString(): String = "Удалить $sprite"
 
   override fun toNode(node: Node) {
-    node.setField("sprite", sprite)
   }
 }

@@ -50,7 +50,7 @@ class Window: JPanel() {
               sprite1Entry.sprite = sprite1
               sprite2Entry.sprite = sprite2
               for(factory in entry.factories) {
-                factory.create(sprite1).execute()
+                factory.create().execute()
               }
             }
           }

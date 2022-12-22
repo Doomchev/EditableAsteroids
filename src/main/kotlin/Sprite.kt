@@ -29,7 +29,7 @@ abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): Element {
     return action
   }
   open fun fullText(): String = toString()
-  private fun entryCaption(prefix: String = ""): String = if(spriteEntry == currentEntry) "" else " $prefix$spriteEntry"
+  private fun entryCaption(prefix: String): String = if(spriteEntry == currentEntry) "" else " $prefix$spriteEntry"
   val caption get() = entryCaption("")
   val forCaption get() = entryCaption("для ")
 }
@@ -74,7 +74,10 @@ open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0
   }
 
   override fun toString(): String {
-    return spriteName(this)
+    for(entry in objectsList) {
+      if(entry.sprite == this) return entry.caption
+    }
+    return super.toString() + image.texture.fileName
   }
 }
 
