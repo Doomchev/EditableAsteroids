@@ -60,16 +60,18 @@ fun main() {
   canvases.add(world)
   currentCanvas = world
 
-  val button1 = MouseButton(BUTTON1, ide)
-  button1.add(world, resizeSprite)
-  button1.add(world, rotateSprite)
-  button1.add(world, moveSprites)
-  button1.add(world, selectSprites)
-  button1.addOnClick(world, selectSprite)
+  val button1 = MouseButton(BUTTON1, ide).apply {
+    add(world, resizeSprite)
+    add(world, rotateSprite)
+    add(world, moveSprites)
+    add(world, selectSprites)
+    addOnClick(world, selectSprite)
+  }
 
-  val button2 = MouseButton(BUTTON3, ide)
-  button2.add(world, createSprite)
-  button2.addOnClick(world, showMenu(objectMenu))
+  val button2 = MouseButton(BUTTON3, ide).apply {
+    add(world, createSprite)
+    addOnClick(world, showMenu(objectMenu))
+  }
 
   val panButton = MouseButton(BUTTON2, ide)
   panButton.add(world, pan)
@@ -78,12 +80,14 @@ fun main() {
   mouseWheelUp(ide).addOnClick(world, zoomIn)
   mouseWheelDown(ide).addOnClick(world, zoomOut)
 
-  world.add(grid)
-  world.add(drawScene)
-  world.add(selectSprites)
-  world.add(rotateSprite)
-  world.add(resizeSprite)
-  world.add(drawDefaultCamera)
+  world.apply {
+    add(grid)
+    add(drawScene)
+    add(selectSprites)
+    add(rotateSprite)
+    add(resizeSprite)
+    add(drawDefaultCamera)
+  }
 
   /// ASSETS LOADING
 
@@ -152,7 +156,7 @@ fun main() {
 
   val itemCreate = JMenuItem("Элемент")
   itemCreate.addActionListener {
-    actions.add(SpriteCreate(Sprite(currentImageArray!!.images[0]), selectClass()))
+    actions.add(SpriteCreate(Sprite(currentImageArray!!.images[0]), selectClass(), LinkedList()))
   }
   createItem.add(itemCreate)
 

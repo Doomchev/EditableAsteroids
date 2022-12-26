@@ -13,6 +13,7 @@ import fpsk
 import mod.dragging.enterDouble
 import mod.dragging.selectImageArray
 import mod.dragging.selectSprite
+import kotlin.math.floor
 
 object spriteAnimationSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {
@@ -51,7 +52,10 @@ class SpriteAnimation(sprite: Sprite, private var array: ImageArray, private var
     while(frame < 0.0) {
       frame += images.size
     }
-    sprite.image = images[frame.toInt() % images.size]
+    while(frame > images.size) {
+      frame -= images.size
+    }
+    sprite.image = images[floor(frame).toInt()]
   }
 
   override fun toString(): String = "Анимировать $sprite со скоростью $speed используя $array"

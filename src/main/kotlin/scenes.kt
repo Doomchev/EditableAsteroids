@@ -3,6 +3,7 @@ import mod.actions.SoundPlayFactory
 import mod.actions.splitImage
 import mod.actions.sprite.*
 import mod.dragging.*
+import java.util.*
 import kotlin.math.PI
 
 fun tilemap() {
@@ -83,7 +84,7 @@ fun asteroids() {
   val asteroid = addClass("Астероид")
   asteroid.onCreate.apply {
     add(SpritePositionInAreaFactory(currentEntry, bounds))
-    add(SpriteSetSizeFactory(currentEntry, RandomDoubleValue(0.5, 2.0)))
+    add(SpriteSetSizeFactory(currentEntry, DoubleValue(2.0)))
     add(SpriteSetSpeedFactory(currentEntry, DoubleValue(15.0)))
   }
 
@@ -93,11 +94,12 @@ fun asteroids() {
     add(SpriteLoopAreaFactory(currentEntry, bounds))
   }
 
-  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(blankImage), asteroid)))
+  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(blankImage), asteroid, LinkedList())))
 
   val explosion = addClass("Взрыв")
 
   explosion.onCreate.apply {
+    //add(SpriteSetImageFactory(currentEntry, imageArrays[5].images[0]))
     add(SoundPlayFactory(sounds[1]))
     add(SpritePositionAsFactory(currentEntry, parentEntry))
     add(SpriteSetSizeFactory(currentEntry, DoubleValue(2.0)))
@@ -109,9 +111,14 @@ fun asteroids() {
   }
 
   bullet.apply {
-    addOnCollision(asteroid, SpriteCreateFactory(sprite1Entry, explosion))
+    val list = LinkedList<SpriteActionFactory>()
+    list.add(SpriteSetSizeFactory(currentEntry, DoubleValue(1.0)))
+    addOnCollision(asteroid, SpriteCreateFactory(sprite1Entry, explosion, list))
     addOnCollision(asteroid, SpriteRemoveFactory(sprite1Entry))
-    addOnCollision(asteroid, SpriteCreateFactory(sprite2Entry, explosion))
+
+    val list2 = LinkedList<SpriteActionFactory>()
+    list2.add(SpriteSetSizeFactory(currentEntry, DoubleValue(2.0)))
+    addOnCollision(asteroid, SpriteCreateFactory(sprite2Entry, explosion, list2))
     addOnCollision(asteroid, SpriteRemoveFactory(sprite2Entry))
   }
 

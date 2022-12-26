@@ -39,6 +39,7 @@ class SpriteMoveFactory(spriteEntry: SpriteEntry): SpriteActionFactory(spriteEnt
 
 class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
   override fun execute() {
+    if(!sprite.active) return
     sprite.centerX += fpsk * sprite.dx
     sprite.centerY += fpsk * sprite.dy
   }

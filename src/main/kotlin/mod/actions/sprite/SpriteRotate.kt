@@ -48,7 +48,7 @@ class SpriteRotation(sprite: Sprite, private var speed: Double): SpriteAction(sp
     sprite.angle += fpsk * speed
   }
 
-  override fun toString(): String = "Повернуть $sprite со скоростью ${format(speed)}"
+  override fun toString(): String = "Вращать $sprite со скоростью ${format(speed)}"
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)

@@ -61,7 +61,9 @@ class SpriteDelayedCreate(sprite: Sprite, private var spriteClass: SpriteClass, 
       factory.create(newSprite).execute()
     }
     for(action in spriteClass.always) {
-      newActions.add(action.create(newSprite))
+      val action = action.create(newSprite)
+      action.execute()
+      newActions.add(action)
     }
   }
 

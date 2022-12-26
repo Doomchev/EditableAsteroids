@@ -30,7 +30,7 @@ object spriteRemoveSerializer: Serializer {
 
 class SpriteRemoveFactory(spriteEntry: SpriteEntry): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
-     return SpriteRemove(spriteEntry.resolve())
+    return SpriteRemove(spriteEntry.resolve())
   }
 
   override fun toString(): String = "Удалить$caption"

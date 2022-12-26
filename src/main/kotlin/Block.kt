@@ -110,5 +110,6 @@ fun showCollisionActions(entry:CollisionEntry, message: String, discrete: Boolea
   blocks.add(CollisionBlock(entry, message))
   for(factory in entry.factories) {
     blocks.add(FactoryBlock(factory, entry.factories,"  ${factory.fullText()}", discrete))
+    factory.addChildBlocks()
   }
 }

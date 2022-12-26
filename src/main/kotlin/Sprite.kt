@@ -23,18 +23,23 @@ object spriteSerializer: ElementSerializer {
 
 abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): Element {
   abstract fun create(): SpriteAction
+
   fun create(sprite: Sprite): SpriteAction {
     val action: SpriteAction = create()
     action.sprite = sprite
     return action
   }
+
   open fun fullText(): String = toString()
   private fun entryCaption(prefix: String): String = if(spriteEntry == currentEntry) "" else " $prefix$spriteEntry"
+
+  open fun addChildBlocks() {}
+
   val caption get() = entryCaption("")
   val forCaption get() = entryCaption("для ")
 }
 
-open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, var angle: Double = 0.0, var dx: Double = 0.0, var dy: Double = 0.0): Shape(centerX, centerY, width, height) {
+open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, var angle: Double = 0.0, var dx: Double = 0.0, var dy: Double = 0.0, var active: Boolean = true): Shape(centerX, centerY, width, height) {
 
   override fun select(selection: Sprite, selected: LinkedList<Sprite>) {
     if(selection.overlaps(this)) selected.add(this)

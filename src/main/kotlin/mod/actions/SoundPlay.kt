@@ -42,6 +42,7 @@ class SoundPlayFactory(private var file: File): SpriteActionFactory(
 
 class SoundPlay(private var file: File): SpriteAction(nullSprite) {
   override fun execute() {
+    return
     val audioInputStream = AudioSystem.getAudioInputStream(file.absoluteFile)
     val clip = AudioSystem.getClip()
     clip.open(audioInputStream)
