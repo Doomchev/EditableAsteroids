@@ -22,14 +22,14 @@ interface Drawing {
   fun draw(g: Graphics2D)
 }
 
-val selectedSprites = LinkedList<Sprite>()
+val selectedSprites = mutableListOf<Sprite>()
 
 interface Element {
   fun toNode(node: Node)
 }
 
 abstract class SceneElement: Element, Drawing {
-  abstract fun select(selection: Sprite, selected: LinkedList<Sprite>)
+  abstract fun select(selection: Sprite, selected: MutableList<Sprite>)
   abstract fun remove(shape: Shape)
   abstract fun spriteUnderCursor(fx: Double, fy: Double): Sprite?
 }
@@ -40,16 +40,16 @@ var sprite1Entry = SpriteEntry("спрайт 1")
 var sprite2Entry = SpriteEntry("спрайт 2")
 
 object project: SceneElement() {
-  private val elements = LinkedList<SceneElement>()
-  val classes = LinkedList<SpriteClass>()
-  val states = LinkedList<State>()
+  private val elements = mutableListOf<SceneElement>()
+  val classes = mutableListOf<SpriteClass>()
+  val states = mutableListOf<State>()
 
   fun add(element: SceneElement) {
     elements.add(element)
   }
 
   fun addFirst(sprite: Sprite) {
-    elements.addFirst(sprite)
+    elements.add(0, sprite)
   }
 
   override fun draw(g: Graphics2D) {
@@ -60,7 +60,7 @@ object project: SceneElement() {
     g.drawString("${actions.size}", 300, 18)
   }
 
-  override fun select(selection: Sprite, selected: LinkedList<Sprite>) {
+  override fun select(selection: Sprite, selected: MutableList<Sprite>) {
     for(element in elements) {
       element.select(selection, selected)
     }
@@ -79,7 +79,7 @@ object project: SceneElement() {
   }
 
   override fun spriteUnderCursor(fx: Double, fy: Double): Sprite? {
-    for(element in elements.descendingIterator()) {
+    for(element in elements.reversed()) {
       val sprite = element.spriteUnderCursor(fx, fy)
       if(sprite != null) return sprite
     }
@@ -94,7 +94,7 @@ object project: SceneElement() {
     node.getField("objects", objectsList)
     node.getField("images", imageArrays)
     node.getField("classes", classes)
-    node.getField("buttons", LinkedList<Pushable>())
+    node.getField("buttons", mutableListOf<Pushable>())
     node.getField("actions", actions)
     node.getChildren(elements)
   }
@@ -107,7 +107,7 @@ object project: SceneElement() {
 
     node.setField("images", imageArrays)
     node.setField("classes", classes)
-    val list = LinkedList<Pushable>()
+    val list = mutableListOf<Pushable>()
     for(button in buttons) {
       if(button.project == user) list.add(button)
     }

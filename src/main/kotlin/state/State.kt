@@ -20,7 +20,7 @@ fun newState(name: String): State {
 
 fun selectState(message:String = "Выберите состояние:"): State {
   val array = Array(project.states.size) { project.states[it]}
-  return array[JOptionPane.showOptionDialog(frame, message, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, array, project.states.first)]
+  return array[JOptionPane.showOptionDialog(frame, message, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, array, project.states.first())]
 }
 
 fun findState(name: String): State {

@@ -51,7 +51,7 @@ class Image(var texture: Texture, var x: Int, var y: Int, var width: Int, var he
 
 object imageArraySerializer: ElementSerializer {
   override fun fromNode(node: Node): Element {
-    val list = LinkedList<Image>()
+    val list = mutableListOf<Image>()
     node.getChildren(list)
     return ImageArray(Array(list.size) { list[it] }, node.getString("name"))
   }
@@ -74,7 +74,7 @@ class ImageArray(var images: Array<Image>, private val name: String): Element {
 
   override fun toNode(node: Node) {
     node.setString("name", name)
-    val list = LinkedList<Image>()
+    val list = mutableListOf<Image>()
     for(image in images) {
       list.add(image)
     }

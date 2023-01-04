@@ -15,17 +15,17 @@ abstract class Pushable(val project: Project): Element {
 
   class DraggingEntry(val canvas: Canvas, val action: DraggingAction)
 
-  val draggingActions = LinkedList<DraggingEntry>()
+  val draggingActions = mutableListOf<DraggingEntry>()
   fun add(canvas: Canvas, action: DraggingAction) {
     draggingActions.add(DraggingEntry(canvas, action))
   }
 
-  val onClickActions = LinkedList<ActionEntry>()
+  val onClickActions = mutableListOf<ActionEntry>()
   fun addOnClick(canvas: Canvas, action: Action) {
     onClickActions.add(ActionEntry(canvas, action))
   }
 
-  val onPressActions = LinkedList<ActionEntry>()
+  val onPressActions = mutableListOf<ActionEntry>()
   fun addOnPress(canvas: Canvas, action: Action) {
     onPressActions.add(ActionEntry(canvas, action))
   }
@@ -40,7 +40,7 @@ object keySerializer: ElementSerializer {
   }
 }
 
-val buttons = LinkedList<Pushable>()
+val buttons = mutableListOf<Pushable>()
 class Key(private var code: Int, project: Project): Pushable(project) {
   override fun correspondsTo(e: KeyEvent): Boolean {
     return e.keyChar.code == code || e.keyCode == code
@@ -135,7 +135,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     }
   }
 
-  private fun onClick(entries: LinkedList<ActionEntry>) {
+  private fun onClick(entries: MutableList<ActionEntry>) {
     for(entry in entries) {
       if(!entry.canvas.active || !entry.canvas.hasMouse()) continue
       currentCanvas = entry.canvas
@@ -174,7 +174,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     currentDraggingAction!!.dragged()
   }
 
-  private fun onDragStart(entries: LinkedList<Pushable.DraggingEntry>) {
+  private fun onDragStart(entries: MutableList<Pushable.DraggingEntry>) {
     for(entry in entries) {
       if(!entry.canvas.hasMouse()) continue
       currentCanvas = entry.canvas
@@ -237,7 +237,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     }
   }
 
-  private val keysPressed = LinkedList<KeyEntry>()
+  private val keysPressed = mutableListOf<KeyEntry>()
   class KeyEntry(val key: Pushable, val canvas: Canvas, var remove: Boolean = false)
 
   override fun keyPressed(e: KeyEvent) {

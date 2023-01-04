@@ -33,7 +33,7 @@ class Canvas(fx: Int, fy:Int, fwidth: Int, fheight:Int, scale: Double, active: B
     update()
   }
 
-  private val drawingModules = LinkedList<Drawing>()
+  private val drawingModules = mutableListOf<Drawing>()
   fun add(obj: Drawing) {
     drawingModules.add(obj)
   }

@@ -23,11 +23,11 @@ import javax.swing.Timer
 var showCollisionShapes = false
 var showGrid = false
 
-val canvases = LinkedList<Canvas>()
-val imageArrays = LinkedList<ImageArray>()
+val canvases = mutableListOf<Canvas>()
+val imageArrays = mutableListOf<ImageArray>()
 var blankImage: Image = Image(Texture(""))
 
-val sounds = LinkedList<File>()
+val sounds = mutableListOf<File>()
 
 const val windowHeight = 800
 const val windowWidth = windowHeight * 9 / 16
@@ -131,7 +131,7 @@ fun main() {
 
   val itemToBottom = JMenuItem("Вниз")
   itemToBottom.addActionListener {
-    for(sprite in selectedSprites.descendingIterator()) {
+    for(sprite in selectedSprites.reversed()) {
       project.remove(sprite)
       project.addFirst(sprite)
     }
@@ -155,7 +155,7 @@ fun main() {
 
   val itemCreate = JMenuItem("Элемент")
   itemCreate.addActionListener {
-    actions.add(SpriteCreate(Sprite(currentImageArray!!.images[0]), selectClass(), LinkedList()))
+    actions.add(SpriteCreate(Sprite(currentImageArray!!.images[0]), selectClass(), mutableListOf()))
   }
   createItem.add(itemCreate)
 
@@ -220,7 +220,7 @@ fun main() {
   imageMenu.add(itemSetVisArea)
 
   blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0)
-  imageArrays.addFirst(ImageArray(Array(1) {blankImage}, "Пустое"))
+  imageArrays.add(0, ImageArray(Array(1) {blankImage}, "Пустое"))
   currentImageArray = imageArrays[0]
 
   // PROPERTIES GUI

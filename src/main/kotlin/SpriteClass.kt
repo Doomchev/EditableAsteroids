@@ -8,7 +8,7 @@ import javax.swing.JOptionPane
 val emptyClass = SpriteClass("")
 
 class NewSprite(var spriteClass: SpriteClass, var sprite: Sprite)
-val newSprites = LinkedList<NewSprite>()
+val newSprites = mutableListOf<NewSprite>()
 
 object collisionEntrySerializer: ElementSerializer {
   override fun fromNode(node: Node): Element {
@@ -19,7 +19,7 @@ object collisionEntrySerializer: ElementSerializer {
 }
 
 class CollisionEntry(var spriteClass: SpriteClass): Element {
-  val factories = LinkedList<SpriteActionFactory>()
+  val factories = mutableListOf<SpriteActionFactory>()
 
   constructor(spriteClass: SpriteClass, newFactories: Array<out SpriteActionFactory>) : this(spriteClass) {
     factories.addAll(newFactories)
@@ -47,17 +47,17 @@ object spriteClassSerializer: ElementSerializer {
 }
 
 class SpriteClass(private var name: String = ""): SceneElement() {
-  val sprites = LinkedList<Sprite>()
-  val onCreate = LinkedList<SpriteActionFactory>()
-  val onCollision = LinkedList<CollisionEntry>()
-  val always = LinkedList<SpriteActionFactory>()
+  val sprites = mutableListOf<Sprite>()
+  val onCreate = mutableListOf<SpriteActionFactory>()
+  val onCollision = mutableListOf<CollisionEntry>()
+  val always = mutableListOf<SpriteActionFactory>()
 
   fun add(sprite: Sprite) {
     sprites.add(sprite)
   }
 
-  override fun select(selection: Sprite, selected: LinkedList<Sprite>) {
-    for(sprite in sprites.descendingIterator()) {
+  override fun select(selection: Sprite, selected: MutableList<Sprite>) {
+    for(sprite in sprites.reversed()) {
       sprite.select(selection, selected)
     }
   }
@@ -115,5 +115,5 @@ fun addClass(caption: String): SpriteClass {
 
 fun selectClass(message:String = "Выберите класс:"): SpriteClass {
   val classesArray = Array(project.classes.size) { project.classes[it]}
-  return classesArray[JOptionPane.showOptionDialog(frame, message, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, classesArray, project.classes.first)]
+  return classesArray[JOptionPane.showOptionDialog(frame, message, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, classesArray, project.classes.first())]
 }

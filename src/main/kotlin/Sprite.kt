@@ -11,7 +11,7 @@ private val whiteStroke = BasicStroke(1f, BasicStroke.CAP_BUTT
 var fps = 100.0
 var fpsk = 1.0 / fps
 
-val spritesToRemove = LinkedList<Sprite>()
+val spritesToRemove = mutableListOf<Sprite>()
 val nullSprite = Sprite(blankImage)
 
 object spriteSerializer: ElementSerializer {
@@ -41,7 +41,7 @@ abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): Element {
 open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, var angle: Double = 0.0, var dx: Double = 1.0, var dy: Double = 0.0, var active: Boolean = true): Shape(centerX, centerY, width, height) {
   var state= nullState
 
-  override fun select(selection: Sprite, selected: LinkedList<Sprite>) {
+  override fun select(selection: Sprite, selected: MutableList<Sprite>) {
     if(selection.overlaps(this)) selected.add(this)
   }
 
@@ -86,8 +86,8 @@ open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0
   }
 }
 
-fun spriteUnderCursor(sprites: LinkedList<Sprite>, x: Double, y: Double): Sprite? {
-  for(sprite in sprites.descendingIterator()) {
+fun spriteUnderCursor(sprites: MutableList<Sprite>, x: Double, y: Double): Sprite? {
+  for(sprite in sprites.reversed()) {
     if(sprite.collidesWithPoint(x, y)) return sprite
   }
   return null
@@ -115,4 +115,4 @@ fun selectSprite(message:String = "Выберите спрайт:"): SpriteEntry
   )]
 }
 
-val objectsList = LinkedList<SpriteEntry>()
+val objectsList = mutableListOf<SpriteEntry>()

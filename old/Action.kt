@@ -4,7 +4,7 @@ import kotlin.system.exitProcess
 var currentCanvas: Canvas = Canvas(0.0, 0.0, 0.0, 0.0)
 
 abstract class Action {
-  val triggers = LinkedList<Button>()
+  val triggers = mutableListOf<Button>()
   open fun execute() {}
   open fun conditions(): Boolean {
     return true

@@ -95,12 +95,12 @@ fun asteroids() {
     add(SpriteMoveForwardFactory(currentEntry))
   }
 
-  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(blankImage), asteroid, LinkedList<SpriteActionFactory>().apply {
-    add(SpriteSetStateFactory(currentEntry, big))
-    add(SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)))
-    add(SpriteSetAngleFactory(currentEntry, RandomDoubleValue(0.0, 360.0)))
-    add(SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(2.0, 3.0)))
-  })))
+  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(blankImage), asteroid, mutableListOf<SpriteActionFactory>(
+    SpriteSetStateFactory(currentEntry, big),
+    SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)),
+    SpriteSetAngleFactory(currentEntry, RandomDoubleValue(0.0, 360.0)),
+    SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(2.0, 3.0)))
+  )))
 
 
   val explosion = addClass("Взрыв")

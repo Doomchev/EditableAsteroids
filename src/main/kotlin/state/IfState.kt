@@ -10,6 +10,7 @@ import SpriteActionFactory
 import SpriteEntry
 import blocks
 import indent
+import mod.project
 import selectSprite
 import java.util.*
 
@@ -19,13 +20,13 @@ object ifStateSerializer: Serializer {
   }
 
   override fun factoryFromNode(node: Node): SpriteActionFactory {
-    val actions = LinkedList<SpriteActionFactory>()
+    val actions = mutableListOf<SpriteActionFactory>()
     node.getField("actions", actions)
     return IfStateFactory(node.getField("spriteentry") as SpriteEntry, findStates(node.getString("state")), actions)
   }
 
   override fun actionFromNode(node: Node): Action {
-    val actions = LinkedList<SpriteActionFactory>()
+    val actions = mutableListOf<SpriteActionFactory>()
     node.getField("actions", actions)
     return IfState(node.getField("sprite") as Sprite, findStates(node.getString("state")), actions)
   }
@@ -59,6 +60,7 @@ class IfStateFactory(spriteEntry: SpriteEntry, private var values: MutableList<S
   override fun toString(): String = "Если $caption == $values"
 
   override fun toNode(node: Node) {
+    node.setField("actions", actions)
   }
 }
 

@@ -24,7 +24,7 @@ object rotateSprite: DraggingAction, Drawing {
 
   override fun conditions(): Boolean {
     if(selectedSprites.size != 1) return false
-    currentSprite = selectedSprites.first
+    currentSprite = selectedSprites.first()
     return block.collidesWithPoint(mousefx, mousefy)
   }
 
@@ -39,7 +39,7 @@ object rotateSprite: DraggingAction, Drawing {
 
   override fun draw(g: Graphics2D) {
     if(selectedSprites.size != 1) return
-    setBlock(selectedSprites.first)
+    setBlock(selectedSprites.first())
     val xx = xToScreen(block.leftX)
     val yy = yToScreen(block.topY)
     g.color = Color.WHITE

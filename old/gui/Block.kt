@@ -6,7 +6,7 @@ open class Block(val element: Element, var style: Style = containerStyle) {
   var y: Int = 0
   var width: Int = 0
   var height: Int = 0
-  var children = LinkedList<Block>()
+  var children = mutableListOf<Block>()
   open fun draw(g: Graphics2D, dx: Int, dy: Int) {
     style.draw(g, x + dx, y + dy, width, height)
   }

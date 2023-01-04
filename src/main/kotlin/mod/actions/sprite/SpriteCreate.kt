@@ -26,24 +26,24 @@ object spriteCreateSerializer: Serializer {
   }
 
   override fun factoryFromNode(node: Node): SpriteActionFactory {
-    val actions = LinkedList<SpriteActionFactory>()
+    val actions = mutableListOf<SpriteActionFactory>()
     node.getField("actions", actions)
     return SpriteCreateFactory(node.getField("spriteentry") as SpriteEntry, node.getField("spriteClass") as SpriteClass, actions)
   }
 
   override fun actionFromNode(node: Node): Action {
-    val actions = LinkedList<SpriteActionFactory>()
+    val actions = mutableListOf<SpriteActionFactory>()
     node.getField("actions", actions)
     return SpriteCreate(node.getField("sprite") as Sprite, node.getField("spriteClass") as SpriteClass, actions)
   }
 
-  override fun toString(): String = "Создать позже"
+  override fun toString(): String = "Создать"
 }
 
-class SpriteCreateFactory(spriteEntry: SpriteEntry, private var spriteClass: SpriteClass, var actions: LinkedList<SpriteActionFactory>): SpriteActionFactory(spriteEntry) {
-  private var actionsList = LinkedList<SpriteActionFactory>()
+class SpriteCreateFactory(spriteEntry: SpriteEntry, private var spriteClass: SpriteClass, var actions: MutableList<SpriteActionFactory>): SpriteActionFactory(spriteEntry) {
+  private var actionsList = mutableListOf<SpriteActionFactory>()
 
-  constructor(spriteEntry: SpriteEntry, spriteClass: SpriteClass, vararg actions: SpriteActionFactory) : this(spriteEntry, spriteClass, LinkedList<SpriteActionFactory>()) {
+  constructor(spriteEntry: SpriteEntry, spriteClass: SpriteClass, vararg actions: SpriteActionFactory) : this(spriteEntry, spriteClass, mutableListOf<SpriteActionFactory>()) {
     this.actionsList.addAll(actions)
   }
 
@@ -67,7 +67,7 @@ class SpriteCreateFactory(spriteEntry: SpriteEntry, private var spriteClass: Spr
   }
 }
 
-class SpriteCreate(sprite: Sprite, private var spriteClass: SpriteClass, private var actions: LinkedList<SpriteActionFactory>): SpriteAction(sprite) {
+class SpriteCreate(sprite: Sprite, private var spriteClass: SpriteClass, private var actions: MutableList<SpriteActionFactory>): SpriteAction(sprite) {
   override fun execute() {
     val newSprite = Sprite(blankImage)
     newSprites.add(NewSprite(spriteClass, newSprite))

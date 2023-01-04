@@ -5,7 +5,7 @@ open class EnumerationValue {
 }
 
 class Enumeration<Value: EnumerationValue> {
-  private val values = LinkedList<Value>()
+  private val values = mutableListOf<Value>()
 
   fun add(value: Value) {
     value.index = values.size

@@ -8,9 +8,9 @@ abstract class Block(var message:String) {
   abstract fun removeElement()
 }
 
-class ClassBlock(private var factories: LinkedList<SpriteActionFactory>, message: String) : Block(message) {
+class ClassBlock(private var factories: MutableList<SpriteActionFactory>, message: String) : Block(message) {
   override fun addElement() {
-    factories.addFirst(selectSerializer(true))
+    factories.add(0, selectSerializer(true))
     updateActions()
   }
 
@@ -32,11 +32,11 @@ class FactoryBlock(private var factory: SpriteActionFactory, private var factori
   }
 }
 
-class ButtonBlock(private var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
+class ButtonBlock(private var entries: MutableList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
     val action = selectSerializer(discrete).create()
     action.sprite = selectSprite().resolve()
-    entries.addFirst(ActionEntry(world, action))
+    entries.add(0, ActionEntry(world, action))
     updateActions()
   }
 
@@ -46,7 +46,7 @@ class ButtonBlock(private var entries: LinkedList<ActionEntry>, message: String,
   }
 }
 
-class ActionBlock(private var entry: ActionEntry, private var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
+class ActionBlock(private var entry: ActionEntry, private var entries: MutableList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
     entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectSerializer(
       discrete
@@ -62,7 +62,7 @@ class ActionBlock(private var entry: ActionEntry, private var entries: LinkedLis
 
 class CollisionBlock(private val entry: CollisionEntry, message: String) : Block(message){
   override fun addElement() {
-    entry.factories.addFirst(selectSerializer(true))
+    entry.factories.add(0, selectSerializer(true))
     updateActions()
   }
 
@@ -72,7 +72,7 @@ class CollisionBlock(private val entry: CollisionEntry, message: String) : Block
   }
 }
 
-val blocks = LinkedList<Block>()
+val blocks = mutableListOf<Block>()
 fun updateActions() {
   blocks.clear()
 
@@ -92,7 +92,7 @@ fun updateActions() {
   }
 }
 
-fun showClassActions(spriteClass: SpriteClass, factories: LinkedList<SpriteActionFactory>, message: String, discrete: Boolean) {
+fun showClassActions(spriteClass: SpriteClass, factories: MutableList<SpriteActionFactory>, message: String, discrete: Boolean) {
   if(factories.isEmpty()) return
   blocks.add(ClassBlock(factories, message))
   indent += "  "
@@ -103,7 +103,7 @@ fun showClassActions(spriteClass: SpriteClass, factories: LinkedList<SpriteActio
   indent = indent.substring(2)
 }
 
-fun showButtonActions(actions: LinkedList<ActionEntry>, message: String, discrete: Boolean) {
+fun showButtonActions(actions: MutableList<ActionEntry>, message: String, discrete: Boolean) {
   if(actions.isEmpty()) return
   blocks.add(ButtonBlock(actions, message, discrete))
   indent += "  "

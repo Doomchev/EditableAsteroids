@@ -1,6 +1,6 @@
 import java.awt.Color
 import java.awt.Graphics2D
-import java.util.LinkedList
+import java.util.MutableList
 
 enum class HorizontalAlign {
   left,
@@ -52,7 +52,7 @@ class Container(
   vararg elements: Element,
 ): Element(horizontalAlign, verticalAlign, style) {
   var justified = 0
-  val elements = LinkedList<Element>()
+  val elements = mutableListOf<Element>()
 
   init {
     for(element in elements) this.elements.add(element)

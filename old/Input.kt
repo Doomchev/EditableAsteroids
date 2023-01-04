@@ -5,12 +5,12 @@ import java.awt.event.KeyListener
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
-import java.util.LinkedList
+import java.util.MutableList
 
 
 abstract class Button(var action: Action) {
   companion object {
-    val all = LinkedList<Button>()
+    val all = mutableListOf<Button>()
   }
 
   init {

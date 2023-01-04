@@ -9,7 +9,7 @@ private var lastID = 0
 class Node(var className: String) {
   val attributes = LinkedHashMap<String, String>()
   val fields = LinkedHashMap<String, Node>()
-  val children = LinkedList<Node>()
+  val children = mutableListOf<Node>()
 
   constructor(element: Element): this(element.javaClass.kotlin.simpleName!!)
 
@@ -71,12 +71,12 @@ class Node(var className: String) {
     return fields.contains(name)
   }
 
-  fun <T: Element> getField(name: String, list: LinkedList<T>) {
+  fun <T: Element> getField(name: String, list: MutableList<T>) {
     val node = fields[name]!!
     node.getChildren(list)
   }
 
-  fun <T: Element> setField(name: String, list: LinkedList<T>) {
+  fun <T: Element> setField(name: String, list: MutableList<T>) {
     val node = Node("List")
     node.setChildren(list)
     fields[name] = node
@@ -113,13 +113,13 @@ class Node(var className: String) {
     return element
   }
 
-  fun <T: Element> getChildren(list: LinkedList<T>) {
+  fun <T: Element> getChildren(list: MutableList<T>) {
     for(node in children) {
       list.add(node.createObject() as T)
     }
   }
 
-  fun <T: Element> setChildren(elements: LinkedList<T>) {
+  fun <T: Element> setChildren(elements: MutableList<T>) {
     for(element in elements) {
       children.add(setNode(element))
     }

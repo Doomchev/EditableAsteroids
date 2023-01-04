@@ -29,7 +29,7 @@ object resizeSprite: StartingPosition(), Drawing {
 
   override fun conditions(): Boolean {
     if(selectedSprites.size != 1) return false
-    currentSprite = selectedSprites.first
+    currentSprite = selectedSprites.first()
     currentBlock = underCursor(mousesx, mousesy)
     return currentBlock != null
   }
@@ -127,7 +127,7 @@ object resizeSprite: StartingPosition(), Drawing {
 
   override fun draw(g: Graphics2D) {
     if(selectedSprites.size != 1) return
-    setBlocks(selectedSprites.first)
+    setBlocks(selectedSprites.first())
     for(block in blocks) {
       if(block.type == BlockType.nothing) continue
       g.fillRect(block.x, block.y, cursorSize, cursorSize)

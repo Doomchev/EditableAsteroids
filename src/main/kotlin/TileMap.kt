@@ -25,7 +25,7 @@ class TileMap(private var columns: Int, private var rows: Int, private var cellW
     }
   }
 
-  override fun select(selection: Sprite, selected: LinkedList<Sprite>) {}
+  override fun select(selection: Sprite, selected: MutableList<Sprite>) {}
 
   override fun remove(shape: Shape) {}
 
