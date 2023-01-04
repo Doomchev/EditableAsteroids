@@ -19,7 +19,6 @@ import java.io.FileWriter
 import java.util.*
 import javax.swing.*
 import javax.swing.Timer
-import kotlin.system.exitProcess
 
 var showCollisionShapes = false
 var showGrid = false
@@ -172,11 +171,19 @@ fun main() {
     override fun execute() {
       showGrid = !showGrid
     }
+
+    override fun toNode(node: Node) {
+      TODO("Not yet implemented")
+    }
   })
 
   Key(99, ide).addOnClick(world, object: Action {
     override fun execute() {
       showCollisionShapes = !showCollisionShapes
+    }
+
+    override fun toNode(node: Node) {
+      TODO("Not yet implemented")
     }
   })
 

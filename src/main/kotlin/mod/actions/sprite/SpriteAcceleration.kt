@@ -10,7 +10,7 @@ import Serializer
 import SpriteAction
 import SpriteEntry
 import mod.dragging.enterDouble
-import mod.dragging.selectSprite
+import selectSprite
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt

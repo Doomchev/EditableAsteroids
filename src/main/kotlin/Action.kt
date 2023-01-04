@@ -3,7 +3,7 @@ import java.util.*
 
 interface Action : Element {
   fun conditions(): Boolean = true
-  open fun execute() {}
+  fun execute() {}
   override fun toNode(node: Node) {}
 }
 

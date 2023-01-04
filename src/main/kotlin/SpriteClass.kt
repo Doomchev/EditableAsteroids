@@ -1,9 +1,14 @@
 import mod.Element
 import mod.SceneElement
+import mod.project
 import java.awt.Graphics2D
 import java.util.*
+import javax.swing.JOptionPane
 
 val emptyClass = SpriteClass("")
+
+class NewSprite(var spriteClass: SpriteClass, var sprite: Sprite)
+val newSprites = LinkedList<NewSprite>()
 
 object collisionEntrySerializer: ElementSerializer {
   override fun fromNode(node: Node): Element {
@@ -16,8 +21,8 @@ object collisionEntrySerializer: ElementSerializer {
 class CollisionEntry(var spriteClass: SpriteClass): Element {
   val factories = LinkedList<SpriteActionFactory>()
 
-  constructor(spriteClass: SpriteClass, factory: SpriteActionFactory) : this(spriteClass) {
-    factories.add(factory)
+  constructor(spriteClass: SpriteClass, newFactories: Array<out SpriteActionFactory>) : this(spriteClass) {
+    factories.addAll(newFactories)
   }
 
   override fun toString(): String {
@@ -65,24 +70,24 @@ class SpriteClass(private var name: String = ""): SceneElement() {
     return spriteUnderCursor(sprites, fx, fy)
   }
   
-  fun add(spriteClass2: SpriteClass, spriteFactory: SpriteActionFactory) {
+  fun add(spriteClass2: SpriteClass, vararg factories: SpriteActionFactory) {
     for(entry in onCollision) {
       if(spriteClass2 == entry.spriteClass) {
-        entry.factories.add(spriteFactory)
+        entry.factories.addAll(factories)
         return
       }
     }
-    onCollision.add(CollisionEntry(spriteClass2, spriteFactory))
+    onCollision.add(CollisionEntry(spriteClass2, factories))
   }
 
-  fun addOnCollision(spriteClass: SpriteClass, factory: SpriteActionFactory) {
+  fun addOnCollision(spriteClass: SpriteClass, vararg factories: SpriteActionFactory) {
     for(entry in onCollision) {
       if(entry.spriteClass == spriteClass) {
-        entry.factories.add(factory)
+        entry.factories.addAll(factories)
         return
       }
     }
-    onCollision.add(CollisionEntry(spriteClass, factory))
+    onCollision.add(CollisionEntry(spriteClass, factories))
   }
 
   override fun toNode(node: Node) {
@@ -100,4 +105,15 @@ class SpriteClass(private var name: String = ""): SceneElement() {
   }
 
   override fun toString(): String = name
+}
+
+fun addClass(caption: String): SpriteClass {
+  val newClass = SpriteClass(caption)
+  project.classes.add(newClass)
+  return newClass
+}
+
+fun selectClass(message:String = "Выберите класс:"): SpriteClass {
+  val classesArray = Array(project.classes.size) { project.classes[it]}
+  return classesArray[JOptionPane.showOptionDialog(frame, message, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, classesArray, project.classes.first)]
 }

@@ -1,48 +1,60 @@
 package mod.actions.sprite
 
 import Action
+import Formula
 import Node
 import Serializer
 import Sprite
 import SpriteAction
 import SpriteActionFactory
 import SpriteEntry
-import fpsk
-import mod.dragging.selectSprite
+import mod.dragging.enterDouble
+import selectSprite
 
 object spriteMoveSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {
-    return SpriteMoveFactory(selectSprite())
+    return SpriteSetMovingVectorFactory(
+      selectSprite()
+      , enterDouble("Введите приращение по Х:")
+      , enterDouble("Введите приращение по Y:"))
   }
 
   override fun factoryFromNode(node: Node): SpriteActionFactory {
-    return SpriteMoveFactory(node.getField("spriteentry") as SpriteEntry)
+    return SpriteMoveFactory(
+      node.getField("spriteentry") as SpriteEntry
+      , node.getFormula("length"))
   }
 
   override fun actionFromNode(node: Node): Action {
-    return SpriteMove(node.getField("sprite") as Sprite)
+    return SpriteMove(node.getField("sprite") as Sprite
+      , node.getDouble("length"))
   }
 
-  override fun toString(): String = "Перемещать"
+  override fun toString(): String = "Задать движение"
 }
 
-class SpriteMoveFactory(spriteEntry: SpriteEntry): SpriteActionFactory(spriteEntry) {
+class SpriteMoveFactory(spriteEntry: SpriteEntry, private var speed: Formula): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
-    return SpriteMove(spriteEntry.resolve())
+    return SpriteMove(spriteEntry.resolve(), speed.get())
   }
 
-  override fun toString(): String = "Перемещать$caption"
+  override fun toString(): String = "Переместить"
+  override fun fullText(): String = "Переместить$caption вперёд на $speed"
 
   override fun toNode(node: Node) {
+    node.setFormula("length", speed)
   }
 }
 
-class SpriteMove(sprite: Sprite): SpriteAction(sprite) {
+class SpriteMove(sprite: Sprite, private var speed: Double): SpriteAction(sprite) {
   override fun execute() {
-    if(!sprite.active) return
-    sprite.centerX += fpsk * sprite.dx
-    sprite.centerY += fpsk * sprite.dy
+    sprite.centerX += sprite.dx * speed
+    sprite.centerY += sprite.dy * speed
   }
 
-  override fun toString(): String = "Перемещать $sprite"
+  override fun toString(): String = "Переместить $sprite вперёд на $speed"
+
+  override fun toNode(node: Node) {
+    node.setDouble("length", speed)
+  }
 }

@@ -1,6 +1,9 @@
 import mod.Element
 import mod.actions.soundPlaySerializer
 import mod.actions.sprite.*
+import state.ifStateSerializer
+import state.spriteSetStateSerializer
+import javax.swing.JOptionPane
 
 interface Serializer {
   fun newFactory(): SpriteActionFactory
@@ -12,9 +15,9 @@ interface ElementSerializer {
   fun fromNode(node: Node): Element
 }
 
-val discreteActions = arrayOf(spriteCreateSerializer, spritePositionAsSerializer, spritePositionInAreaSerializer, spriteSetSizeSerializer, spriteSetAngleSerializer, spriteDirectAsSerializer, spriteSetMovingVectorSerializer, spriteSetSpeedSerializer, soundPlaySerializer, spriteSetImageSerializer, spriteRemoveSerializer, spriteDeactivateSerializer, spriteDirectAtSerializer)
+val discreteActions = arrayOf(spriteCreateSerializer, spritePositionAsSerializer, spritePositionInAreaSerializer, spriteSetSizeSerializer, spriteSetAngleSerializer, spriteDirectAsSerializer, spriteSetMovingVectorSerializer, spriteSetSpeedSerializer, soundPlaySerializer, spriteSetImageSerializer, spriteRemoveSerializer, spriteDeactivateSerializer, spriteDirectAtSerializer, spriteTurnSerializer, ifStateSerializer, spriteSetStateSerializer)
 
-val continuousActions = arrayOf(spriteDelayedCreateSerializer, spriteRotationSerializer, spriteMoveSerializer, spriteAccelerationSerializer, spriteAnimationSerializer, spriteSetBoundsSerializer, spriteLoopAreaSerializer, spriteDelayedRemoveSerializer, spriteDirectAtSerializer)
+val continuousActions = arrayOf(spriteDelayedCreateSerializer, spriteRotationSerializer, spriteMoveForwardSerializer, spriteAccelerationSerializer, spriteAnimationSerializer, spriteSetBoundsSerializer, spriteLoopAreaSerializer, spriteDelayedRemoveSerializer, spriteDirectAtSerializer)
 
 val elements = listOf(imageSerializer, imageArraySerializer, textureSerializer, spriteSerializer, spriteClassSerializer, collisionEntrySerializer, keySerializer, mouseButtonSerializer, mouseWheelUpSerializer, mouseWheelDownSerializer, actionEntrySerializer, spriteEntrySerializer)
 
@@ -40,4 +43,17 @@ fun registerSerializers() {
     val name = serializer.javaClass.kotlin.simpleName!!
     elementSerializers[capitalize(name)] = serializer
   }
+}
+
+fun selectSerializer(discrete: Boolean): SpriteActionFactory {
+  val serArray = if(discrete) discreteActions else continuousActions
+  return (JOptionPane.showInputDialog(
+    frame,
+    "Выберите действие:",
+    "",
+    JOptionPane.QUESTION_MESSAGE,
+    null,
+    serArray,
+    serArray[0]
+  ) as Serializer).newFactory()
 }

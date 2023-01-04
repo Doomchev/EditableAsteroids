@@ -11,7 +11,7 @@ import SpriteEntry
 import format
 import fpsk
 import mod.dragging.enterDouble
-import mod.dragging.selectSprite
+import selectSprite
 import kotlin.math.PI
 
 object spriteRotationSerializer: Serializer {

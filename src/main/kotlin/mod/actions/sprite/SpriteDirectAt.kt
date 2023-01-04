@@ -7,16 +7,16 @@ import Sprite
 import SpriteAction
 import SpriteActionFactory
 import SpriteEntry
-import mod.dragging.selectSprite
+import selectSprite
 import kotlin.math.atan2
 
 object spriteDirectAtSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {
-    return SpriteDirectAtFactory(selectSprite(), selectSprite("Направить как:"))
+    return SpriteDirectToFactory(selectSprite(), selectSprite("Направить как:"))
   }
 
   override fun factoryFromNode(node: Node): SpriteActionFactory {
-    return SpriteDirectAtFactory(node.getField("spriteentry") as SpriteEntry, node.getField("template") as SpriteEntry)
+    return SpriteDirectToFactory(node.getField("spriteentry") as SpriteEntry, node.getField("template") as SpriteEntry)
   }
 
   override fun actionFromNode(node: Node): Action {
@@ -26,7 +26,7 @@ object spriteDirectAtSerializer: Serializer {
   override fun toString(): String = "Направить на"
 }
 
-class SpriteDirectAtFactory(spriteEntry: SpriteEntry, private var template: SpriteEntry): SpriteActionFactory(spriteEntry) {
+class SpriteDirectToFactory(spriteEntry: SpriteEntry, private var template: SpriteEntry): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
     return SpriteDirectAt(spriteEntry.resolve(), template.resolve())
   }
@@ -40,7 +40,7 @@ class SpriteDirectAtFactory(spriteEntry: SpriteEntry, private var template: Spri
 
 class SpriteDirectAt(sprite: Sprite, private var template: Sprite): SpriteAction(sprite) {
   override fun execute() {
-    sprite.angle = atan2(sprite.centerY - template.centerY, sprite.centerX - template.centerX)
+    sprite.angle = atan2(template.centerY - sprite.centerY, template.centerX - sprite.centerX)
   }
 
   override fun toString(): String = "Направить $sprite на $template"

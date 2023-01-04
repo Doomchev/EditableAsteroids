@@ -1,7 +1,4 @@
 import mod.Element
-import mod.currentEntry
-import mod.dragging.objectsList
-import java.lang.Error
 
 object spriteEntrySerializer: ElementSerializer {
   override fun fromNode(node: Node): Element {

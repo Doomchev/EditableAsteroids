@@ -11,13 +11,15 @@ import SpriteActionFactory
 import SpriteEntry
 import fpsk
 import mod.dragging.enterDouble
-import mod.dragging.selectImageArray
-import mod.dragging.selectSprite
+import selectImageArray
+import selectSprite
 import kotlin.math.floor
 
 object spriteAnimationSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {
-    return SpriteAnimationFactory(selectSprite(), selectImageArray(), enterDouble("Введите скорость (кадров/сек):"))
+    return SpriteAnimationFactory(
+      selectSprite(),
+      selectImageArray(), enterDouble("Введите скорость (кадров/сек):"))
   }
 
   override fun factoryFromNode(node: Node): SpriteActionFactory {

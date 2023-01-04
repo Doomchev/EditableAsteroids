@@ -7,9 +7,7 @@ import Sprite
 import SpriteAction
 import SpriteActionFactory
 import SpriteEntry
-import mod.dragging.selectSprite
-import mod.sprite1Entry
-import mod.sprite2Entry
+import selectSprite
 import spritesToRemove
 
 object spriteRemoveSerializer: Serializer {

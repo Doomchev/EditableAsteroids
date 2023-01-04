@@ -7,12 +7,15 @@ import Sprite
 import SpriteAction
 import SpriteActionFactory
 import SpriteEntry
-import mod.dragging.selectSprite
+import selectSprite
 import nullSprite
 
 object spriteLoopAreaSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {
-    return SpriteLoopAreaFactory(selectSprite(), selectSprite("Выберите границу"))
+    return SpriteLoopAreaFactory(
+      selectSprite(),
+      selectSprite("Выберите границу")
+    )
   }
 
   override fun factoryFromNode(node: Node): SpriteActionFactory {

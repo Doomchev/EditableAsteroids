@@ -2,6 +2,7 @@ import mod.Element
 import java.awt.Color
  import java.awt.Graphics2D
 import java.util.*
+import javax.swing.JOptionPane
 
 object imageSerializer: ElementSerializer {
   override fun fromNode(node: Node): Element {
@@ -83,4 +84,9 @@ class ImageArray(var images: Array<Image>, private val name: String): Element {
   override fun toString(): String {
     return name
   }
+}
+
+fun selectImageArray(): ImageArray {
+  val options = Array(imageArrays.size) { imageArrays[it] }
+  return options[JOptionPane.showOptionDialog(frame, "Выберите изображение:", "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0])]
 }

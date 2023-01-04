@@ -9,8 +9,8 @@ import blankImage
 import Serializer
 import SpriteAction
 import SpriteEntry
-import mod.dragging.selectImageArray
-import mod.dragging.selectSprite
+import selectImageArray
+import selectSprite
 
 object spriteSetImageSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {

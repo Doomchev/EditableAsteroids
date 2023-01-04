@@ -9,7 +9,7 @@ import SpriteAction
 import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.enterDouble
-import mod.dragging.selectSprite
+import selectSprite
 import zero
 
 object spriteSetSizeSerializer: Serializer {

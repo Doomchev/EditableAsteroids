@@ -1,7 +1,3 @@
-import mod.actions.SoundPlayFactory
-import mod.actions.sprite.*
-import java.util.*
-import javax.swing.JOptionPane
 import kotlin.random.Random
 
 abstract class Formula {
@@ -43,13 +39,13 @@ class DoubleValue(private val value: Double): Formula() {
   }
 }
 
-class RandomDoubleValue(private val from: Double, private val size:Double): Formula() {
+class RandomDoubleValue(private val begin: Double, private val end:Double): Formula() {
   override fun get(): Double {
-    return from + size * Random.nextDouble()
+    return begin + (end - begin) * Random.nextDouble()
   }
 
   override fun toString(): String {
-    return "$from..$size"
+    return "$begin..$end"
   }
 }
 

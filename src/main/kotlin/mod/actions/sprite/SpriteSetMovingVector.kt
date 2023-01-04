@@ -9,7 +9,7 @@ import SpriteAction
 import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.enterDouble
-import mod.dragging.selectSprite
+import selectSprite
 
 object spriteSetMovingVectorSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {

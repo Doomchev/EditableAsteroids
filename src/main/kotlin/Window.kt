@@ -35,6 +35,11 @@ class Window: JPanel() {
       action.execute()
     }
 
+    for(entry in newSprites) {
+      entry.spriteClass.sprites.add(entry.sprite)
+    }
+    newSprites.clear()
+
     for(action in newActions) {
       actions.add(action)
       action.execute()

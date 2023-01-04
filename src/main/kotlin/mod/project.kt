@@ -10,7 +10,8 @@ import SpriteEntry
 import actions
 import buttons
 import imageArrays
-import mod.dragging.objectsList
+import objectsList
+import state.State
 import toRemove
 import user
 import java.awt.Color
@@ -41,6 +42,7 @@ var sprite2Entry = SpriteEntry("спрайт 2")
 object project: SceneElement() {
   private val elements = LinkedList<SceneElement>()
   val classes = LinkedList<SpriteClass>()
+  val states = LinkedList<State>()
 
   fun add(element: SceneElement) {
     elements.add(element)

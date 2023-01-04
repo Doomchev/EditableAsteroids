@@ -1,6 +1,4 @@
 import mod.project
-import mod.dragging.selectSerializer
-import mod.dragging.selectSprite
 import java.util.*
 
 abstract class Block(var message:String) {
@@ -20,7 +18,7 @@ class ClassBlock(private var factories: LinkedList<SpriteActionFactory>, message
   }
 }
 
-class FactoryBlock(private var factory: SpriteActionFactory, private var factories: LinkedList<SpriteActionFactory>, message: String, private var discrete: Boolean) : Block(message) {
+class FactoryBlock(private var factory: SpriteActionFactory, private var factories: MutableList<SpriteActionFactory>, message: String, private var discrete: Boolean) : Block(message) {
   override fun addElement() {
     factories.add(factories.indexOf(factory) + 1, selectSerializer(discrete))
     updateActions()
@@ -48,7 +46,9 @@ class ButtonBlock(private var entries: LinkedList<ActionEntry>, message: String,
 
 class ActionBlock(private var entry: ActionEntry, private var entries: LinkedList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
-    entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectSerializer(discrete).create(selectSprite().resolve())))
+    entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectSerializer(
+      discrete
+    ).create(selectSprite().resolve())))
     updateActions()
   }
 
@@ -95,6 +95,7 @@ fun showClassActions(spriteClass: SpriteClass, factories: LinkedList<SpriteActio
   blocks.add(ClassBlock(factories, message))
   for(factory in factories) {
     blocks.add(FactoryBlock(factory, factories, "  ${factory.fullText()}", discrete))
+    factory.addChildBlocks()
   }
 }
 

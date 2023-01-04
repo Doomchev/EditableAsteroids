@@ -7,7 +7,7 @@ import Sprite
 import SpriteAction
 import SpriteActionFactory
 import SpriteEntry
-import mod.dragging.selectSprite
+import selectSprite
 
 object spriteDeactivateSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {

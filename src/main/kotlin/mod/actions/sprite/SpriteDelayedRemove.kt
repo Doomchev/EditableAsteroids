@@ -10,7 +10,7 @@ import SpriteActionFactory
 import SpriteEntry
 import fpsk
 import mod.dragging.enterDouble
-import mod.dragging.selectSprite
+import selectSprite
 import spritesToRemove
 
 object spriteDelayedRemoveSerializer: Serializer {

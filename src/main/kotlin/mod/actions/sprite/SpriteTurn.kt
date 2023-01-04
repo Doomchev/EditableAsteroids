@@ -13,41 +13,41 @@ import selectSprite
 import zero
 import kotlin.math.PI
 
-object spriteSetAngleSerializer: Serializer {
+object spriteTurnSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {
     return SpriteSetAngleFactory(selectSprite(), enterDouble("Введите скорость поворота (град/сек):"))
   }
 
   override fun factoryFromNode(node: Node): SpriteActionFactory {
-    return SpriteSetAngleFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("angle"))
+    return SpriteTurnFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("angle"))
   }
 
   override fun actionFromNode(node: Node): Action {
-    return SpriteSetAngle(node.getField("sprite") as Sprite, node.getDouble("angle"))
+    return SpriteTurn(node.getField("sprite") as Sprite, node.getDouble("angle"))
   }
 
   override fun toString(): String = "Задать угол"
 }
 
-class SpriteSetAngleFactory(spriteEntry: SpriteEntry, private var angle: Formula = zero): SpriteActionFactory(spriteEntry) {
+class SpriteTurnFactory(spriteEntry: SpriteEntry, private var angle: Formula = zero): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
-    return SpriteSetAngle(spriteEntry.resolve(), angle.get() * PI / 180.0)
+    return SpriteTurn(spriteEntry.resolve(), angle.get() * PI / 180.0)
   }
 
-  override fun toString(): String = "Задать угол"
-  override fun fullText(): String = "Задать угол $angle$forCaption"
+  override fun toString(): String = "Повернуть"
+  override fun fullText(): String = "Повернуть$forCaption на $angle"
 
   override fun toNode(node: Node) {
     node.setFormula("angle", angle)
   }
 }
 
-class SpriteSetAngle(sprite: Sprite, private var angle: Double): SpriteAction(sprite) {
+class SpriteTurn(sprite: Sprite, private var angle: Double): SpriteAction(sprite) {
   override fun execute() {
-    sprite.angle = angle
+    sprite.angle += angle
   }
 
-  override fun toString(): String = "Задать $sprite угол $angle"
+  override fun toString(): String = "Повернуть $sprite на $angle"
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)

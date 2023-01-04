@@ -13,11 +13,11 @@ import emptyClass
 import fpsk
 import mod.dragging.*
 import mod.parentEntry
-import mod.project
 import newActions
-import nullSprite
 import zero
 import SpriteEntry
+import selectClass
+import selectSprite
 
 object spriteDelayedCreateSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {
