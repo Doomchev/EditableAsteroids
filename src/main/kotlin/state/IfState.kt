@@ -9,6 +9,7 @@ import SpriteAction
 import SpriteActionFactory
 import SpriteEntry
 import blocks
+import indent
 import selectSprite
 import java.util.*
 
@@ -47,10 +48,12 @@ class IfStateFactory(spriteEntry: SpriteEntry, private var values: MutableList<S
   }
 
   override fun addChildBlocks() {
+    indent += "  "
     for(factory in actions) {
-      blocks.add(FactoryBlock(factory, actions,"    ${factory.fullText()}", true))
+      blocks.add(FactoryBlock(factory, actions,"$indent${factory.fullText()}", true))
       factory.addChildBlocks()
     }
+    indent = indent.substring(2)
   }
 
   override fun toString(): String = "Если $caption == $values"

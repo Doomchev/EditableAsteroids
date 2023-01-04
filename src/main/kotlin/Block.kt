@@ -1,6 +1,8 @@
 import mod.project
 import java.util.*
 
+var indent: String = ""
+
 abstract class Block(var message:String) {
   abstract fun addElement()
   abstract fun removeElement()
@@ -93,24 +95,30 @@ fun updateActions() {
 fun showClassActions(spriteClass: SpriteClass, factories: LinkedList<SpriteActionFactory>, message: String, discrete: Boolean) {
   if(factories.isEmpty()) return
   blocks.add(ClassBlock(factories, message))
+  indent += "  "
   for(factory in factories) {
-    blocks.add(FactoryBlock(factory, factories, "  ${factory.fullText()}", discrete))
+    blocks.add(FactoryBlock(factory, factories, "$indent${factory.fullText()}", discrete))
     factory.addChildBlocks()
   }
+  indent = indent.substring(2)
 }
 
 fun showButtonActions(actions: LinkedList<ActionEntry>, message: String, discrete: Boolean) {
   if(actions.isEmpty()) return
   blocks.add(ButtonBlock(actions, message, discrete))
+  indent += "  "
   for(entry in actions) {
-    blocks.add(ActionBlock(entry, actions,"  $entry", discrete))
+    blocks.add(ActionBlock(entry, actions,"$indent$entry", discrete))
   }
+  indent = indent.substring(2)
 }
 
 fun showCollisionActions(entry:CollisionEntry, message: String, discrete: Boolean) {
   blocks.add(CollisionBlock(entry, message))
+  indent += "  "
   for(factory in entry.factories) {
-    blocks.add(FactoryBlock(factory, entry.factories,"  ${factory.fullText()}", discrete))
+    blocks.add(FactoryBlock(factory, entry.factories,"$indent${factory.fullText()}", discrete))
     factory.addChildBlocks()
   }
+  indent = indent.substring(2)
 }

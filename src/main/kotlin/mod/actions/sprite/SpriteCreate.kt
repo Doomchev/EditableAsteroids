@@ -12,6 +12,7 @@ import SpriteClass
 import SpriteEntry
 import blankImage
 import blocks
+import indent
 import mod.parentEntry
 import newActions
 import newSprites
@@ -50,9 +51,11 @@ class SpriteCreateFactory(spriteEntry: SpriteEntry, private var spriteClass: Spr
   override fun fullText(): String = "Создать $spriteClass на основе $spriteEntry"
 
   override fun addChildBlocks() {
+    indent += "  "
     for(factory in actionsList) {
-      blocks.add(FactoryBlock(factory, actionsList,"    ${factory.fullText()}", true))
+      blocks.add(FactoryBlock(factory, actionsList,"$indent${factory.fullText()}", true))
     }
+    indent = indent.substring(2)
   }
 
   override fun create(): SpriteAction {

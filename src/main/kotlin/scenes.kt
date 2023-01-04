@@ -119,10 +119,6 @@ fun asteroids() {
     addOnCollision(asteroid
       /*, SpriteCreateFactory(sprite1Entry, explosion
         , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0)))*/
-      , SpriteRemoveFactory(sprite1Entry)
-
-      , SpriteRemoveFactory(sprite2Entry)
-
       , IfStateFactory(sprite2Entry, big
         , SpriteCreateFactory(sprite2Entry, explosion
           , SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)))
@@ -156,6 +152,10 @@ fun asteroids() {
       , IfStateFactory(sprite2Entry, small
         , SpriteCreateFactory(sprite2Entry, explosion
           , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0))))
+
+      , SpriteRemoveFactory(sprite1Entry)
+
+      , SpriteRemoveFactory(sprite2Entry)
     )
   }
 
