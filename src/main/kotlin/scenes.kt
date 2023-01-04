@@ -5,8 +5,7 @@ import mod.actions.sprite.*
 import state.IfStateFactory
 import state.SpriteSetStateFactory
 import state.newState
-import java.util.*
-import kotlin.math.PI
+import kotlin.math.*
 
 fun tilemap() {
   splitImage(imageArrays[4], 5, 7)
@@ -49,10 +48,18 @@ fun asteroids() {
   splitImage(explosionImage, 4, 4)
   explosionImage.setVisibleArea(1.5, 1.5)
 
+  val flameImage = imageArrays[7]
+  splitImage(flameImage, 3, 3)
+  flameImage.setCenter(0.5, 0.2)
+
   /// SPRITES
 
   val player = Sprite(imageArrays[3].images[0], -3.0, -5.0, 1.0, 1.0)
   player.setName("игрок")
+
+  val flame = Sprite(flameImage.images[0], -4.0, -5.0, 1.0, 1.0, -90.0)
+  addConstraint(flame, player)
+  actions.add(SpriteAnimation(flame, flameImage, 16.0, 0.0))
 
   Key(97, user).onPressActions.add(ActionEntry(world, SpriteRotation(player, -1.5 * PI)))
   Key(100, user).onPressActions.add(ActionEntry(world, SpriteRotation(player, 1.5 * PI)))
@@ -88,14 +95,13 @@ fun asteroids() {
   val medium = newState("средний")
   val small = newState("маленький")
 
-  asteroid.always.apply {
-    add(SpriteAnimationFactory(currentEntry, imageArrays[1], RandomDirection(RandomDoubleValue(12.0, 20.0))))
-    add(SpriteRotationFactory(currentEntry, RandomDoubleValue(-180.0, 180.0)))
-    add(SpriteLoopAreaFactory(currentEntry, bounds))
-    add(SpriteMoveForwardFactory(currentEntry))
-  }
+  asteroid.always.addAll(mutableListOf(
+    SpriteAnimationFactory(currentEntry, imageArrays[1], RandomDirection(RandomDoubleValue(12.0, 20.0))),
+    SpriteRotationFactory(currentEntry, RandomDoubleValue(-180.0, 180.0)),
+    SpriteLoopAreaFactory(currentEntry, bounds),
+    SpriteMoveForwardFactory(currentEntry)))
 
-  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(blankImage), asteroid, mutableListOf<SpriteActionFactory>(
+  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(blankImage), asteroid, mutableListOf(
     SpriteSetStateFactory(currentEntry, big),
     SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)),
     SpriteSetAngleFactory(currentEntry, RandomDoubleValue(0.0, 360.0)),
@@ -115,54 +121,53 @@ fun asteroids() {
     add(SpriteDelayedRemoveFactory(currentEntry, DoubleValue(1.0)))
   }
 
-  bullet.apply {
-    addOnCollision(asteroid
-      /*, SpriteCreateFactory(sprite1Entry, explosion
-        , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0)))*/
-      , IfStateFactory(sprite2Entry, big
-        , SpriteCreateFactory(sprite2Entry, explosion
-          , SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)))
-        , SpriteCreateFactory(sprite2Entry, asteroid
-          , SpriteSetStateFactory(currentEntry, medium)
-          , SpritePositionAsFactory(currentEntry, sprite2Entry)
-          , SpriteSetSizeFactory(currentEntry, DoubleValue(2.0))
-          , SpriteDirectToFactory(currentEntry, sprite1Entry)
-          , SpriteTurnFactory(currentEntry, RandomDoubleValue(150.0, 210.0))
-          , SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(3.0, 5.0))))
+  bullet.addOnCollision(asteroid
+    /*, SpriteCreateFactory(sprite1Entry, explosion
+      , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0)))*/
+    , IfStateFactory(sprite2Entry, big
+      , SpriteCreateFactory(sprite2Entry, explosion
+        , SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)))
+      , SpriteCreateFactory(sprite2Entry, asteroid
+        , SpriteSetStateFactory(currentEntry, medium)
+        , SpritePositionAsFactory(currentEntry, sprite2Entry)
+        , SpriteSetSizeFactory(currentEntry, DoubleValue(2.0))
+        , SpriteDirectToFactory(currentEntry, sprite1Entry)
+        , SpriteTurnFactory(currentEntry, RandomDoubleValue(150.0, 210.0))
+        , SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(3.0, 5.0))))
 
-      , IfStateFactory(sprite2Entry, mutableListOf(big, medium)
-        , SpriteCreateFactory(sprite2Entry, explosion
-          , SpriteSetSizeFactory(currentEntry, DoubleValue(2.0)))
-        , SpriteCreateFactory(sprite2Entry, asteroid
-          , SpriteSetStateFactory(currentEntry, small)
-          , SpritePositionAsFactory(currentEntry, sprite2Entry)
-          , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0))
-          , SpriteDirectToFactory(currentEntry, sprite1Entry)
-          , SpriteTurnFactory(currentEntry, RandomDoubleValue(210.0, 270.0))
-          , SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(5.0, 7.0)))
+    , IfStateFactory(sprite2Entry, mutableListOf(big, medium)
+      , SpriteCreateFactory(sprite2Entry, explosion
+        , SpriteSetSizeFactory(currentEntry, DoubleValue(2.0)))
+      , SpriteCreateFactory(sprite2Entry, asteroid
+        , SpriteSetStateFactory(currentEntry, small)
+        , SpritePositionAsFactory(currentEntry, sprite2Entry)
+        , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0))
+        , SpriteDirectToFactory(currentEntry, sprite1Entry)
+        , SpriteTurnFactory(currentEntry, RandomDoubleValue(210.0, 270.0))
+        , SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(5.0, 7.0)))
 
-        , SpriteCreateFactory(sprite2Entry, asteroid
-          , SpriteSetStateFactory(currentEntry, small)
-          , SpritePositionAsFactory(currentEntry, sprite2Entry)
-          , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0))
-          , SpriteDirectToFactory(currentEntry, sprite1Entry)
-          , SpriteTurnFactory(currentEntry, RandomDoubleValue(90.0, 150.0))
-          , SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(5.0, 7.0))))
+      , SpriteCreateFactory(sprite2Entry, asteroid
+        , SpriteSetStateFactory(currentEntry, small)
+        , SpritePositionAsFactory(currentEntry, sprite2Entry)
+        , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0))
+        , SpriteDirectToFactory(currentEntry, sprite1Entry)
+        , SpriteTurnFactory(currentEntry, RandomDoubleValue(90.0, 150.0))
+        , SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(5.0, 7.0))))
 
-      , IfStateFactory(sprite2Entry, small
-        , SpriteCreateFactory(sprite2Entry, explosion
-          , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0))))
+    , IfStateFactory(sprite2Entry, small
+      , SpriteCreateFactory(sprite2Entry, explosion
+        , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0))))
 
-      , SpriteRemoveFactory(sprite1Entry)
+    , SpriteRemoveFactory(sprite1Entry)
 
-      , SpriteRemoveFactory(sprite2Entry)
-    )
-  }
+    , SpriteRemoveFactory(sprite2Entry)
+  )
 
   project.apply {
     add(bounds.sprite!!)
     add(bullet)
     add(asteroid)
+    add(flame)
     add(player)
     add(explosion)
   }

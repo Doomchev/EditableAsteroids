@@ -4,6 +4,7 @@ import java.awt.BasicStroke
 import java.awt.Graphics2D
 import java.util.*
 import javax.swing.JOptionPane
+import kotlin.math.PI
 
 private val whiteStroke = BasicStroke(1f, BasicStroke.CAP_BUTT
   , BasicStroke.JOIN_ROUND,1.0f, floatArrayOf(2f, 0f, 0f),2f)
@@ -38,8 +39,9 @@ abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): Element {
   val forCaption get() = entryCaption("для ")
 }
 
-open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, var angle: Double = 0.0, var dx: Double = 1.0, var dy: Double = 0.0, var active: Boolean = true): Shape(centerX, centerY, width, height) {
+open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, angleInDegrees: Double = 0.0, var dx: Double = 1.0, var dy: Double = 0.0, var active: Boolean = true): Shape(centerX, centerY, width, height) {
   var state= nullState
+  var angle = angleInDegrees * PI / 180.0
 
   override fun select(selection: Sprite, selected: MutableList<Sprite>) {
     if(selection.overlaps(this)) selected.add(this)
