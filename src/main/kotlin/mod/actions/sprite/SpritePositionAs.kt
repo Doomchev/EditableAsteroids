@@ -8,6 +8,7 @@ import SpriteAction
 import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.selectSprite
+import selectSprite
 
 object spritePositionAsSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {

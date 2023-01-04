@@ -7,8 +7,8 @@ import Sprite
 import SpriteAction
 import SpriteActionFactory
 import SpriteEntry
-import mod.dragging.selectSprite
 import nullSprite
+import selectSprite
 import spritesToRemove
 
 object spriteSetBoundsSerializer: Serializer {

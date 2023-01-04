@@ -8,6 +8,7 @@ import SpriteAction
 import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.selectSprite
+import selectSprite
 import kotlin.random.Random
 
 object spritePositionInAreaSerializer: Serializer {
