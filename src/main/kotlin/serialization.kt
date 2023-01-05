@@ -9,13 +9,19 @@ interface Serializer {
   fun newFactory(): SpriteActionFactory
   fun factoryFromNode(node: Node): SpriteActionFactory
   fun actionFromNode(node: Node): Action
+  fun getActions(node: Node): MutableList<SpriteActionFactory> {
+    val actions = mutableListOf<SpriteActionFactory>()
+    node.getField("actions", actions)
+    return actions
+  }
 }
 
 interface ElementSerializer {
   fun fromNode(node: Node): Element
 }
 
-val discreteActions = arrayOf(spriteCreateSerializer, spritePositionAsSerializer, spritePositionInAreaSerializer, spriteSetSizeSerializer, spriteSetAngleSerializer, spriteDirectAsSerializer, spriteSetMovingVectorSerializer, spriteSetSpeedSerializer, soundPlaySerializer, spriteSetImageSerializer, spriteRemoveSerializer, spriteDeactivateSerializer, spriteDirectAtSerializer, spriteTurnSerializer, ifStateSerializer, spriteSetStateSerializer)
+val discreteActions = arrayOf(spriteCreateSerializer, spritePositionAsSerializer, spritePositionInAreaSerializer, spriteSetSizeSerializer, spriteSetAngleSerializer, spriteDirectAsSerializer, spriteSetMovingVectorSerializer, spriteSetSpeedSerializer, soundPlaySerializer, spriteSetImageSerializer, spriteRemoveSerializer, spriteDeactivateSerializer, spriteDirectAtSerializer, spriteTurnSerializer, ifStateSerializer, spriteSetStateSerializer, spriteCreateSerializer, repeatSerializer
+)
 
 val continuousActions = arrayOf(spriteDelayedCreateSerializer, spriteRotationSerializer, spriteMoveForwardSerializer, spriteAccelerationSerializer, spriteAnimationSerializer, spriteSetBoundsSerializer, spriteLoopAreaSerializer, spriteDelayedRemoveSerializer, spriteDirectAtSerializer)
 

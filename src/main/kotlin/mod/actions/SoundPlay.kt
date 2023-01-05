@@ -11,7 +11,9 @@ import nullSpriteEntry
 import sounds
 import java.io.File
 import javax.sound.sampled.AudioSystem
+import javax.sound.sampled.FloatControl
 import javax.swing.JOptionPane
+
 
 object soundPlaySerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {
@@ -42,10 +44,12 @@ class SoundPlayFactory(private var file: File): SpriteActionFactory(
 
 class SoundPlay(private var file: File): SpriteAction(nullSprite) {
   override fun execute() {
-    return
+    //return
     val audioInputStream = AudioSystem.getAudioInputStream(file.absoluteFile)
     val clip = AudioSystem.getClip()
     clip.open(audioInputStream)
+    val gainControl = clip.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl
+    gainControl.value = -15.0f
     clip.start()
   }
 

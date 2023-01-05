@@ -7,6 +7,7 @@ import state.IfStateFactory
 import state.SpriteSetStateFactory
 import state.newState
 import kotlin.math.*
+import kotlin.reflect.jvm.internal.impl.resolve.constants.IntValue
 
 fun tilemap() {
   splitImage(imageArrays[4], 5, 7)
@@ -35,6 +36,7 @@ fun asteroids() {
 
   val asteroidImage = imageArrays[1]
   splitImage(asteroidImage, 8, 4)
+  asteroidImage.setVisibleArea(1.25, 1.25)
 
   val bulletImage = imageArrays[2]
   splitImage(bulletImage, 1, 16)
@@ -53,11 +55,6 @@ fun asteroids() {
   splitImage(flameImage, 3, 3)
   flameImage.setCenter(0.5, 0.2)
 
-  val asteroid = addClass("Астероид")
-  val big = newState("большой")
-  val medium = newState("средний")
-  val small = newState("маленький")
-
   /// SPRITES
 
   val player = Sprite(imageArrays[3].images[0], -3.0, -5.0, 1.0, 1.0)
@@ -72,19 +69,28 @@ fun asteroids() {
   Key(100, user).onPressActions.add(ActionEntry(world, SpriteRotation(player, 1.5 * PI)))
   Key(119, user).onPressActions.add(ActionEntry(world, SpriteAcceleration(player, 50.0, 10.0)))
 
-  val bounds = SpriteEntry("границы поля", Sprite(blankImage, world.centerX, world.centerY, world.width + 2.0,world.height + 2.0))
+  val bounds = SpriteEntry("границы поля", Sprite(blankImage, world.centerX, world.centerY, world.width + 3.0,world.height + 3.0))
+
+  val asteroid = addClass("Астероид")
+  val big = newState("большой")
+  val medium = newState("средний")
+  val small = newState("маленький")
+  val asteroidArea = SpriteEntry("зона появления астероидов", Sprite(blankImage, world.centerX, world.topY - 1.5, world.width + 3.0,0.01))
 
   actions.apply {
     add(SpriteAcceleration(player, -15.0, 100.0))
     add(SpriteLoopArea(player, bounds.sprite!!))
     add(SpriteMoveForward(player))
     add(IsListEmpty(asteroid, mutableListOf(
-      SpriteCreateFactory(currentEntry, asteroid, mutableListOf(
-        SpriteSetStateFactory(currentEntry, big),
-        SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)),
-        SpriteSetAngleFactory(currentEntry, RandomDoubleValue(0.0, 360.0)),
-        SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(2.0, 3.0))
-    )))))
+      RepeatFactory(DoubleValue(2.0),
+        SpriteCreateFactory(currentEntry, asteroid, mutableListOf(
+          SpriteSetStateFactory(currentEntry, big),
+          SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)),
+          SpriteSetAngleFactory(currentEntry, RandomDoubleValue(0.0, 360.0)),
+          SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(2.0, 3.0)),
+          SpritePositionInAreaFactory(currentEntry, asteroidArea)
+      )))
+    )))
   }
 
   val bullet = addClass("Пуля")
@@ -127,18 +133,18 @@ fun asteroids() {
       , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0)))*/
     , IfStateFactory(sprite2Entry, big
       , SpriteCreateFactory(sprite2Entry, explosion
-        , SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)))
+        , SpriteSetSizeFactory(currentEntry, DoubleValue(2.5)))
       , SpriteCreateFactory(sprite2Entry, asteroid
         , SpriteSetStateFactory(currentEntry, medium)
         , SpritePositionAsFactory(currentEntry, sprite2Entry)
-        , SpriteSetSizeFactory(currentEntry, DoubleValue(2.0))
+        , SpriteSetSizeFactory(currentEntry, DoubleValue(1.75))
         , SpriteDirectToFactory(currentEntry, sprite1Entry)
         , SpriteTurnFactory(currentEntry, RandomDoubleValue(150.0, 210.0))
         , SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(3.0, 5.0))))
 
     , IfStateFactory(sprite2Entry, mutableListOf(big, medium)
       , SpriteCreateFactory(sprite2Entry, explosion
-        , SpriteSetSizeFactory(currentEntry, DoubleValue(2.0)))
+        , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0)))
       , SpriteCreateFactory(sprite2Entry, asteroid
         , SpriteSetStateFactory(currentEntry, small)
         , SpritePositionAsFactory(currentEntry, sprite2Entry)
@@ -166,6 +172,7 @@ fun asteroids() {
 
   project.apply {
     add(bounds.sprite!!)
+    add(asteroidArea.sprite!!)
     add(bullet)
     add(asteroid)
     add(flame)

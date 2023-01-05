@@ -30,6 +30,14 @@ abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): Element, Actio
 
   open fun addChildBlocks() {}
 
+  fun addChildBlocks(actions: MutableList<SpriteActionFactory>) {
+    indent += "  "
+    for(factory in actions) {
+      blocks.add(FactoryBlock(factory, actions,"$indent${factory.fullText()}", true))
+    }
+    indent = indent.substring(2)
+  }
+
   val caption get() = entryCaption("")
   val forCaption get() = entryCaption("для ")
 }

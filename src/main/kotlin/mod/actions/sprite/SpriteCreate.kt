@@ -26,15 +26,11 @@ object spriteCreateSerializer: Serializer {
   }
 
   override fun factoryFromNode(node: Node): SpriteActionFactory {
-    val actions = mutableListOf<SpriteActionFactory>()
-    node.getField("actions", actions)
-    return SpriteCreateFactory(node.getField("spriteentry") as SpriteEntry, node.getField("spriteClass") as SpriteClass, actions)
+    return SpriteCreateFactory(node.getField("spriteentry") as SpriteEntry, node.getField("spriteClass") as SpriteClass, getActions(node))
   }
 
   override fun actionFromNode(node: Node): Action {
-    val actions = mutableListOf<SpriteActionFactory>()
-    node.getField("actions", actions)
-    return SpriteCreate(node.getField("sprite") as Sprite, node.getField("spriteClass") as SpriteClass, actions)
+    return SpriteCreate(node.getField("sprite") as Sprite, node.getField("spriteClass") as SpriteClass, getActions(node))
   }
 
   override fun toString(): String = "Создать"
@@ -45,16 +41,12 @@ class SpriteCreateFactory(spriteEntry: SpriteEntry, private var spriteClass: Spr
     this.actions.addAll(actions)
   }
 
+  override fun addChildBlocks() {
+    addChildBlocks(actions)
+  }
+
   override fun toString(): String = "Создать"
   override fun fullText(): String = "Создать $spriteClass на основе $spriteEntry"
-
-  override fun addChildBlocks() {
-    indent += "  "
-    for(factory in this.actions) {
-      blocks.add(FactoryBlock(factory, this.actions,"$indent${factory.fullText()}", true))
-    }
-    indent = indent.substring(2)
-  }
 
   override fun create(): SpriteAction {
     return SpriteCreate(spriteEntry.resolve(), spriteClass, this.actions)
