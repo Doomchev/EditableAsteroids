@@ -1,13 +1,8 @@
 import mod.*
 import state.nullState
-import java.awt.BasicStroke
 import java.awt.Graphics2D
-import java.util.*
 import javax.swing.JOptionPane
 import kotlin.math.PI
-
-private val whiteStroke = BasicStroke(1f, BasicStroke.CAP_BUTT
-  , BasicStroke.JOIN_ROUND,1.0f, floatArrayOf(2f, 0f, 0f),2f)
 
 var fps = 100.0
 var fpsk = 1.0 / fps
@@ -21,7 +16,7 @@ object spriteSerializer: ElementSerializer {
   }
 }
 
-abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): Element {
+abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): Element, Action {
   abstract fun create(): SpriteAction
 
   fun create(sprite: Sprite): SpriteAction {

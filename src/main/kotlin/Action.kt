@@ -23,7 +23,7 @@ class ActionEntry(val canvas: Canvas, val action: Action): Element {
   }
 }
 
-abstract class SpriteAction(var sprite: Sprite): Action, Element
+abstract class SpriteAction(var sprite: Sprite): Action
 
 val actions = mutableListOf<SpriteAction>()
 val newActions = mutableListOf<SpriteAction>()

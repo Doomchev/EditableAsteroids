@@ -41,10 +41,8 @@ object spriteCreateSerializer: Serializer {
 }
 
 class SpriteCreateFactory(spriteEntry: SpriteEntry, private var spriteClass: SpriteClass, var actions: MutableList<SpriteActionFactory>): SpriteActionFactory(spriteEntry) {
-  private var actionsList = mutableListOf<SpriteActionFactory>()
-
   constructor(spriteEntry: SpriteEntry, spriteClass: SpriteClass, vararg actions: SpriteActionFactory) : this(spriteEntry, spriteClass, mutableListOf<SpriteActionFactory>()) {
-    this.actionsList.addAll(actions)
+    this.actions.addAll(actions)
   }
 
   override fun toString(): String = "Создать"
@@ -52,14 +50,14 @@ class SpriteCreateFactory(spriteEntry: SpriteEntry, private var spriteClass: Spr
 
   override fun addChildBlocks() {
     indent += "  "
-    for(factory in actionsList) {
-      blocks.add(FactoryBlock(factory, actionsList,"$indent${factory.fullText()}", true))
+    for(factory in this.actions) {
+      blocks.add(FactoryBlock(factory, this.actions,"$indent${factory.fullText()}", true))
     }
     indent = indent.substring(2)
   }
 
   override fun create(): SpriteAction {
-    return SpriteCreate(spriteEntry.resolve(), spriteClass, actionsList)
+    return SpriteCreate(spriteEntry.resolve(), spriteClass, this.actions)
   }
 
   override fun toNode(node: Node) {

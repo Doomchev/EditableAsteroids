@@ -1,5 +1,6 @@
 import mod.*
 import mod.actions.SoundPlayFactory
+import mod.actions.list.IsListEmpty
 import mod.actions.splitImage
 import mod.actions.sprite.*
 import state.IfStateFactory
@@ -52,12 +53,18 @@ fun asteroids() {
   splitImage(flameImage, 3, 3)
   flameImage.setCenter(0.5, 0.2)
 
+  val asteroid = addClass("Астероид")
+  val big = newState("большой")
+  val medium = newState("средний")
+  val small = newState("маленький")
+
   /// SPRITES
 
   val player = Sprite(imageArrays[3].images[0], -3.0, -5.0, 1.0, 1.0)
   player.setName("игрок")
 
   val flame = Sprite(flameImage.images[0], -4.0, -5.0, 1.0, 1.0, -90.0)
+  flame.setName("пламя")
   addConstraint(flame, player)
   actions.add(SpriteAnimation(flame, flameImage, 16.0, 0.0))
 
@@ -71,6 +78,13 @@ fun asteroids() {
     add(SpriteAcceleration(player, -15.0, 100.0))
     add(SpriteLoopArea(player, bounds.sprite!!))
     add(SpriteMoveForward(player))
+    add(IsListEmpty(asteroid, mutableListOf(
+      SpriteCreateFactory(currentEntry, asteroid, mutableListOf(
+        SpriteSetStateFactory(currentEntry, big),
+        SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)),
+        SpriteSetAngleFactory(currentEntry, RandomDoubleValue(0.0, 360.0)),
+        SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(2.0, 3.0))
+    )))))
   }
 
   val bullet = addClass("Пуля")
@@ -88,26 +102,13 @@ fun asteroids() {
     add(SpriteSetBoundsFactory(currentEntry, bounds))
   }
 
-  Key(32, user).onPressActions.add(ActionEntry(world, SpriteDelayedCreate(player, bullet, 0.1)))
-
-  val asteroid = addClass("Астероид")
-  val big = newState("большой")
-  val medium = newState("средний")
-  val small = newState("маленький")
+  Key(32, user).onPressActions.add(ActionEntry(world, SpriteDelayedCreate(player, bullet, 0.2)))
 
   asteroid.always.addAll(mutableListOf(
     SpriteAnimationFactory(currentEntry, imageArrays[1], RandomDirection(RandomDoubleValue(12.0, 20.0))),
     SpriteRotationFactory(currentEntry, RandomDoubleValue(-180.0, 180.0)),
     SpriteLoopAreaFactory(currentEntry, bounds),
     SpriteMoveForwardFactory(currentEntry)))
-
-  Key(98, user).onClickActions.add(ActionEntry(world, SpriteCreate(Sprite(blankImage), asteroid, mutableListOf(
-    SpriteSetStateFactory(currentEntry, big),
-    SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)),
-    SpriteSetAngleFactory(currentEntry, RandomDoubleValue(0.0, 360.0)),
-    SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(2.0, 3.0)))
-  )))
-
 
   val explosion = addClass("Взрыв")
 
