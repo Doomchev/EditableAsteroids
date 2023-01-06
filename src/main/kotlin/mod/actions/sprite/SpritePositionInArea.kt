@@ -42,8 +42,8 @@ class SpritePositionInAreaFactory(spriteEntry: SpriteEntry, private var area: Sp
 
 class SpritePositionInArea(sprite: Sprite, private var area: Sprite): SpriteAction(sprite) {
   override fun execute() {
-    sprite.centerX = area.leftX + Random.nextDouble(area.width)
-    sprite.centerY = area.topY + Random.nextDouble(area.height)
+    sprite.centerX = area.leftX + if(area.width > 0.0) Random.nextDouble(area.width) else 0.0
+    sprite.centerY = area.topY + if(area.height > 0.0) Random.nextDouble(area.height) else 0.0
   }
 
   override fun toString(): String = "Переместить $sprite в область $area"

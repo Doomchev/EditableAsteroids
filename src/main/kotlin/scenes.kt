@@ -7,7 +7,6 @@ import state.IfStateFactory
 import state.SpriteSetStateFactory
 import state.newState
 import kotlin.math.*
-import kotlin.reflect.jvm.internal.impl.resolve.constants.IntValue
 
 fun tilemap() {
   splitImage(imageArrays[4], 5, 7)
@@ -57,17 +56,29 @@ fun asteroids() {
 
   /// SPRITES
 
-  val player = Sprite(imageArrays[3].images[0], -3.0, -5.0, 1.0, 1.0)
-  player.setName("игрок")
+  val player = addClass("Игрок")
+  val playerSprite = Sprite(imageArrays[3].images[0], 0.0, 0.0, 1.0, 1.0)
+  playerSprite.setName("игрок")
+  player.sprites.add(playerSprite)
 
-  val flame = Sprite(flameImage.images[0], -4.0, -5.0, 1.0, 1.0, -90.0)
+  val flame = Sprite(flameImage.images[0], -1.0, 0.0, 1.0, 1.0, -90.0)
+  flame.visible = false
   flame.setName("пламя")
-  addConstraint(flame, player)
+  addConstraint(flame, playerSprite)
   actions.add(SpriteAnimation(flame, flameImage, 16.0, 0.0))
 
-  Key(97, user).onPressActions.add(ActionEntry(world, SpriteRotation(player, -1.5 * PI)))
-  Key(100, user).onPressActions.add(ActionEntry(world, SpriteRotation(player, 1.5 * PI)))
-  Key(119, user).onPressActions.add(ActionEntry(world, SpriteAcceleration(player, 50.0, 10.0)))
+  val gun = Sprite(blankImage, 1.0, 0.0)
+  val gunEntry = SpriteEntry("дуло", gun)
+  addConstraint(gun, playerSprite)
+
+  Key(97, user).onPressActions.add(ActionEntry(world, SpriteRotation(playerSprite, -1.5 * PI)))
+  Key(100, user).onPressActions.add(ActionEntry(world, SpriteRotation(playerSprite, 1.5 * PI)))
+  val forward: Key = Key(119, user)
+  forward.onPressActions.apply {
+    add(ActionEntry(world, SpriteAcceleration(playerSprite, 50.0, 10.0)))
+    add(ActionEntry(world, SpriteShow(flame)))
+  }
+  forward.onUnpressActions.add(ActionEntry(world, SpriteHide(flame)))
 
   val bounds = SpriteEntry("границы поля", Sprite(blankImage, world.centerX, world.centerY, world.width + 3.0,world.height + 3.0))
 
@@ -78,9 +89,9 @@ fun asteroids() {
   val asteroidArea = SpriteEntry("зона появления астероидов", Sprite(blankImage, world.centerX, world.topY - 1.5, world.width + 3.0,0.01))
 
   actions.apply {
-    add(SpriteAcceleration(player, -15.0, 100.0))
-    add(SpriteLoopArea(player, bounds.sprite!!))
-    add(SpriteMoveForward(player))
+    add(SpriteAcceleration(playerSprite, -15.0, 100.0))
+    add(SpriteLoopArea(playerSprite, bounds.sprite!!))
+    add(SpriteMoveForward(playerSprite))
     add(IsListEmpty(asteroid, mutableListOf(
       RepeatFactory(DoubleValue(2.0),
         SpriteCreateFactory(currentEntry, asteroid, mutableListOf(
@@ -97,7 +108,7 @@ fun asteroids() {
 
   bullet.onCreate.apply {
     add(SoundPlayFactory(sounds[0]))
-    add(SpritePositionAsFactory(currentEntry, parentEntry))
+    add(SpritePositionAsFactory(currentEntry, gunEntry))
     add(SpriteDirectAsFactory(currentEntry, parentEntry))
     add(SpriteSetSizeFactory(currentEntry, DoubleValue(0.15)))
     add(SpriteSetSpeedFactory(currentEntry, DoubleValue(15.0)))
@@ -108,7 +119,7 @@ fun asteroids() {
     add(SpriteSetBoundsFactory(currentEntry, bounds))
   }
 
-  Key(32, user).onPressActions.add(ActionEntry(world, SpriteDelayedCreate(player, bullet, 0.2)))
+  Key(32, user).onPressActions.add(ActionEntry(world, SpriteDelayedCreate(playerSprite, bullet, 0.2)))
 
   asteroid.always.addAll(mutableListOf(
     SpriteAnimationFactory(currentEntry, imageArrays[1], RandomDirection(RandomDoubleValue(12.0, 20.0))),
@@ -169,6 +180,13 @@ fun asteroids() {
 
     , SpriteRemoveFactory(sprite2Entry)
   )
+
+  player.addOnCollision(asteroid
+    , SpriteCreateFactory(sprite1Entry, explosion
+      , SpriteSetSizeFactory(currentEntry, DoubleValue(2.5)))
+    , SpriteRemoveFactory(sprite1Entry)
+  )
+
 
   project.apply {
     add(bounds.sprite!!)

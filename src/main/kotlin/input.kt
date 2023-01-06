@@ -29,6 +29,11 @@ abstract class Pushable(val project: Project): Element {
   fun addOnPress(canvas: Canvas, action: Action) {
     onPressActions.add(ActionEntry(canvas, action))
   }
+
+  val onUnpressActions = mutableListOf<ActionEntry>()
+  fun addOnUnpress(canvas: Canvas, action: Action) {
+    onUnpressActions.add(ActionEntry(canvas, action))
+  }
 }
 
 object keySerializer: ElementSerializer {
@@ -36,6 +41,7 @@ object keySerializer: ElementSerializer {
     val key = Key(node.getInt("code"), user)
     node.getField("onClick", key.onClickActions)
     node.getField("onPress", key.onPressActions)
+    node.getField("onUnpress", key.onUnpressActions)
     return key
   }
 }
@@ -50,6 +56,7 @@ class Key(private var code: Int, project: Project): Pushable(project) {
     node.setInt("code", code)
     node.setField("onClick", onClickActions)
     node.setField("onPress", onPressActions)
+    node.setField("onUnpress", onUnpressActions)
   }
 
   override fun toString(): String {
@@ -62,6 +69,7 @@ object mouseButtonSerializer: ElementSerializer {
     val key = Key(node.getInt("code"), user)
     node.getField("onClick", key.onClickActions)
     node.getField("onPress", key.onPressActions)
+    node.getField("onUnpress", key.onPressActions)
     return key
   }
 }
@@ -192,7 +200,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     if(currentDraggingAction == null) {
       for(button in buttons) {
         if(!button.correspondsTo(e)) continue
-        //onClick(button.onClickActions)
+        onClick(button.onClickActions)
         break
       }
       return
@@ -274,6 +282,15 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   }
 
   override fun keyReleased(e: KeyEvent) {
+    for(key in buttons) {
+      if(!key.correspondsTo(e)) continue
+      for(entry in key.onUnpressActions) {
+        if(!entry.canvas.active || !entry.canvas.hasMouse()) continue
+        currentCanvas = entry.canvas
+        if(!entry.action.conditions()) continue
+        entry.action.execute()
+      }
+    }
     for(keyEntry in keysPressed) {
       if(!keyEntry.key.correspondsTo(e)) continue
       keyEntry.remove = true

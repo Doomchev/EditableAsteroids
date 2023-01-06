@@ -45,6 +45,7 @@ abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): Element, Actio
 open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, angleInDegrees: Double = 0.0, var dx: Double = 1.0, var dy: Double = 0.0, var active: Boolean = true): Shape(centerX, centerY, width, height) {
   var state= nullState
   var angle = angleInDegrees * PI / 180.0
+  var visible: Boolean = true
 
   override fun select(selection: Sprite, selected: MutableList<Sprite>) {
     if(selection.overlaps(this)) selected.add(this)
@@ -58,11 +59,11 @@ open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0
   }
 
   override fun draw(g: Graphics2D) {
+    if(!visible) return
     if(image == blankImage) {
       drawDashedRectangle(g, leftX, topY, width, height, 1f)
     } else {
-      image.draw(g, xToScreen(leftX), yToScreen(topY), distToScreen(width),
-        distToScreen(height), angle, false)
+      image.draw(g, xToScreen(leftX), yToScreen(topY), distToScreen(width), distToScreen(height), angle, false)
     }
   }
 
@@ -79,8 +80,10 @@ open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0
     node.setDouble("dy", dy)
   }
 
-  fun setName(name: String) {
-    objectsList.add(SpriteEntry(name, this))
+  fun setName(name: String): SpriteEntry {
+    val entry = SpriteEntry(name, this)
+    objectsList.add(entry)
+    return entry
   }
 
   override fun toString(): String {
@@ -108,15 +111,7 @@ fun selectSprite(message:String = "Выберите спрайт:"): SpriteEntry
       else -> objectsList[it - 4]
     }
   }
-  return options[JOptionPane.showOptionDialog(
-    frame,
-    message,
-    "",
-    JOptionPane.DEFAULT_OPTION,
-    JOptionPane.QUESTION_MESSAGE,
-    null,
-    options,
-    options[0]
+  return options[JOptionPane.showOptionDialog(frame, message,"", JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]
   )]
 }
 

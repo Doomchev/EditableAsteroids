@@ -1,7 +1,7 @@
 import mod.Element
 import java.util.*
 
-interface Action : Element {
+interface Action: Element {
   fun conditions(): Boolean = true
   fun execute() {}
   override fun toNode(node: Node) {}

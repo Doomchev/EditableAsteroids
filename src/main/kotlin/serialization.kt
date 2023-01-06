@@ -20,8 +20,7 @@ interface ElementSerializer {
   fun fromNode(node: Node): Element
 }
 
-val discreteActions = arrayOf(spriteCreateSerializer, spritePositionAsSerializer, spritePositionInAreaSerializer, spriteSetSizeSerializer, spriteSetAngleSerializer, spriteDirectAsSerializer, spriteSetMovingVectorSerializer, spriteSetSpeedSerializer, soundPlaySerializer, spriteSetImageSerializer, spriteRemoveSerializer, spriteDeactivateSerializer, spriteDirectAtSerializer, spriteTurnSerializer, ifStateSerializer, spriteSetStateSerializer, spriteCreateSerializer, repeatSerializer
-)
+val discreteActions = arrayOf(spriteCreateSerializer, spritePositionAsSerializer, spritePositionInAreaSerializer, spriteSetSizeSerializer, spriteSetAngleSerializer, spriteDirectAsSerializer, spriteSetMovingVectorSerializer, spriteSetSpeedSerializer, soundPlaySerializer, spriteSetImageSerializer, spriteRemoveSerializer, spriteDeactivateSerializer, spriteDirectAtSerializer, spriteTurnSerializer, ifStateSerializer, spriteSetStateSerializer, spriteCreateSerializer, repeatSerializer, spriteShowSerializer, spriteHideSerializer)
 
 val continuousActions = arrayOf(spriteDelayedCreateSerializer, spriteRotationSerializer, spriteMoveForwardSerializer, spriteAccelerationSerializer, spriteAnimationSerializer, spriteSetBoundsSerializer, spriteLoopAreaSerializer, spriteDelayedRemoveSerializer, spriteDirectAtSerializer)
 
@@ -53,13 +52,5 @@ fun registerSerializers() {
 
 fun selectSerializer(discrete: Boolean): SpriteActionFactory {
   val serArray = if(discrete) discreteActions else continuousActions
-  return (JOptionPane.showInputDialog(
-    frame,
-    "Выберите действие:",
-    "",
-    JOptionPane.QUESTION_MESSAGE,
-    null,
-    serArray,
-    serArray[0]
-  ) as Serializer).newFactory()
+  return (JOptionPane.showInputDialog(frame,"Выберите действие:", "", JOptionPane.QUESTION_MESSAGE, null, serArray, serArray[0]) as Serializer).newFactory()
 }
