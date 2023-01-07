@@ -178,6 +178,7 @@ fun asteroids() {
 
     , SpriteRemoveFactory(sprite1Entry)
 
+    , SpriteDeactivateFactory(sprite2Entry)
     , SpriteRemoveFactory(sprite2Entry)
   )
 
@@ -186,7 +187,6 @@ fun asteroids() {
       , SpriteSetSizeFactory(currentEntry, DoubleValue(2.5)))
     , SpriteRemoveFactory(sprite1Entry)
   )
-
 
   project.apply {
     add(bounds.sprite!!)

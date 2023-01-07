@@ -145,9 +145,8 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
 
   private fun onClick(entries: MutableList<ActionEntry>) {
     for(entry in entries) {
-      if(!entry.canvas.active || !entry.canvas.hasMouse()) continue
+      if(!entry.canvas.active || !entry.canvas.hasMouse() || !entry.action.conditions()) continue
       currentCanvas = entry.canvas
-      if(!entry.action.conditions()) continue
       entry.action.execute()
     }
   }

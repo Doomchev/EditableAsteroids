@@ -31,6 +31,7 @@ class Window: JPanel() {
     }
 
     for(action in actions) {
+      if(!action.sprite.active) continue
       currentEntry.sprite = action.sprite
       action.execute()
     }
