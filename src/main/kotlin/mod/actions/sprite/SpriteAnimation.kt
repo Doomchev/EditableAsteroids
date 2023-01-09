@@ -35,7 +35,7 @@ object spriteAnimationSerializer: Serializer {
 
 class SpriteAnimationFactory(spriteEntry: SpriteEntry, private var array: ImageArray, private var speed: Formula): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
-    return SpriteAnimation(spriteEntry.resolve(), array, speed.get(), 0.0)
+    return SpriteAnimation(spriteEntry.resolve(), array, speed.getDouble(), 0.0)
   }
 
   override fun toString(): String = "Анимировать"

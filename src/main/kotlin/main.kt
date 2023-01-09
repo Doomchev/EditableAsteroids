@@ -12,6 +12,7 @@ import mod.drawing.*
 import mod.project
 import mod.selectedSprites
 import java.awt.Color
+import java.awt.Dimension
 import java.awt.event.MouseEvent.*
 import java.io.File
 import java.io.FileReader
@@ -63,7 +64,6 @@ fun main() {
   timer.start()
 
   frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-  frame.setSize(windowWidth, windowHeight)
 
   panel.isFocusable = true
   panel.requestFocus()
@@ -71,8 +71,10 @@ fun main() {
   panel.addMouseListener(listener)
   panel.addMouseMotionListener(listener)
   panel.addMouseWheelListener(listener)
-  panel.setSize(windowWidth, windowHeight)
-  frame.contentPane = panel
+  panel.preferredSize = Dimension(windowWidth, windowHeight)
+  frame.add(panel);
+  frame.pack();
+
   // SCENE
 
   registerSerializers()

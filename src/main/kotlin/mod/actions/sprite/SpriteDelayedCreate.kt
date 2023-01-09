@@ -40,7 +40,7 @@ class SpriteDelayedCreateFactory(spriteEntry: SpriteEntry, private var spriteCla
   override fun fullText(): String = "Создать $spriteClass через $delay сек. на основе $spriteEntry"
 
   override fun create(): SpriteAction {
-    return SpriteDelayedCreate(spriteEntry.resolve(), spriteClass, delay.get())
+    return SpriteDelayedCreate(spriteEntry.resolve(), spriteClass, delay.getDouble())
   }
 
   override fun toNode(node: Node) {

@@ -1,13 +1,19 @@
+import mod.Element
 import kotlin.random.Random
 
-abstract class Formula {
-  abstract fun get(): Double
+abstract class Formula: Element {
+  abstract fun getInt(): Int
+  abstract fun getDouble(): Double
+  open fun add(increment: Int) {}
+  open fun add(increment: Double) {}
+  open fun add(increment: String) {}
+  override fun toNode(node: Node) {}
 }
 
 object zero: Formula() {
-  override fun get(): Double {
-    return 0.0
-  }
+  override fun getInt(): Int = 0
+
+  override fun getDouble(): Double = 0.0
 
   override fun toString(): String {
     return "0"
@@ -29,18 +35,82 @@ fun doubleToFormula(string: String): Formula {
   return DoubleValue(string.toDouble())
 }
 
-class DoubleValue(private val value: Double): Formula() {
-  override fun get(): Double {
-    return value
+class IntValue(private var value: Int, var zeros: Boolean = false): Formula() {
+  override fun getInt(): Int = value
+
+  override fun getDouble(): Double = value.toDouble()
+
+  override fun toString(): String = if(zeros) String.format("%08d", value) else value.toString()
+
+  override fun add(increment: Int) {
+    value += increment
   }
 
-  override fun toString(): String {
-    return "$value"
+  override fun add(increment: Double) {
+    value += increment.toInt()
+  }
+
+  override fun add(increment: String) {
+    TODO()
+  }
+
+  override fun toNode(node: Node) {
+    node.setInt("value", value)
+  }
+}
+
+class DoubleValue(private var value: Double): Formula() {
+  override fun getInt(): Int = value.toInt()
+
+  override fun getDouble(): Double = value
+
+  override fun toString(): String = "$value"
+
+  override fun add(increment: Int) {
+    value += increment
+  }
+
+  override fun add(increment: Double) {
+    value += increment
+  }
+
+  override fun add(increment: String) {
+    TODO()
+  }
+
+  override fun toNode(node: Node) {
+    node.setDouble("value", value)
+  }
+}
+
+class StringValue(private var value: String): Formula() {
+  override fun getInt(): Int = value.toInt()
+
+  override fun getDouble(): Double = value.toDouble()
+
+  override fun toString(): String = value
+
+  override fun add(increment: Int) {
+    value += increment
+  }
+
+  override fun add(increment: Double) {
+    value += increment
+  }
+
+  override fun add(increment: String) {
+    value += increment
+  }
+
+  override fun toNode(node: Node) {
+    node.setString("value", value)
   }
 }
 
 class RandomDoubleValue(private val begin: Double, private val end:Double): Formula() {
-  override fun get(): Double {
+  override fun getInt(): Int = getDouble().toInt()
+
+  override fun getDouble(): Double {
     return begin + (end - begin) * Random.nextDouble()
   }
 
@@ -50,8 +120,10 @@ class RandomDoubleValue(private val begin: Double, private val end:Double): Form
 }
 
 class RandomDirection(private val formula: Formula) : Formula() {
-  override fun get(): Double {
-    return if(Random.nextBoolean()) -formula.get() else formula.get()
+  override fun getInt(): Int = getDouble().toInt()
+
+  override fun getDouble(): Double {
+    return if(Random.nextBoolean()) -formula.getDouble() else formula.getDouble()
   }
 
   override fun toString(): String {

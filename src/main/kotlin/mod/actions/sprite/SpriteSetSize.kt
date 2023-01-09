@@ -30,7 +30,7 @@ object spriteSetSizeSerializer: Serializer {
 
 class SpriteSetSizeFactory(spriteEntry: SpriteEntry, var size: Formula = zero): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
-    return SpriteSetSize(spriteEntry.resolve(), size.get())
+    return SpriteSetSize(spriteEntry.resolve(), size.getDouble())
   }
 
   override fun toString(): String = "Установить размер"

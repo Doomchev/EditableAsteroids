@@ -31,7 +31,7 @@ object spriteSetSpeedSerializer: Serializer {
 
 class SpriteSetSpeedFactory(spriteEntry: SpriteEntry, private var speed: Formula): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
-    return SpriteSetSpeed(spriteEntry.resolve(), speed.get())
+    return SpriteSetSpeed(spriteEntry.resolve(), speed.getDouble())
   }
 
   override fun toString(): String = "Задать скорость"

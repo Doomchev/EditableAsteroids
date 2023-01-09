@@ -1,7 +1,6 @@
 import mod.*
-import mod.actions.SoundPlayFactory
+import mod.actions.*
 import mod.actions.list.IsListEmpty
-import mod.actions.splitImage
 import mod.actions.sprite.*
 import state.IfStateFactory
 import state.SpriteSetStateFactory
@@ -54,6 +53,19 @@ fun asteroids() {
   splitImage(flameImage, 3, 3)
   flameImage.setCenter(0.5, 0.2)
 
+  // HUD
+
+  val score = IntValue(100)
+  varMap["score"] = score
+  val lives = StringValue(" ∆ ∆ ∆")
+  varMap["lives"] = lives
+  val level = IntValue(0)
+  varMap["level"] = level
+
+  val scoreDisplay = Label(score, 0.0, world.topY + 0.5, world.width - 1.0, 1.0, HorizontalAlign.left)
+  val levelDisplay = Label(level, 0.0, world.topY + 0.5, world.width - 1.0, 1.0, HorizontalAlign.center, VerticalAlign.center, "LEVEL ", false)
+  val livesDisplay = Label(lives, 0.0, world.topY + 0.5, world.width - 1.0, 1.0, HorizontalAlign.right)
+
   /// SPRITES
 
   val player = addClass("Игрок")
@@ -93,7 +105,8 @@ fun asteroids() {
     add(SpriteLoopArea(playerSprite, bounds.sprite!!))
     add(SpriteMoveForward(playerSprite))
     add(IsListEmpty(asteroid, mutableListOf(
-      RepeatFactory(DoubleValue(2.0),
+      VariableAddFactory("level", 1),
+      RepeatFactory(level,
         SpriteCreateFactory(currentEntry, asteroid, mutableListOf(
           SpriteSetStateFactory(currentEntry, big),
           SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)),
@@ -151,7 +164,11 @@ fun asteroids() {
         , SpriteSetSizeFactory(currentEntry, DoubleValue(1.75))
         , SpriteDirectToFactory(currentEntry, sprite1Entry)
         , SpriteTurnFactory(currentEntry, RandomDoubleValue(150.0, 210.0))
-        , SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(3.0, 5.0))))
+        , SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(3.0, 5.0))
+        , VariableAddFactory("score", 100)))
+
+    , IfStateFactory(sprite2Entry, medium
+      , VariableAddFactory("score", 200))
 
     , IfStateFactory(sprite2Entry, mutableListOf(big, medium)
       , SpriteCreateFactory(sprite2Entry, explosion
@@ -174,7 +191,8 @@ fun asteroids() {
 
     , IfStateFactory(sprite2Entry, small
       , SpriteCreateFactory(sprite2Entry, explosion
-        , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0))))
+        , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0))
+        , VariableAddFactory("score", 300)))
 
     , SpriteRemoveFactory(sprite1Entry)
 
@@ -187,6 +205,7 @@ fun asteroids() {
       , SpriteSetSizeFactory(currentEntry, DoubleValue(2.5)))
     , SpriteRemoveFactory(sprite1Entry)
   )
+  // Elements
 
   project.apply {
     add(bounds.sprite!!)
@@ -196,5 +215,8 @@ fun asteroids() {
     add(flame)
     add(player)
     add(explosion)
+    add(scoreDisplay)
+    add(levelDisplay)
+    add(livesDisplay)
   }
 }

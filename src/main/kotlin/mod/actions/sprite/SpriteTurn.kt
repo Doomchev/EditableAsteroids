@@ -31,7 +31,7 @@ object spriteTurnSerializer: Serializer {
 
 class SpriteTurnFactory(spriteEntry: SpriteEntry, private var angle: Formula = zero): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
-    return SpriteTurn(spriteEntry.resolve(), angle.get() * PI / 180.0)
+    return SpriteTurn(spriteEntry.resolve(), angle.getDouble() * PI / 180.0)
   }
 
   override fun toString(): String = "Повернуть"

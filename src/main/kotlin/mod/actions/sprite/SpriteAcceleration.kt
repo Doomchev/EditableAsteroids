@@ -34,7 +34,7 @@ object spriteAccelerationSerializer: Serializer {
 
 class SpriteAccelerationFactory(spriteEntry: SpriteEntry, private var acceleration: Formula, private var limit: Formula): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
-    return SpriteAcceleration(spriteEntry.resolve(), acceleration.get(), limit.get())
+    return SpriteAcceleration(spriteEntry.resolve(), acceleration.getDouble(), limit.getDouble())
   }
 
   override fun toString(): String = "Ускорять"

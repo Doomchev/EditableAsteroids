@@ -35,7 +35,7 @@ object spriteMoveSerializer: Serializer {
 
 class SpriteMoveFactory(spriteEntry: SpriteEntry, private var speed: Formula): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
-    return SpriteMove(spriteEntry.resolve(), speed.get())
+    return SpriteMove(spriteEntry.resolve(), speed.getDouble())
   }
 
   override fun toString(): String = "Переместить"

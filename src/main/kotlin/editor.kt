@@ -148,16 +148,16 @@ fun editor() {
 
   val itemSetCenter = JMenuItem("Задать центр")
   itemSetCenter.addActionListener {
-    val x = enterDouble("Введите горизонтальное смещение:").get()
-    val y = enterDouble("Введите вертикальное смещение:").get()
+    val x = enterDouble("Введите горизонтальное смещение:").getDouble()
+    val y = enterDouble("Введите вертикальное смещение:").getDouble()
     currentImageArray!!.setCenter(x, y)
   }
   imageMenu.add(itemSetCenter)
 
   val itemSetVisArea = JMenuItem("Задать размер обл. вывода")
   itemSetVisArea.addActionListener {
-    val xk = enterDouble("Введите коэфф. к ширине:").get()
-    val yk = enterDouble("Введите коэфф. к высоте:").get()
+    val xk = enterDouble("Введите коэфф. к ширине:").getDouble()
+    val yk = enterDouble("Введите коэфф. к высоте:").getDouble()
     currentImageArray!!.setVisibleArea(xk, yk)
   }
   imageMenu.add(itemSetVisArea)

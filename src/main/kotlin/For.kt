@@ -1,6 +1,4 @@
-import mod.actions.list.IsListEmptyFactory
 import mod.dragging.enterDouble
-import mod.dragging.enterInt
 
 object repeatSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {
@@ -12,7 +10,7 @@ object repeatSerializer: Serializer {
   }
 
   override fun actionFromNode(node: Node): Action {
-    return Repeat(node.getFormula("quantity").get().toInt(), getActions(node))
+    return Repeat(node.getFormula("quantity").getDouble().toInt(), getActions(node))
   }
 
   override fun toString(): String = "Повторить"
@@ -24,7 +22,7 @@ class RepeatFactory(private var quantity: Formula, var actions: MutableList<Spri
   }
 
   override fun create(): SpriteAction {
-    return Repeat(quantity.get().toInt(), actions)
+    return Repeat(quantity.getDouble().toInt(), actions)
   }
 
   override fun addChildBlocks() {

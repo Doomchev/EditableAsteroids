@@ -32,7 +32,7 @@ object spriteRotationSerializer: Serializer {
 
 class SpriteRotationFactory(spriteEntry: SpriteEntry, private var speed: Formula): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
-    return SpriteRotation(spriteEntry.resolve(), speed.get() * PI / 180.0)
+    return SpriteRotation(spriteEntry.resolve(), speed.getDouble() * PI / 180.0)
   }
 
   override fun toString(): String = "Вращать"

@@ -31,7 +31,7 @@ object spriteSetMovingVectorSerializer: Serializer {
 
 class SpriteSetMovingVectorFactory(spriteEntry: SpriteEntry, private var dx: Formula, private var dy: Formula): SpriteActionFactory(spriteEntry) {
   override fun create(): SpriteAction {
-    return SpriteSetMovingVector(spriteEntry.resolve(), dx.get(), dy.get())
+    return SpriteSetMovingVector(spriteEntry.resolve(), dx.getDouble(), dy.getDouble())
   }
 
   override fun toString(): String = "Задать движение"
