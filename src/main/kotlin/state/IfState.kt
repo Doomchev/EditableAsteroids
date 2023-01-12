@@ -10,9 +10,7 @@ import SpriteActionFactory
 import SpriteEntry
 import blocks
 import indent
-import mod.project
 import selectSprite
-import java.util.*
 
 object ifStateSerializer: Serializer {
   override fun newFactory(): SpriteActionFactory {
@@ -26,7 +24,7 @@ object ifStateSerializer: Serializer {
   }
 
   override fun actionFromNode(node: Node): Action {
-    val actions = mutableListOf<SpriteActionFactory>()
+    val actions = mutableListOf<SpriteAction>()
     node.getField("actions", actions)
     return IfState(node.getField("sprite") as Sprite, findStates(node.getString("state")), actions)
   }
@@ -34,24 +32,28 @@ object ifStateSerializer: Serializer {
   override fun toString(): String = "При состоянии"
 }
 
-class IfStateFactory(spriteEntry: SpriteEntry, private var values: MutableList<State>, var actions: MutableList<SpriteActionFactory>): SpriteActionFactory(spriteEntry) {
+class IfStateFactory(spriteEntry: SpriteEntry, private var values: MutableList<State>, private var factories: MutableList<SpriteActionFactory>): SpriteActionFactory(spriteEntry) {
 
-  constructor(spriteEntry: SpriteEntry, value: State, vararg actions: SpriteActionFactory) : this(spriteEntry, mutableListOf(value), mutableListOf<SpriteActionFactory>()) {
-    this.actions.addAll(actions)
+  constructor(spriteEntry: SpriteEntry, value: State, vararg factories: SpriteActionFactory) : this(spriteEntry, mutableListOf(value), mutableListOf<SpriteActionFactory>()) {
+    this.factories.addAll(factories)
   }
 
-  constructor(spriteEntry: SpriteEntry, values: MutableList<State>, vararg actions: SpriteActionFactory) : this(spriteEntry, values, mutableListOf<SpriteActionFactory>()) {
-    this.actions.addAll(actions)
+  constructor(spriteEntry: SpriteEntry, values: MutableList<State>, vararg factories: SpriteActionFactory) : this(spriteEntry, values, mutableListOf<SpriteActionFactory>()) {
+    this.factories.addAll(factories)
   }
 
   override fun create(): SpriteAction {
+    val actions = mutableListOf<SpriteAction>()
+    for(factory in factories) {
+      actions.add(factory.create())
+    }
     return IfState(spriteEntry.resolve(), values, actions)
   }
 
   override fun addChildBlocks() {
     indent += "  "
-    for(factory in actions) {
-      blocks.add(FactoryBlock(factory, actions,"$indent${factory.fullText()}", true))
+    for(factory in factories) {
+      blocks.add(FactoryBlock(factory, factories,"$indent${factory.fullText()}", true))
       factory.addChildBlocks()
     }
     indent = indent.substring(2)
@@ -60,16 +62,16 @@ class IfStateFactory(spriteEntry: SpriteEntry, private var values: MutableList<S
   override fun toString(): String = "Если $caption == $values"
 
   override fun toNode(node: Node) {
-    node.setField("actions", actions)
+    node.setField("actions", factories)
   }
 }
 
-class IfState(sprite: Sprite, private var states: MutableList<State>, private var actions: MutableList<SpriteActionFactory>): SpriteAction(sprite) {
+class IfState(sprite: Sprite, private var states: MutableList<State>, private var actions: MutableList<SpriteAction>): SpriteAction(sprite) {
   override fun execute() {
     for(state in states) {
       if(sprite.state == state) {
-        for(factory in actions) {
-          factory.create().execute()
+        for(action in actions) {
+          action.execute()
         }
         return
       }

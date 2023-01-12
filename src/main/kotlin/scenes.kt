@@ -2,9 +2,7 @@ import mod.*
 import mod.actions.*
 import mod.actions.list.IsListEmpty
 import mod.actions.sprite.*
-import state.IfStateFactory
-import state.SpriteSetStateFactory
-import state.newState
+import state.*
 import kotlin.math.*
 
 fun tilemap() {
@@ -57,7 +55,7 @@ fun asteroids() {
 
   val score = IntValue(100)
   varMap["score"] = score
-  val lives = StringValue(" ∆ ∆ ∆")
+  val lives = IntValue(3, "d")
   varMap["lives"] = lives
   val level = IntValue(0)
   varMap["level"] = level
@@ -72,10 +70,14 @@ fun asteroids() {
   val playerSprite = Sprite(imageArrays[3].images[0], 0.0, 0.0, 1.0, 1.0)
   playerSprite.setName("игрок")
   player.sprites.add(playerSprite)
+  val startEntry = SpriteEntry("start", Sprite(blankImage, 0.0, 0.0, 1.0, 1.0))
+
+  val alive = newState("живой")
+  val destroyed = newState("уничтожен")
+  playerSprite.state = alive
 
   val flame = Sprite(flameImage.images[0], -1.0, 0.0, 1.0, 1.0, -90.0)
   flame.visible = false
-  flame.setName("пламя")
   addConstraint(flame, playerSprite)
   actions.add(SpriteAnimation(flame, flameImage, 16.0, 0.0))
 
@@ -87,8 +89,8 @@ fun asteroids() {
   Key(100, user).onPressActions.add(ActionEntry(world, SpriteRotation(playerSprite, 1.5 * PI)))
   val forward: Key = Key(119, user)
   forward.onPressActions.apply {
-    add(ActionEntry(world, SpriteAcceleration(playerSprite, 50.0, 10.0)))
-    add(ActionEntry(world, SpriteShow(flame)))
+    add(ActionEntry(world, SpriteAcceleration(playerSprite, 25.0, 7.5)))
+    add(ActionEntry(world, IfState(playerSprite, mutableListOf(alive), mutableListOf(SpriteShow(flame)))))
   }
   forward.onUnpressActions.add(ActionEntry(world, SpriteHide(flame)))
 
@@ -132,7 +134,10 @@ fun asteroids() {
     add(SpriteSetBoundsFactory(currentEntry, bounds))
   }
 
-  Key(32, user).onPressActions.add(ActionEntry(world, SpriteDelayedCreate(playerSprite, bullet, 0.2)))
+  Key(32, user).onPressActions.apply {
+    add(ActionEntry(world, IfState(playerSprite, mutableListOf(alive)
+        , mutableListOf(SpriteDelayedCreate(playerSprite, bullet, 0.2)))))
+  }
 
   asteroid.always.addAll(mutableListOf(
     SpriteAnimationFactory(currentEntry, imageArrays[1], RandomDirection(RandomDoubleValue(12.0, 20.0))),
@@ -141,6 +146,7 @@ fun asteroids() {
     SpriteMoveForwardFactory(currentEntry)))
 
   val explosion = addClass("Взрыв")
+
 
   explosion.onCreate.apply {
     add(SoundPlayFactory(sounds[1]))
@@ -201,10 +207,23 @@ fun asteroids() {
   )
 
   player.addOnCollision(asteroid
-    , SpriteCreateFactory(sprite1Entry, explosion
-      , SpriteSetSizeFactory(currentEntry, DoubleValue(2.5)))
-    , SpriteRemoveFactory(sprite1Entry)
+    , IfStateFactory(sprite1Entry, alive
+      , SpriteCreateFactory(sprite1Entry, explosion
+        , SpriteSetSizeFactory(currentEntry, DoubleValue(2.5)))
+      , SpriteHideFactory(sprite1Entry)
+      , SpriteHideFactory(SpriteEntry("flame", flame))
+      , SpriteDeactivateFactory(sprite1Entry)
+      , SpriteSetStateFactory(sprite1Entry, destroyed)
+      , DelayFactory(sprite1Entry, DoubleValue(1.0)
+        , SpritePositionAsFactory(sprite1Entry, startEntry)
+        , SpriteSetStateFactory(sprite1Entry, alive)
+        , SpriteShowFactory(sprite1Entry)
+        , SpriteActivateFactory(sprite1Entry)
+        , VariableAddFactory("lives", -1)
+        )
+    )
   )
+  
   // Elements
 
   project.apply {

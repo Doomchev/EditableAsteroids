@@ -35,12 +35,16 @@ fun doubleToFormula(string: String): Formula {
   return DoubleValue(string.toDouble())
 }
 
-class IntValue(private var value: Int, var zeros: Boolean = false): Formula() {
+class IntValue(private var value: Int, private var format: String = ""): Formula() {
   override fun getInt(): Int = value
 
   override fun getDouble(): Double = value.toDouble()
 
-  override fun toString(): String = if(zeros) String.format("%08d", value) else value.toString()
+  override fun toString(): String = when(format) {
+    "0" -> String.format("%08d", value)
+    "d" -> " ∆".repeat(maxOf(value, 0))
+    else -> value.toString()
+  }
 
   override fun add(increment: Int) {
     value += increment

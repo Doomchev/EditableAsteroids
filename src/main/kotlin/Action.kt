@@ -1,4 +1,5 @@
 import mod.Element
+import mod.actions.DelayedAction
 import java.util.*
 
 interface Action: Element {
@@ -27,3 +28,4 @@ abstract class SpriteAction(var sprite: Sprite): Action
 
 val actions = mutableListOf<SpriteAction>()
 val newActions = mutableListOf<SpriteAction>()
+val delayedActions = mutableListOf<DelayedAction>()

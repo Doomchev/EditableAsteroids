@@ -31,7 +31,7 @@ class Window: JPanel() {
     }
 
     for(action in actions) {
-      if(!action.sprite.active) continue
+      //if(!action.sprite.active) continue
       currentEntry.sprite = action.sprite
       action.execute()
     }
@@ -56,6 +56,12 @@ class Window: JPanel() {
       }
     }
     spritesToRemove.clear()
+
+    val it = delayedActions.iterator()
+    while(it.hasNext()) {
+      val action = it.next()
+      if(action.check()) it.remove()
+    }
 
     for(cnv in canvases) {
       cnv.draw(g2d)
