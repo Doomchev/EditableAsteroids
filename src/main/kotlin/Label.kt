@@ -7,12 +7,14 @@ enum class VerticalAlign{top, center, bottom}
 
 val defaultFont = Font("Dialog", Font.PLAIN, 16)
 
-class Label(private var variable: Formula, centerX: Double, centerY: Double, width: Double, height: Double, private var horizontalAlign: HorizontalAlign = HorizontalAlign.center, var verticalAlign: VerticalAlign = VerticalAlign.center, var prefix: String = "", zeros: Boolean = true): Sprite(blankImage, centerX, centerY, width, height) {
+class Label(private var variable: Formula?, centerX: Double, centerY: Double, width: Double, height: Double, private var horizontalAlign: HorizontalAlign = HorizontalAlign.center, var verticalAlign: VerticalAlign = VerticalAlign.center, private var prefix: String = "", zeros: Boolean = true): Sprite(blankImage, centerX, centerY, width, height) {
   override fun draw(g: Graphics2D) {
+    if(!visible) return
+
     g.color = Color.white
     g.font = defaultFont
 
-    val text = prefix + variable.toString()
+    var text = prefix + if(variable == null) "" else variable!!.toString()
 
     val metrics = g.getFontMetrics(defaultFont)
     val stringWidth = metrics.stringWidth(text)

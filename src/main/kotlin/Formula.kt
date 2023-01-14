@@ -4,6 +4,7 @@ import kotlin.random.Random
 abstract class Formula: Element {
   abstract fun getInt(): Int
   abstract fun getDouble(): Double
+  open fun set(value: Int) {}
   open fun add(increment: Int) {}
   open fun add(increment: Double) {}
   open fun add(increment: String) {}
@@ -44,6 +45,10 @@ class IntValue(private var value: Int, private var format: String = ""): Formula
     "0" -> String.format("%08d", value)
     "d" -> " ∆".repeat(maxOf(value, 0))
     else -> value.toString()
+  }
+
+  override fun set(value: Int) {
+    this.value = value
   }
 
   override fun add(increment: Int) {

@@ -1,5 +1,6 @@
 import mod.*
 import mod.actions.*
+import mod.actions.list.ClearList
 import mod.actions.list.IsListEmpty
 import mod.actions.sprite.*
 import state.*
@@ -63,6 +64,10 @@ fun asteroids() {
   val scoreDisplay = Label(score, 0.0, world.topY + 0.5, world.width - 1.0, 1.0, HorizontalAlign.left)
   val levelDisplay = Label(level, 0.0, world.topY + 0.5, world.width - 1.0, 1.0, HorizontalAlign.center, VerticalAlign.center, "LEVEL ", false)
   val livesDisplay = Label(lives, 0.0, world.topY + 0.5, world.width - 1.0, 1.0, HorizontalAlign.right)
+  val spaceDisplay = Label(null, 0.0, 0.0, world.width, 1.0, HorizontalAlign.center, VerticalAlign.center, "PRESS SPACE")
+  spaceDisplay.visible = false
+  val gameOverDisplay = Label(null, 0.0, 0.0, world.width, 1.0, HorizontalAlign.center, VerticalAlign.center, "GAME OVER")
+  gameOverDisplay.visible = false
 
   /// SPRITES
 
@@ -70,10 +75,11 @@ fun asteroids() {
   val playerSprite = Sprite(imageArrays[3].images[0], 0.0, 0.0, 1.0, 1.0)
   playerSprite.setName("игрок")
   player.sprites.add(playerSprite)
-  val startEntry = SpriteEntry("start", Sprite(blankImage, 0.0, 0.0, 1.0, 1.0))
+  val start = Sprite(blankImage, 0.0, 0.0, 1.0, 1.0)
 
   val alive = newState("живой")
   val destroyed = newState("уничтожен")
+  val gameOver = newState("игра окончена")
   playerSprite.state = alive
 
   val flame = Sprite(flameImage.images[0], -1.0, 0.0, 1.0, 1.0, -90.0)
@@ -112,7 +118,7 @@ fun asteroids() {
         SpriteCreateFactory(currentEntry, asteroid, mutableListOf(
           SpriteSetStateFactory(currentEntry, big),
           SpriteSetSizeFactory(currentEntry, DoubleValue(3.0)),
-          SpriteSetAngleFactory(currentEntry, RandomDoubleValue(0.0, 360.0)),
+          SpriteSetAngleFactory(currentEntry, RandomDirection(RandomDoubleValue(45.0, 135.0))),
           SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(2.0, 3.0)),
           SpritePositionInAreaFactory(currentEntry, asteroidArea)
       )))
@@ -134,9 +140,32 @@ fun asteroids() {
     add(SpriteSetBoundsFactory(currentEntry, bounds))
   }
 
-  Key(32, user).onPressActions.apply {
-    add(ActionEntry(world, IfState(playerSprite, mutableListOf(alive)
-        , mutableListOf(SpriteDelayedCreate(playerSprite, bullet, 0.2)))))
+  val space = Key(32, user)
+  space.onPressActions.add(ActionEntry(world
+      , IfState(playerSprite, mutableListOf(alive)
+        , mutableListOf(SpriteDelayedCreate(playerSprite, bullet, 0.2))
+      )
+    ))
+  space.onClickActions.apply {
+    add(ActionEntry(world
+      , IfState(playerSprite, mutableListOf(gameOver), mutableListOf(
+        SpriteHide(gameOverDisplay)
+        , VariableSet("lives", 3)
+        , VariableSet("level", 0)
+        , ClearList(asteroid)
+        , SpriteSetState(playerSprite, alive)
+        , SpriteShow(playerSprite)
+        , SpriteActivate(playerSprite)
+      ))))
+    add(ActionEntry(world
+      , IfState(playerSprite, mutableListOf(destroyed), mutableListOf(
+          SpritePositionAs(playerSprite, start)
+        , SpriteSetState(playerSprite, alive)
+        , SpriteHide(spaceDisplay)
+        , SpriteShow(playerSprite)
+        , SpriteActivate(playerSprite)
+        , VariableAdd("lives", -1)
+      ))))
   }
 
   asteroid.always.addAll(mutableListOf(
@@ -146,7 +175,6 @@ fun asteroids() {
     SpriteMoveForwardFactory(currentEntry)))
 
   val explosion = addClass("Взрыв")
-
 
   explosion.onCreate.apply {
     add(SoundPlayFactory(sounds[1]))
@@ -214,13 +242,12 @@ fun asteroids() {
       , SpriteHideFactory(SpriteEntry("flame", flame))
       , SpriteDeactivateFactory(sprite1Entry)
       , SpriteSetStateFactory(sprite1Entry, destroyed)
-      , DelayFactory(sprite1Entry, DoubleValue(1.0)
-        , SpritePositionAsFactory(sprite1Entry, startEntry)
-        , SpriteSetStateFactory(sprite1Entry, alive)
-        , SpriteShowFactory(sprite1Entry)
-        , SpriteActivateFactory(sprite1Entry)
-        , VariableAddFactory("lives", -1)
-        )
+      , SpriteShowFactory(SpriteEntry("space", spaceDisplay))
+      , VariableIfEqualFactory("lives", IntValue(0), mutableListOf(
+        SpriteHideFactory(SpriteEntry("", spaceDisplay))
+        , SpriteShowFactory(SpriteEntry("", gameOverDisplay))
+        , SpriteSetStateFactory(SpriteEntry("", playerSprite), gameOver)
+      ))
     )
   )
   
@@ -237,5 +264,7 @@ fun asteroids() {
     add(scoreDisplay)
     add(levelDisplay)
     add(livesDisplay)
+    add(gameOverDisplay)
+    add(spaceDisplay)
   }
 }
