@@ -44,6 +44,10 @@ abstract class ActionFactory: Element, Action {
   val caption get() = entryCaption("")
   val forCaption get() = entryCaption("для ")
   private fun entryCaption(prefix: String): String = ""
+
+  open fun execute(sprite: Sprite) {
+    create(sprite).execute()
+  }
 }
 
 open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, angleInDegrees: Double = 0.0, var dx: Double = 1.0, var dy: Double = 0.0, var active: Boolean = true): Shape(centerX, centerY, width, height) {

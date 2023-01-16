@@ -27,30 +27,38 @@ fun snow() {
   actions.add(SpriteDelayedCreate(nullSprite, flake, 0.1))
 }
 
+fun starfield() {
+
+}
+
 fun asteroids() {
 
   /// IMAGES
 
-  val asteroidImage = imageArrays[1]
+  val asteroidImage = addClassImage("asteroid.png")
   splitImage(asteroidImage, 8, 4)
   asteroidImage.setVisibleArea(1.25, 1.25)
 
-  val bulletImage = imageArrays[2]
+  val bulletImage = addClassImage("bullet.png")
   splitImage(bulletImage, 1, 16)
   bulletImage.setCenter(43.0 / 48.0, 5.5 / 12.0)
   bulletImage.setVisibleArea(10.5, 3.0)
 
-  val shipImage = imageArrays[3]
+  val shipImage = addClassImage("ship.png")
   shipImage.setCenter(0.35, 0.5)
   shipImage.setVisibleArea(1.5, 1.5)
 
-  val explosionImage = imageArrays[5]
+  val explosionImage = addClassImage("explosion.png")
   splitImage(explosionImage, 4, 4)
   explosionImage.setVisibleArea(1.5, 1.5)
 
-  val flameImage = imageArrays[7]
+  val flameImage = addClassImage("flame.png")
   splitImage(flameImage, 3, 3)
   flameImage.setCenter(0.5, 0.2)
+
+  // global variables
+
+  val startingLives = IntValue(3)
 
   // HUD
 
@@ -72,7 +80,7 @@ fun asteroids() {
   /// SPRITES
 
   val player = addClass("Игрок")
-  val playerSprite = Sprite(imageArrays[3].images[0], 0.0, 0.0, 1.0, 1.0)
+  val playerSprite = Sprite(shipImage.images[0], 0.0, 0.0, 1.0, 1.0)
   playerSprite.setName("игрок")
   player.sprites.add(playerSprite)
   val start = Sprite(blankImage, 0.0, 0.0, 1.0, 1.0)
@@ -136,7 +144,7 @@ fun asteroids() {
   }
   bullet.always.apply {
     add(SpriteMoveForwardFactory(currentEntry))
-    add(SpriteAnimationFactory(currentEntry, imageArrays[2], DoubleValue(16.0)))
+    add(SpriteAnimationFactory(currentEntry, bulletImage, DoubleValue(16.0)))
     add(SpriteSetBoundsFactory(currentEntry, bounds))
   }
 
@@ -169,7 +177,7 @@ fun asteroids() {
   }
 
   asteroid.always.addAll(mutableListOf(
-    SpriteAnimationFactory(currentEntry, imageArrays[1], RandomDirection(RandomDoubleValue(12.0, 20.0))),
+    SpriteAnimationFactory(currentEntry, asteroidImage, RandomDirection(RandomDoubleValue(12.0, 20.0))),
     SpriteRotationFactory(currentEntry, RandomDoubleValue(-180.0, 180.0)),
     SpriteLoopAreaFactory(currentEntry, bounds),
     SpriteMoveForwardFactory(currentEntry)))

@@ -43,7 +43,7 @@ class IfStateFactory(spriteEntry: SpriteEntry, private var values: MutableList<S
     this.factories.addAll(factories)
   }
 
-  override fun create(): SpriteAction {
+  override fun create(): Action {
     val actions = mutableListOf<Action>()
     for(factory in factories) {
       actions.add(factory.create())

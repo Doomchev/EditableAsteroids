@@ -60,7 +60,7 @@ class SpriteCreate(sprite: Sprite, private var spriteClass: SpriteClass, private
     newSprites.add(NewSprite(spriteClass, newSprite))
     parentEntry.sprite = sprite
     for(factory in spriteClass.onCreate + actions) {
-      factory.create(newSprite).execute()
+      factory.execute(newSprite)
     }
     for(action in spriteClass.always) {
       newActions.add(action.create(newSprite))

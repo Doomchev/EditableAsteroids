@@ -42,21 +42,23 @@ class Project(): Element {
 val ide = Project()
 val user = Project()
 
+fun addClassImage(filename: String): ImageArray {
+  return ImageArray(Array(1) { Image(Texture(filename)) }, filename)
+}
+
 fun main() {
   /// ASSETS LOADING
-
-  for(imageFile in File("./").listFiles()) {
-    if(!imageFile.name.endsWith(".png")) continue
-    val image = Image(Texture(imageFile.name))
-    imageArrays.add(ImageArray(Array(1) { image }, imageFile.name))
-  }
 
   for(soundFile in File("./").listFiles()) {
     if(!soundFile.name.endsWith(".wav")) continue
     sounds.add(soundFile)
   }
 
-  editor()
+  blankImage = Image(Texture(""), 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0)
+  imageArrays.add(0, ImageArray(Array(1) {blankImage}, "Пустое"))
+  currentImageArray = imageArrays[0]
+
+    editor()
 
   /// GUI
 

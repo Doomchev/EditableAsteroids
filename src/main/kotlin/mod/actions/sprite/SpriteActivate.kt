@@ -31,6 +31,10 @@ class SpriteActivateFactory(spriteEntry: SpriteEntry): SpriteActionFactory(sprit
     return SpriteActivate(spriteEntry.resolve())
   }
 
+  override fun execute(sprite: Sprite) {
+    sprite.active = true
+  }
+
   override fun toString(): String = "Активировать$caption"
 
   override fun toNode(node: Node) {

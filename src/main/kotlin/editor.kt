@@ -162,10 +162,6 @@ fun editor() {
   }
   imageMenu.add(itemSetVisArea)
 
-  blankImage = Image(imageArrays[0].images[0].texture, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0)
-  imageArrays.add(0, ImageArray(Array(1) {blankImage}, "Пустое"))
-  currentImageArray = imageArrays[0]
-
   // PROPERTIES GUI
 
   properties.add(drawBlocks)
