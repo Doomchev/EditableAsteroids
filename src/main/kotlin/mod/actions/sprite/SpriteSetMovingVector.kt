@@ -6,19 +6,20 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.enterDouble
 import selectSprite
 
 object spriteSetMovingVectorSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteSetMovingVectorFactory(
       selectSprite(), enterDouble("Введите приращение по Х:"
     ), enterDouble("Введите приращение по Y:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteSetMovingVectorFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("dx"), node.getFormula("dy"))
   }
 

@@ -6,6 +6,7 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
 import fpsk
@@ -14,11 +15,11 @@ import selectSprite
 import spritesToRemove
 
 object spriteDelayedRemoveSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteDelayedRemoveFactory(selectSprite(), enterDouble("Введите задержку:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteDelayedRemoveFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("delay"))
   }
 

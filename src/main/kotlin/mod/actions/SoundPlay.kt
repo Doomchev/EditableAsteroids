@@ -4,7 +4,7 @@ import Action
 import Node
 import Serializer
 import SpriteAction
-import SpriteActionFactory
+import ActionFactory
 import frame
 import nullSprite
 import nullSpriteEntry
@@ -16,11 +16,11 @@ import javax.swing.JOptionPane
 
 
 object soundPlaySerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SoundPlayFactory(selectSound())
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SoundPlayFactory(File(node.getString("file")))
   }
 
@@ -29,8 +29,7 @@ object soundPlaySerializer: Serializer {
   }
 }
 
-class SoundPlayFactory(private var file: File): SpriteActionFactory(
-  nullSpriteEntry) {
+class SoundPlayFactory(private var file: File): ActionFactory() {
   override fun create(): SpriteAction {
     return SoundPlay(file)
   }

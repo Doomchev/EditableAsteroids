@@ -4,18 +4,18 @@ import Action
 import Node
 import Serializer
 import SpriteAction
-import SpriteActionFactory
+import ActionFactory
 import SpriteClass
 import nullSprite
 import nullSpriteEntry
 import selectClass
 
 object clearListSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return ClearListFactory(selectClass())
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return ClearListFactory(node.getField("class") as SpriteClass)
   }
 
@@ -26,12 +26,12 @@ object clearListSerializer: Serializer {
   override fun toString(): String = "Очистить список"
 }
 
-class ClearListFactory(private var spriteClass: SpriteClass, var actions: MutableList<SpriteActionFactory>): SpriteActionFactory(nullSpriteEntry) {
-  constructor(spriteClass: SpriteClass, vararg actions: SpriteActionFactory) : this(spriteClass, mutableListOf<SpriteActionFactory>()) {
+class ClearListFactory(private var spriteClass: SpriteClass, var actions: MutableList<ActionFactory>): ActionFactory() {
+  constructor(spriteClass: SpriteClass, vararg actions: ActionFactory) : this(spriteClass, mutableListOf<ActionFactory>()) {
     this.actions.addAll(actions)
   }
 
-  override fun create(): SpriteAction {
+  override fun create(): Action {
     return ClearList(spriteClass)
   }
 
@@ -42,7 +42,7 @@ class ClearListFactory(private var spriteClass: SpriteClass, var actions: Mutabl
   }
 }
 
-class ClearList(private var spriteClass: SpriteClass): SpriteAction(nullSprite) {
+class ClearList(private var spriteClass: SpriteClass): Action {
   override fun execute() {
     spriteClass.sprites.clear()
   }

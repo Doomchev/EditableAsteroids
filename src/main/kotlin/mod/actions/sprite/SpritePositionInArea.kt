@@ -5,18 +5,18 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
-import mod.dragging.selectSprite
 import selectSprite
 import kotlin.random.Random
 
 object spritePositionInAreaSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpritePositionInAreaFactory(selectSprite(), selectSprite("Выберите область:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpritePositionInAreaFactory(node.getField("spriteentry") as SpriteEntry, node.getField("area") as SpriteEntry)
   }
 

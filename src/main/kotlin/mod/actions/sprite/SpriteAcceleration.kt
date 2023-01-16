@@ -4,10 +4,11 @@ import Formula
 import Node
 import Sprite
 import Action
-import SpriteActionFactory
+import ActionFactory
 import fpsk
 import Serializer
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.enterDouble
 import selectSprite
@@ -16,11 +17,11 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 object spriteAccelerationSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteAccelerationFactory(selectSprite(), enterDouble("Введите ускорение (ед/сек):"), enterDouble("Введите макс. скорость (ед/сек):"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteAccelerationFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("acceleration"), node.getFormula("limit"))
   }
 

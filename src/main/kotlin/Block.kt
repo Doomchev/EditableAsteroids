@@ -1,5 +1,4 @@
 import mod.project
-import java.util.*
 
 var indent: String = ""
 
@@ -8,7 +7,7 @@ abstract class Block(var message:String) {
   abstract fun removeElement()
 }
 
-class ClassBlock(private var factories: MutableList<SpriteActionFactory>, message: String) : Block(message) {
+class ClassBlock(private var factories: MutableList<ActionFactory>, message: String) : Block(message) {
   override fun addElement() {
     factories.add(0, selectSerializer(true))
     updateActions()
@@ -20,7 +19,7 @@ class ClassBlock(private var factories: MutableList<SpriteActionFactory>, messag
   }
 }
 
-class FactoryBlock(private var factory: SpriteActionFactory, private var factories: MutableList<SpriteActionFactory>, message: String, private var discrete: Boolean) : Block(message) {
+class FactoryBlock(private var factory: ActionFactory, private var factories: MutableList<ActionFactory>, message: String, private var discrete: Boolean) : Block(message) {
   override fun addElement() {
     factories.add(factories.indexOf(factory) + 1, selectSerializer(discrete))
     updateActions()
@@ -35,7 +34,7 @@ class FactoryBlock(private var factory: SpriteActionFactory, private var factori
 class ButtonBlock(private var entries: MutableList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
     val action = selectSerializer(discrete).create()
-    action.sprite = selectSprite().resolve()
+    //action.sprite = selectSprite().resolve()
     entries.add(0, ActionEntry(world, action))
     updateActions()
   }
@@ -92,7 +91,7 @@ fun updateActions() {
   }
 }
 
-fun showClassActions(spriteClass: SpriteClass, factories: MutableList<SpriteActionFactory>, message: String, discrete: Boolean) {
+fun showClassActions(spriteClass: SpriteClass, factories: MutableList<ActionFactory>, message: String, discrete: Boolean) {
   if(factories.isEmpty()) return
   blocks.add(ClassBlock(factories, message))
   indent += "  "

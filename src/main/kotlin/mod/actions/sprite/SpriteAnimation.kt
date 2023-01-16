@@ -7,6 +7,7 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
 import fpsk
@@ -16,13 +17,13 @@ import selectSprite
 import kotlin.math.floor
 
 object spriteAnimationSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteAnimationFactory(
       selectSprite(),
       selectImageArray(), enterDouble("Введите скорость (кадров/сек):"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteAnimationFactory(node.getField("spriteentry") as SpriteEntry, node.getField("array") as ImageArray, node.getFormula("speed"))
   }
 

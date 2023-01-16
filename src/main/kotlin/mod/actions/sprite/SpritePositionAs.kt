@@ -5,17 +5,17 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
-import mod.dragging.selectSprite
 import selectSprite
 
 object spritePositionAsSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpritePositionAsFactory(selectSprite("Выберите спрайт, который перемещается:"), selectSprite("Выберите спрайт, к которому перемещается:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpritePositionAsFactory(node.getField("spriteentry") as SpriteEntry, node.getField("destination") as SpriteEntry)
   }
 

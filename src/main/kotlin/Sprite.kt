@@ -16,21 +16,24 @@ object spriteSerializer: ElementSerializer {
   }
 }
 
-abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): Element, Action {
-  abstract fun create(): SpriteAction
+abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): ActionFactory() {
+  private fun entryCaption(prefix: String): String = if(spriteEntry == currentEntry) "" else " $prefix$spriteEntry"
+}
+
+abstract class ActionFactory: Element, Action {
+  abstract fun create(): Action
 
   fun create(sprite: Sprite): SpriteAction {
-    val action: SpriteAction = create()
+    val action: SpriteAction = create() as SpriteAction
     action.sprite = sprite
     return action
   }
 
   open fun fullText(): String = toString()
-  private fun entryCaption(prefix: String): String = if(spriteEntry == currentEntry) "" else " $prefix$spriteEntry"
 
   open fun addChildBlocks() {}
 
-  fun addChildBlocks(actions: MutableList<SpriteActionFactory>) {
+  fun addChildBlocks(actions: MutableList<ActionFactory>) {
     indent += "  "
     for(factory in actions) {
       blocks.add(FactoryBlock(factory, actions,"$indent${factory.fullText()}", true))
@@ -40,6 +43,7 @@ abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): Element, Actio
 
   val caption get() = entryCaption("")
   val forCaption get() = entryCaption("для ")
+  private fun entryCaption(prefix: String): String = ""
 }
 
 open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, angleInDegrees: Double = 0.0, var dx: Double = 1.0, var dy: Double = 0.0, var active: Boolean = true): Shape(centerX, centerY, width, height) {

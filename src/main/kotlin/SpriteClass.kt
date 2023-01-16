@@ -2,7 +2,6 @@ import mod.Element
 import mod.SceneElement
 import mod.project
 import java.awt.Graphics2D
-import java.util.*
 import javax.swing.JOptionPane
 
 val emptyClass = SpriteClass("")
@@ -19,9 +18,9 @@ object collisionEntrySerializer: ElementSerializer {
 }
 
 class CollisionEntry(var spriteClass: SpriteClass): Element {
-  val factories = mutableListOf<SpriteActionFactory>()
+  val factories = mutableListOf<ActionFactory>()
 
-  constructor(spriteClass: SpriteClass, newFactories: Array<out SpriteActionFactory>) : this(spriteClass) {
+  constructor(spriteClass: SpriteClass, newFactories: Array<out ActionFactory>) : this(spriteClass) {
     factories.addAll(newFactories)
   }
 
@@ -48,9 +47,9 @@ object spriteClassSerializer: ElementSerializer {
 
 class SpriteClass(private var name: String = ""): SceneElement() {
   val sprites = mutableListOf<Sprite>()
-  val onCreate = mutableListOf<SpriteActionFactory>()
+  val onCreate = mutableListOf<ActionFactory>()
   val onCollision = mutableListOf<CollisionEntry>()
-  val always = mutableListOf<SpriteActionFactory>()
+  val always = mutableListOf<ActionFactory>()
 
   fun add(sprite: Sprite) {
     sprites.add(sprite)
@@ -70,7 +69,7 @@ class SpriteClass(private var name: String = ""): SceneElement() {
     return spriteUnderCursor(sprites, fx, fy)
   }
   
-  fun add(spriteClass2: SpriteClass, vararg factories: SpriteActionFactory) {
+  fun add(spriteClass2: SpriteClass, vararg factories: ActionFactory) {
     for(entry in onCollision) {
       if(spriteClass2 == entry.spriteClass) {
         entry.factories.addAll(factories)
@@ -80,7 +79,7 @@ class SpriteClass(private var name: String = ""): SceneElement() {
     onCollision.add(CollisionEntry(spriteClass2, factories))
   }
 
-  fun addOnCollision(spriteClass: SpriteClass, vararg factories: SpriteActionFactory) {
+  fun addOnCollision(spriteClass: SpriteClass, vararg factories: ActionFactory) {
     for(entry in onCollision) {
       if(entry.spriteClass == spriteClass) {
         entry.factories.addAll(factories)

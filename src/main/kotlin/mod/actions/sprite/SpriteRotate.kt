@@ -6,6 +6,7 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
 import format
@@ -15,11 +16,11 @@ import selectSprite
 import kotlin.math.PI
 
 object spriteRotationSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteRotationFactory(selectSprite(), enterDouble("Введите скорость поворота (град/сек):"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteRotationFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("speed"))
   }
 

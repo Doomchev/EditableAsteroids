@@ -7,11 +7,11 @@ import state.spriteSetStateSerializer
 import javax.swing.JOptionPane
 
 interface Serializer {
-  fun newFactory(): SpriteActionFactory
-  fun factoryFromNode(node: Node): SpriteActionFactory
+  fun newFactory(): ActionFactory
+  fun factoryFromNode(node: Node): ActionFactory
   fun actionFromNode(node: Node): Action
-  fun getActions(node: Node): MutableList<SpriteActionFactory> {
-    val actions = mutableListOf<SpriteActionFactory>()
+  fun getActions(node: Node): MutableList<ActionFactory> {
+    val actions = mutableListOf<ActionFactory>()
     node.getField("actions", actions)
     return actions
   }
@@ -51,7 +51,7 @@ fun registerSerializers() {
   }
 }
 
-fun selectSerializer(discrete: Boolean): SpriteActionFactory {
+fun selectSerializer(discrete: Boolean): ActionFactory {
   val serArray = if(discrete) discreteActions else continuousActions
   return (JOptionPane.showInputDialog(frame,"Выберите действие:", "", JOptionPane.QUESTION_MESSAGE, null, serArray, serArray[0]) as Serializer).newFactory()
 }

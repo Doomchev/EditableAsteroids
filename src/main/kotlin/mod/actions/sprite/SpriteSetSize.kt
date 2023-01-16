@@ -6,6 +6,7 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.enterDouble
@@ -13,11 +14,11 @@ import selectSprite
 import zero
 
 object spriteSetSizeSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteSetSizeFactory(selectSprite(), enterDouble("Введите ширину/высоту:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteSetSizeFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("size"))
   }
 

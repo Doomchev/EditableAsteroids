@@ -5,17 +5,18 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
 import selectSprite
 import kotlin.math.atan2
 
 object spriteDirectAtSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteDirectToFactory(selectSprite(), selectSprite("Направить как:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteDirectToFactory(node.getField("spriteentry") as SpriteEntry, node.getField("template") as SpriteEntry)
   }
 

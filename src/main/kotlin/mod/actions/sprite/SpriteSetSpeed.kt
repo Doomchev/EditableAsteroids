@@ -4,9 +4,10 @@ import Formula
 import Node
 import Sprite
 import Action
-import SpriteActionFactory
+import ActionFactory
 import Serializer
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.enterDouble
 import selectSprite
@@ -14,11 +15,11 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 object spriteSetSpeedSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteSetSpeedFactory(selectSprite(), enterDouble("Введите скорость:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteSetSpeedFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("speed"))
   }
 

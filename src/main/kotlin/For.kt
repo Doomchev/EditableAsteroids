@@ -1,11 +1,11 @@
 import mod.dragging.enterDouble
 
 object repeatSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return RepeatFactory(enterDouble("Введите количество повторений:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return RepeatFactory(node.getFormula("quantity"), getActions(node))
   }
 
@@ -16,8 +16,8 @@ object repeatSerializer: Serializer {
   override fun toString(): String = "Повторить"
 }
 
-class RepeatFactory(private var quantity: Formula, var actions: MutableList<SpriteActionFactory>): SpriteActionFactory(nullSpriteEntry) {
-  constructor(quantity: Formula, vararg actions: SpriteActionFactory) : this(quantity, mutableListOf<SpriteActionFactory>()) {
+class RepeatFactory(private var quantity: Formula, var actions: MutableList<ActionFactory>): ActionFactory() {
+  constructor(quantity: Formula, vararg actions: ActionFactory) : this(quantity, mutableListOf<ActionFactory>()) {
     this.actions.addAll(actions)
   }
 
@@ -36,7 +36,7 @@ class RepeatFactory(private var quantity: Formula, var actions: MutableList<Spri
   }
 }
 
-class Repeat(private var quantity: Int, private var actions: MutableList<SpriteActionFactory>): SpriteAction(nullSprite) {
+class Repeat(private var quantity: Int, private var actions: MutableList<ActionFactory>): SpriteAction(nullSprite) {
   override fun execute() {
     for(i in 0 until quantity)
     for(factory in actions) {

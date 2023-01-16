@@ -4,20 +4,21 @@ import Image
 import Node
 import Sprite
 import Action
-import SpriteActionFactory
+import ActionFactory
 import blankImage
 import Serializer
 import SpriteAction
+import SpriteActionFactory
 import SpriteEntry
 import selectImageArray
 import selectSprite
 
 object spriteSetImageSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteSetImageFactory(selectSprite(), selectImageArray().images[0])
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteSetImageFactory(node.getField("spriteentry") as SpriteEntry, node.getField("image") as Image)
   }
 

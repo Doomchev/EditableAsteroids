@@ -5,16 +5,17 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
 import selectSprite
 
 object spriteDirectAsSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteDirectAsFactory(selectSprite(), selectSprite("Направить как:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteDirectAsFactory(node.getField("spriteentry") as SpriteEntry, node.getField("template") as SpriteEntry)
   }
 

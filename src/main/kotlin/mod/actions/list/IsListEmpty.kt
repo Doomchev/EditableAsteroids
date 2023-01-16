@@ -4,18 +4,18 @@ import Action
 import Node
 import Serializer
 import SpriteAction
-import SpriteActionFactory
+import ActionFactory
 import SpriteClass
 import nullSprite
 import nullSpriteEntry
 import selectClass
 
 object isListEmptySerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return IsListEmptyFactory(selectClass())
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return IsListEmptyFactory(node.getField("class") as SpriteClass, getActions(node))
   }
 
@@ -26,8 +26,8 @@ object isListEmptySerializer: Serializer {
   override fun toString(): String = "При состоянии"
 }
 
-class IsListEmptyFactory(private var spriteClass: SpriteClass, var actions: MutableList<SpriteActionFactory>): SpriteActionFactory(nullSpriteEntry) {
-  constructor(spriteClass: SpriteClass, vararg actions: SpriteActionFactory) : this(spriteClass, mutableListOf<SpriteActionFactory>()) {
+class IsListEmptyFactory(private var spriteClass: SpriteClass, var actions: MutableList<ActionFactory>): ActionFactory() {
+  constructor(spriteClass: SpriteClass, vararg actions: ActionFactory) : this(spriteClass, mutableListOf<ActionFactory>()) {
     this.actions.addAll(actions)
   }
 
@@ -46,7 +46,7 @@ class IsListEmptyFactory(private var spriteClass: SpriteClass, var actions: Muta
   }
 }
 
-class IsListEmpty(private var spriteClass: SpriteClass, private var actions: MutableList<SpriteActionFactory>): SpriteAction(nullSprite) {
+class IsListEmpty(private var spriteClass: SpriteClass, private var actions: MutableList<ActionFactory>): SpriteAction(nullSprite) {
   override fun execute() {
     if(spriteClass.sprites.isNotEmpty()) return
     for(factory in actions) {

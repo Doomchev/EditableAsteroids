@@ -6,6 +6,7 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
 import mod.dragging.enterDouble
@@ -14,11 +15,11 @@ import zero
 import kotlin.math.PI
 
 object spriteTurnSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteSetAngleFactory(selectSprite(), enterDouble("Введите скорость поворота (град/сек):"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteTurnFactory(node.getField("spriteentry") as SpriteEntry, node.getFormula("angle"))
   }
 

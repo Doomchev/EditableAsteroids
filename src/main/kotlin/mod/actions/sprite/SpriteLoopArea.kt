@@ -5,20 +5,21 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
 import selectSprite
 import nullSprite
 
 object spriteLoopAreaSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteLoopAreaFactory(
       selectSprite(),
       selectSprite("Выберите границу")
     )
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteLoopAreaFactory(node.getField("spriteentry") as SpriteEntry, node.getField("bounds") as SpriteEntry)
   }
 

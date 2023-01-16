@@ -5,16 +5,17 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
 import selectSprite
 
 object spriteSetStateSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteSetStateFactory(selectSprite(), selectState())
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteSetStateFactory(node.getField("spriteentry") as SpriteEntry, findState(node.getString("state")))
   }
 
@@ -26,7 +27,7 @@ object spriteSetStateSerializer: Serializer {
 }
 
 class SpriteSetStateFactory(spriteEntry: SpriteEntry, private var state: State): SpriteActionFactory(spriteEntry) {
-  override fun create(): SpriteAction {
+  override fun create(): Action {
     return SpriteSetState(spriteEntry.resolve(), state)
   }
 

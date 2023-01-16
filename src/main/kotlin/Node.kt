@@ -19,7 +19,7 @@ class Node(var className: String) {
       val node = Node(element)
       element.toNode(node)
       if(element is SpriteAction) node.setField("sprite", element.sprite)
-      if(element is SpriteActionFactory) node.setField("spriteentry", element.spriteEntry)
+      if(element is SpriteActionFactory) node.setField("entry", element.spriteEntry)
       lastID++
       idForElement[element] = lastID
       node.setInt("id", lastID)
@@ -96,7 +96,7 @@ class Node(var className: String) {
     }
     var element: Element? = null
     if(className.endsWith("Factory")) {
-      val factory = factorySerializers[className]!!.factoryFromNode(this)
+      val factory = factorySerializers[className]!!.factoryFromNode(this) as SpriteActionFactory
       factory.spriteEntry = getField("spriteEntry") as SpriteEntry
       element = factory
     }

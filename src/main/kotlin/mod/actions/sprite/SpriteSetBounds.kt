@@ -5,6 +5,7 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
 import nullSprite
@@ -12,11 +13,11 @@ import selectSprite
 import spritesToRemove
 
 object spriteSetBoundsSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteSetBoundsFactory(selectSprite(), selectSprite("Выберите область:"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteSetBoundsFactory(node.getField("spriteentry") as SpriteEntry, node.getField("bounds") as SpriteEntry)
   }
 

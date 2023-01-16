@@ -7,24 +7,23 @@ import Sprite
 import Action
 import SpriteAction
 import SpriteClass
+import ActionFactory
 import SpriteActionFactory
 import blankImage
-import emptyClass
 import fpsk
 import mod.dragging.*
 import mod.parentEntry
 import newActions
-import zero
 import SpriteEntry
 import selectClass
 import selectSprite
 
 object spriteDelayedCreateSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return SpriteDelayedCreateFactory(selectSprite("Выберите родительский спрайт:"),  selectClass(), enterDouble("Введите интервал (сек):"))
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
+  override fun factoryFromNode(node: Node): ActionFactory {
     return SpriteDelayedCreateFactory(node.getField("spriteentry") as SpriteEntry, node.getField("spriteClass") as SpriteClass, node.getFormula("delay"))
   }
 

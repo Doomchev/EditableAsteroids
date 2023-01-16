@@ -6,6 +6,7 @@ import Node
 import Serializer
 import Sprite
 import SpriteAction
+import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
 import blocks
@@ -13,18 +14,18 @@ import indent
 import selectSprite
 
 object ifStateSerializer: Serializer {
-  override fun newFactory(): SpriteActionFactory {
+  override fun newFactory(): ActionFactory {
     return IfStateFactory(selectSprite(), selectState())
   }
 
-  override fun factoryFromNode(node: Node): SpriteActionFactory {
-    val actions = mutableListOf<SpriteActionFactory>()
+  override fun factoryFromNode(node: Node): ActionFactory {
+    val actions = mutableListOf<ActionFactory>()
     node.getField("actions", actions)
     return IfStateFactory(node.getField("spriteentry") as SpriteEntry, findStates(node.getString("state")), actions)
   }
 
   override fun actionFromNode(node: Node): Action {
-    val actions = mutableListOf<SpriteAction>()
+    val actions = mutableListOf<Action>()
     node.getField("actions", actions)
     return IfState(node.getField("sprite") as Sprite, findStates(node.getString("state")), actions)
   }
@@ -32,18 +33,18 @@ object ifStateSerializer: Serializer {
   override fun toString(): String = "При состоянии"
 }
 
-class IfStateFactory(spriteEntry: SpriteEntry, private var values: MutableList<State>, private var factories: MutableList<SpriteActionFactory>): SpriteActionFactory(spriteEntry) {
+class IfStateFactory(spriteEntry: SpriteEntry, private var values: MutableList<State>, private var factories: MutableList<ActionFactory>): SpriteActionFactory(spriteEntry) {
 
-  constructor(spriteEntry: SpriteEntry, value: State, vararg factories: SpriteActionFactory) : this(spriteEntry, mutableListOf(value), mutableListOf<SpriteActionFactory>()) {
+  constructor(spriteEntry: SpriteEntry, value: State, vararg factories: ActionFactory) : this(spriteEntry, mutableListOf(value), mutableListOf<ActionFactory>()) {
     this.factories.addAll(factories)
   }
 
-  constructor(spriteEntry: SpriteEntry, values: MutableList<State>, vararg factories: SpriteActionFactory) : this(spriteEntry, values, mutableListOf<SpriteActionFactory>()) {
+  constructor(spriteEntry: SpriteEntry, values: MutableList<State>, vararg factories: ActionFactory) : this(spriteEntry, values, mutableListOf<ActionFactory>()) {
     this.factories.addAll(factories)
   }
 
   override fun create(): SpriteAction {
-    val actions = mutableListOf<SpriteAction>()
+    val actions = mutableListOf<Action>()
     for(factory in factories) {
       actions.add(factory.create())
     }
@@ -66,7 +67,7 @@ class IfStateFactory(spriteEntry: SpriteEntry, private var values: MutableList<S
   }
 }
 
-class IfState(sprite: Sprite, private var states: MutableList<State>, private var actions: MutableList<SpriteAction>): SpriteAction(sprite) {
+class IfState(sprite: Sprite, private var states: MutableList<State>, private var actions: MutableList<Action>): SpriteAction(sprite) {
   override fun execute() {
     for(state in states) {
       if(sprite.state == state) {
