@@ -99,12 +99,8 @@ private fun menuItemAction(spriteClass: SpriteClass?, event: MenuEvent, keyCode:
 private fun applyToSprite(sprite: Sprite, event: MenuEvent, keyCode: Int) {
   when(event) {
     MenuEvent.onCreate -> {}
-    MenuEvent.onClick -> Key(keyCode, user).addOnClick(world, selectSerializer(
-      true
-    ).create(sprite))
-    MenuEvent.onPress -> Key(keyCode, user).addOnPress(world, selectSerializer(
-      false
-    ).create(sprite))
+    MenuEvent.onClick -> Key(keyCode, user, world).onClickActions.add(selectSerializer(true).create(sprite))
+    MenuEvent.onPress -> Key(keyCode, user, world).onPressActions.add(selectSerializer(false).create(sprite))
     MenuEvent.onCollision -> {}
     MenuEvent.always -> actions.add(selectSerializer(false).create(sprite))
   }

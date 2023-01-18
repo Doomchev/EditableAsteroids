@@ -32,31 +32,31 @@ fun editor() {
   canvases.add(world)
   currentCanvas = world
 
-  val button1 = MouseButton(MouseEvent.BUTTON1, ide).apply {
-    add(world, resizeSprite)
-    add(world, rotateSprite)
-    add(world, moveSprites)
-    add(world, selectSprites)
-    addOnClick(world, selectSprite)
-    addOnClick(properties, object: Action {
-      override fun execute() {
-        if(selectedBlock == null) return
-        selectedBlock!!.editElement()
-      }
-    })
+  MouseButton(MouseEvent.BUTTON1, ide, world).apply {
+    draggingActions.add(resizeSprite)
+    draggingActions.add(rotateSprite)
+    draggingActions.add(moveSprites)
+    draggingActions.add(selectSprites)
+    onClickActions.add(selectSprite)
   }
 
-  val button2 = MouseButton(MouseEvent.BUTTON3, ide).apply {
-    add(world, createSprite)
-    addOnClick(world, showMenu(objectMenu))
+  MouseButton(MouseEvent.BUTTON1, user, world).onClickActions.add(object: Action {
+    override fun execute() {
+      if(selectedBlock == null) return
+      selectedBlock!!.editElement()
+    }
+  })
+
+  MouseButton(MouseEvent.BUTTON3, ide, world).apply {
+    draggingActions.add(createSprite)
+    onClickActions.add(showMenu(objectMenu))
   }
 
-  val panButton = MouseButton(MouseEvent.BUTTON2, ide)
-  panButton.add(world, pan)
-  Key(127, ide).addOnClick(world, deleteSprites)
+  MouseButton(MouseEvent.BUTTON2, ide, world).draggingActions.add(pan)
+  Key(127, ide, world).onClickActions.add(deleteSprites)
 
-  mouseWheelUp(ide).addOnClick(world, zoomIn)
-  mouseWheelDown(ide).addOnClick(world, zoomOut)
+  mouseWheelUp(ide, world).onClickActions.add(zoomIn)
+  mouseWheelDown(ide, world).onClickActions.add(zoomOut)
 
   world.apply {
     add(grid)
@@ -114,9 +114,9 @@ fun editor() {
   }
   createItem.add(tileMapItem)
 
-  Key(118, ide).addOnClick(world, restoreCamera())
+  Key(118, ide, world).onClickActions.add(restoreCamera())
 
-  Key(103, ide).addOnClick(world, object: Action {
+  Key(103, ide, world).onClickActions.add(object: Action {
     override fun execute() {
       showGrid = !showGrid
     }
@@ -126,7 +126,7 @@ fun editor() {
     }
   })
 
-  Key(99, ide).addOnClick(world, object: Action {
+  Key(99, ide, world).onClickActions.add(object: Action {
     override fun execute() {
       showCollisionShapes = !showCollisionShapes
     }
@@ -141,8 +141,8 @@ fun editor() {
   canvases.add(assets)
 
   assets.add(drawImages)
-  button1.addOnClick(assets, selectImage)
-  button2.addOnClick(assets, showMenu(imageMenu))
+  MouseButton(MouseEvent.BUTTON1, ide, assets).onClickActions.add(selectImage)
+  MouseButton(MouseEvent.BUTTON3, ide, assets).onClickActions.add(showMenu(imageMenu))
 
   val itemCutImage = JMenuItem("Разрезать")
   itemCutImage.addActionListener {
@@ -172,7 +172,7 @@ fun editor() {
 
   properties.add(drawBlocks)
   canvases.add(properties)
-  button2.addOnClick(properties, showMenu(actionMenu))
+  MouseButton(MouseEvent.BUTTON3, ide, properties).onClickActions.add(showMenu(actionMenu))
 
   val addProperty = JMenuItem("Добавить действие")
   addProperty.addActionListener {

@@ -32,28 +32,28 @@ class FactoryBlock(private var factory: ActionFactory, private var factories: Mu
   }
 }
 
-class ButtonBlock(private var entries: MutableList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
+class ButtonBlock(private var actions: MutableList<Action>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
     val action = selectSerializer(discrete).create()
     //action.sprite = selectSprite().resolve()
-    entries.add(0, ActionEntry(world, action))
+    actions.add(0, action)
     updateActions()
   }
 
   override fun removeElement() {
-    entries.clear()
+    actions.clear()
     updateActions()
   }
 }
 
-class ActionBlock(private var entry: ActionEntry, private var entries: MutableList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
+class ActionBlock(private var action: Action, private var actions: MutableList<Action>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
-    entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectSerializer(discrete).create(selectSprite().resolve())))
+    actions.add(actions.indexOf(action) + 1, selectSerializer(discrete).create(selectSprite().resolve()))
     updateActions()
   }
 
   override fun removeElement() {
-    entries.remove(entry)
+    actions.remove(action)
     updateActions()
   }
 }
@@ -119,7 +119,7 @@ fun showClassActions(spriteClass: SpriteClass, factories: MutableList<ActionFact
   indent = indent.substring(2)
 }
 
-fun showButtonActions(actions: MutableList<ActionEntry>, message: String, discrete: Boolean) {
+fun showButtonActions(actions: MutableList<Action>, message: String, discrete: Boolean) {
   if(actions.isEmpty()) return
   blocks.add(ButtonBlock(actions, message, discrete))
   indent += "  "

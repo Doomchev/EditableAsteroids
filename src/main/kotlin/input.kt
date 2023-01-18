@@ -1,10 +1,9 @@
 import mod.Element
 import java.awt.Graphics2D
 import java.awt.event.*
-import java.util.*
 import kotlin.math.abs
 
-abstract class Pushable(val project: Project): Element {
+abstract class Pushable(val project: Project, val canvas: Canvas): Element {
   init {
     buttons.add(this)
   }
@@ -13,32 +12,15 @@ abstract class Pushable(val project: Project): Element {
   open fun correspondsTo(e: MouseWheelEvent): Boolean = false
   open fun correspondsTo(e: KeyEvent): Boolean = false
 
-  class DraggingEntry(val canvas: Canvas, val action: DraggingAction)
-
-  val draggingActions = mutableListOf<DraggingEntry>()
-  fun add(canvas: Canvas, action: DraggingAction) {
-    draggingActions.add(DraggingEntry(canvas, action))
-  }
-
-  val onClickActions = mutableListOf<ActionEntry>()
-  fun addOnClick(canvas: Canvas, action: Action) {
-    onClickActions.add(ActionEntry(canvas, action))
-  }
-
-  val onPressActions = mutableListOf<ActionEntry>()
-  fun addOnPress(canvas: Canvas, action: Action) {
-    onPressActions.add(ActionEntry(canvas, action))
-  }
-
-  val onUnpressActions = mutableListOf<ActionEntry>()
-  fun addOnUnpress(canvas: Canvas, action: Action) {
-    onUnpressActions.add(ActionEntry(canvas, action))
-  }
+  val draggingActions = mutableListOf<DraggingAction>()
+  val onClickActions = mutableListOf<Action>()
+  val onPressActions = mutableListOf<Action>()
+  val onUnpressActions = mutableListOf<Action>()
 }
 
 object keySerializer: ElementSerializer {
   override fun fromNode(node: Node): Element {
-    val key = Key(node.getInt("code"), user)
+    val key = Key(node.getInt("code"), user, world)
     node.getField("onClick", key.onClickActions)
     node.getField("onPress", key.onPressActions)
     node.getField("onUnpress", key.onUnpressActions)
@@ -47,7 +29,7 @@ object keySerializer: ElementSerializer {
 }
 
 val buttons = mutableListOf<Pushable>()
-class Key(private var code: Int, project: Project): Pushable(project) {
+class Key(private var code: Int, project: Project, canvas: Canvas): Pushable(project, canvas) {
   override fun correspondsTo(e: KeyEvent): Boolean {
     return e.keyChar.code == code || e.keyCode == code
   }
@@ -66,7 +48,8 @@ class Key(private var code: Int, project: Project): Pushable(project) {
 
 object mouseButtonSerializer: ElementSerializer {
   override fun fromNode(node: Node): Element {
-    val key = Key(node.getInt("code"), user)
+    val key = Key(node.getInt("code"), node.getField("project") as Project, node.getField("canvas") as Canvas)
+
     node.getField("onClick", key.onClickActions)
     node.getField("onPress", key.onPressActions)
     node.getField("onUnpress", key.onPressActions)
@@ -74,7 +57,7 @@ object mouseButtonSerializer: ElementSerializer {
   }
 }
 
-class MouseButton(private var button: Int, project: Project): Pushable(project) {
+class MouseButton(private var button: Int, project: Project, canvas: Canvas): Pushable(project, canvas) {
   override fun correspondsTo(e: MouseEvent): Boolean {
     return e.button == button
   }
@@ -89,10 +72,10 @@ class MouseButton(private var button: Int, project: Project): Pushable(project) 
 }
 
 object mouseWheelUpSerializer: ElementSerializer {
-  override fun fromNode(node: Node): Element = mouseWheelUp(user)
+  override fun fromNode(node: Node): Element = mouseWheelUp(user, world)
 }
 
-class mouseWheelUp(project: Project): Pushable(project) {
+class mouseWheelUp(project: Project, canvas: Canvas): Pushable(project, canvas) {
   override fun correspondsTo(e: MouseWheelEvent): Boolean {
     return e.wheelRotation < 0
   }
@@ -106,10 +89,10 @@ class mouseWheelUp(project: Project): Pushable(project) {
 }
 
 object mouseWheelDownSerializer: ElementSerializer {
-  override fun fromNode(node: Node): Element = mouseWheelDown(user)
+  override fun fromNode(node: Node): Element = mouseWheelDown(user, world)
 }
 
-class mouseWheelDown(project: Project): Pushable(project) {
+class mouseWheelDown(project: Project, canvas: Canvas): Pushable(project, canvas) {
   override fun correspondsTo(e: MouseWheelEvent): Boolean {
     return e.wheelRotation > 0
   }
@@ -139,15 +122,15 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     updateMouse(e.x, e.y)
     for(button in buttons) {
       if(!button.correspondsTo(e)) continue
-      onClick(button.onClickActions)
+      onClick(button, button.onClickActions)
     }
   }
 
-  private fun onClick(entries: MutableList<ActionEntry>) {
-    for(entry in entries) {
-      if(!entry.canvas.active || !entry.canvas.hasMouse() || !entry.action.conditions()) continue
-      currentCanvas = entry.canvas
-      entry.action.execute()
+  private fun onClick(button: Pushable, actions: MutableList<Action>) {
+    for(action in actions) {
+      if(!button.canvas.active || !button.canvas.hasMouse() || !action.conditions()) continue
+      currentCanvas = button.canvas
+      action.execute()
     }
   }
 
@@ -172,7 +155,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
 
       for(button in buttons) {
         if(!button.correspondsTo(pressedEvent!!)) continue
-        onDragStart(button.draggingActions)
+        onDragStart(button, button.draggingActions)
       }
       return
     }
@@ -181,15 +164,15 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     currentDraggingAction!!.dragged()
   }
 
-  private fun onDragStart(entries: MutableList<Pushable.DraggingEntry>) {
-    for(entry in entries) {
-      if(!entry.canvas.hasMouse()) continue
-      currentCanvas = entry.canvas
+  private fun onDragStart(button: Pushable, actions: MutableList<DraggingAction>) {
+    if(!button.canvas.hasMouse()) return
+    for(action in actions) {
+      currentCanvas = button.canvas
       updateMouse(pressedEvent!!.x, pressedEvent!!.y)
-      if(!entry.action.conditions()) continue
-      currentDraggingCanvas = entry.canvas
-      currentDraggingAction = entry.action
-      entry.action.pressed()
+      if(!action.conditions()) continue
+      currentDraggingCanvas = button.canvas
+      currentDraggingAction = action
+      action.pressed()
       return
     }
   }
@@ -199,7 +182,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
     if(currentDraggingAction == null) {
       for(button in buttons) {
         if(!button.correspondsTo(e)) continue
-        onClick(button.onClickActions)
+        onClick(button, button.onClickActions)
         break
       }
       return
@@ -226,7 +209,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
   override fun mouseWheelMoved(e: MouseWheelEvent) {
     for(wheel in buttons) {
       if(!wheel.correspondsTo(e)) continue
-      onClick(wheel.onClickActions)
+      onClick(wheel, wheel.onClickActions)
     }
   }
 
@@ -240,7 +223,7 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
 
     for(key in buttons) {
       if(!key.correspondsTo(e)) continue
-      onClick(key.onClickActions)
+      onClick(key, key.onClickActions)
     }
   }
 
@@ -254,11 +237,11 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
 
     for(key in buttons) {
       if(!key.correspondsTo(e)) continue
+      if(!key.canvas.hasMouse()) continue
       for(entry in key.onPressActions) {
-        if(!entry.canvas.hasMouse()) continue
-        keysPressed.add(KeyEntry(key, entry.canvas))
+        keysPressed.add(KeyEntry(key, key.canvas))
       }
-      onDragStart(key.draggingActions)
+      onDragStart(key, key.draggingActions)
     }
   }
 
@@ -268,26 +251,25 @@ object listener: MouseListener, MouseMotionListener, MouseWheelListener, KeyList
       val entry = it.next()
       if(entry.remove) {
         it.remove()
-      } else {
-        for(actionEntry in entry.key.onPressActions) {
-          if(!actionEntry.action.conditions()) {
-            it.remove()
-            continue
-          }
-          actionEntry.action.execute()
+        return
+      }
+      for(action in entry.key.onPressActions) {
+        if(!action.conditions()) {
+          it.remove()
+          continue
         }
+        action.execute()
       }
     }
   }
 
   override fun keyReleased(e: KeyEvent) {
     for(key in buttons) {
-      if(!key.correspondsTo(e)) continue
-      for(entry in key.onUnpressActions) {
-        if(!entry.canvas.active || !entry.canvas.hasMouse()) continue
-        currentCanvas = entry.canvas
-        if(!entry.action.conditions()) continue
-        entry.action.execute()
+      if(!key.correspondsTo(e) || !key.canvas.active || !key.canvas.hasMouse()) continue
+      currentCanvas = key.canvas
+      for(action in key.onUnpressActions) {
+        if(!action.conditions()) continue
+        action.execute()
       }
     }
     for(keyEntry in keysPressed) {

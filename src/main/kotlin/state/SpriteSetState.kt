@@ -31,7 +31,7 @@ class SpriteSetStateFactory(spriteEntry: SpriteEntry, private var state: State):
     return SpriteSetState(spriteEntry.resolve(), state)
   }
 
-  override fun toString(): String = "Изменить на $state"
+  override fun toString(): String = "Изменить состояние $spriteEntry на $state"
 
   override fun toNode(node: Node) {
     node.setString("state", state.name)
@@ -43,7 +43,7 @@ class SpriteSetState(sprite: Sprite, private var state: State): SpriteAction(spr
     sprite.state = state
   }
 
-  override fun toString(): String = "Изменить состояние на $state"
+  override fun toString(): String = "Изменить состояние $sprite на $state"
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)

@@ -80,32 +80,32 @@ fun asteroids() {
 
   // global variables
 
-  val startingLives = IntVariable("startingLives", 3)
+  val startingLives = IntVariable("начальное кол-во жизней", 3)
 
-  val acceleration = DoubleVariable("acceleration",25.0)
-  val accelerationLimit = DoubleVariable("acceleration limit",7.5)
-  val deceleration = DoubleVariable("deceleration", 15.0)
-  val maxSpeed = DoubleVariable("max speed", 3.0)
-  val rotationSpeed = DoubleVariable("rotation speed", 1.5)
+  val acceleration = DoubleVariable("ускорение",25.0)
+  val accelerationLimit = DoubleVariable("предел ускорения",7.5)
+  val deceleration = DoubleVariable("замедление", 15.0)
+  val maxSpeed = DoubleVariable("макс скорость", 3.0)
+  val rotationSpeed = DoubleVariable("скорость вращения", 1.5)
 
-  val bulletSpeed = DoubleVariable("bullet speed",15.0)
-  val bulletDelay = DoubleVariable("bullet delay", 0.15)
+  val bulletSpeed = DoubleVariable("скорость пули",15.0)
+  val bulletDelay = DoubleVariable("интервал между пулями", 0.15)
 
   // HUD
 
   val score = IntValue(0)
-  varMap["score"] = score
+  varMap["очки"] = score
   val lives = IntValue(startingLives.getInt(), "d")
-  varMap["lives"] = lives
+  varMap["жизни"] = lives
   val level = IntValue(0)
-  varMap["level"] = level
+  varMap["уровень"] = level
 
   val scoreDisplay = Label(score, 0.0, world.topY + 0.5, world.width - 1.0, 1.0, HorizontalAlign.left)
-  val levelDisplay = Label(level, 0.0, world.topY + 0.5, world.width - 1.0, 1.0, HorizontalAlign.center, VerticalAlign.center, "LEVEL ", false)
+  val levelDisplay = Label(level, 0.0, world.topY + 0.5, world.width - 1.0, 1.0, HorizontalAlign.center, VerticalAlign.center, "УРОВЕНЬ ", false)
   val livesDisplay = Label(lives, 0.0, world.topY + 0.5, world.width - 1.0, 1.0, HorizontalAlign.right)
-  val spaceDisplay = Label(null, 0.0, 0.0, world.width, 1.0, HorizontalAlign.center, VerticalAlign.center, "PRESS SPACE")
+  val spaceDisplay = Label(null, 0.0, 0.0, world.width, 1.0, HorizontalAlign.center, VerticalAlign.center, "НАЖМИТЕ ПРОБЕЛ")
   spaceDisplay.visible = false
-  val gameOverDisplay = Label(null, 0.0, 0.0, world.width, 1.0, HorizontalAlign.center, VerticalAlign.center, "GAME OVER")
+  val gameOverDisplay = Label(null, 0.0, 0.0, world.width, 1.0, HorizontalAlign.center, VerticalAlign.center, "ИГРА ОКОНЧЕНА")
   gameOverDisplay.visible = false
 
   /// SPRITES
@@ -130,14 +130,14 @@ fun asteroids() {
   val gunEntry = SpriteEntry("дуло", gun)
   addConstraint(gun, playerSprite)
 
-  Key(97, user).onPressActions.add(ActionEntry(world, SpriteRotation(playerSprite, -rotationSpeed.getDouble() * PI)))
-  Key(100, user).onPressActions.add(ActionEntry(world, SpriteRotation(playerSprite, rotationSpeed.getDouble() * PI)))
-  val forward: Key = Key(119, user)
+  Key(97, user, world).onPressActions.add(SpriteRotation(playerSprite, -rotationSpeed.getDouble() * PI))
+  Key(100, user, world).onPressActions.add(SpriteRotation(playerSprite, rotationSpeed.getDouble() * PI))
+  val forward: Key = Key(119, user, world)
   forward.onPressActions.apply {
-    add(ActionEntry(world, SpriteAcceleration(playerSprite, acceleration.getDouble(), accelerationLimit.getDouble())))
-    add(ActionEntry(world, IfState(playerSprite, mutableListOf(alive), mutableListOf(SpriteShow(flame)))))
+    add(SpriteAcceleration(playerSprite, acceleration.getDouble(), accelerationLimit.getDouble()))
+    add(IfState(playerSprite, mutableListOf(alive), mutableListOf(SpriteShow(flame))))
   }
-  forward.onUnpressActions.add(ActionEntry(world, SpriteHide(flame)))
+  forward.onUnpressActions.add(SpriteHide(flame))
 
   val bounds = SpriteEntry("границы поля", Sprite(blankImage, world.centerX, world.centerY, world.width + 3.0,world.height + 3.0))
 
@@ -152,7 +152,7 @@ fun asteroids() {
     add(SpriteLoopArea(playerSprite, bounds.sprite!!))
     add(SpriteMoveForward(playerSprite))
     add(IsListEmpty(asteroid, mutableListOf(
-      VariableAddFactory("level", 1),
+      VariableAddFactory("уровень", 1),
       RepeatFactory(level,
         SpriteCreateFactory(currentEntry, asteroid, mutableListOf(
           SpriteSetStateFactory(currentEntry, big),
@@ -179,39 +179,38 @@ fun asteroids() {
     add(SpriteSetBoundsFactory(currentEntry, bounds))
   }
 
-  val space = Key(32, user)
-  space.onPressActions.add(ActionEntry(world
-    , IfState(playerSprite, mutableListOf(alive), mutableListOf(
+  val space = Key(32, user, world)
+  space.onPressActions.apply {
+    add(IfState(playerSprite, mutableListOf(alive), mutableListOf(
       SpriteDelayedCreate(playerSprite, bullet, bulletDelay.getDouble()))
-    )
-  ))
+    ))
+  }
   space.onClickActions.apply {
-    add(ActionEntry(world
-      , IfState(playerSprite, mutableListOf(gameOver), mutableListOf(
-          SpriteHide(gameOverDisplay)
-        , VariableSet("lives", startingLives.getInt())
-        , VariableSet("level", 0)
-        , ClearList(asteroid)
-        , SpriteSetState(playerSprite, alive)
-        , SpriteShow(playerSprite)
-        , SpriteActivate(playerSprite)
-      ))))
-    add(ActionEntry(world
-      , IfState(playerSprite, mutableListOf(destroyed), mutableListOf(
-          SpritePositionAs(playerSprite, start)
-        , SpriteSetState(playerSprite, alive)
-        , SpriteHide(spaceDisplay)
-        , SpriteShow(playerSprite)
-        , SpriteActivate(playerSprite)
-        , VariableAdd("lives", -1)
-      ))))
+    add(IfState(playerSprite, mutableListOf(gameOver), mutableListOf(
+        SpriteHide(gameOverDisplay)
+      , VariableSet("жизни", startingLives.getInt())
+      , VariableSet("уровень", 0)
+      , ClearList(asteroid)
+      , SpriteSetState(playerSprite, alive)
+      , SpriteShow(playerSprite)
+      , SpriteActivate(playerSprite)
+    )))
+    add(IfState(playerSprite, mutableListOf(destroyed), mutableListOf(
+        SpritePositionAs(playerSprite, start)
+      , SpriteSetState(playerSprite, alive)
+      , SpriteHide(spaceDisplay)
+      , SpriteShow(playerSprite)
+      , SpriteActivate(playerSprite)
+      , VariableAdd("жизни", -1)
+    )))
   }
 
-  asteroid.always.addAll(mutableListOf(
-    SpriteAnimationFactory(currentEntry, asteroidImage, RandomDirection(RandomDoubleValue(12.0, 20.0))),
-    SpriteRotationFactory(currentEntry, RandomDoubleValue(-180.0, 180.0)),
-    SpriteLoopAreaFactory(currentEntry, bounds),
-    SpriteMoveForwardFactory(currentEntry)))
+  asteroid.always.apply {
+    add(SpriteAnimationFactory(currentEntry, asteroidImage, RandomDirection(RandomDoubleValue(12.0, 20.0))))
+    add(SpriteRotationFactory(currentEntry, RandomDoubleValue(-180.0, 180.0)))
+    add(SpriteLoopAreaFactory(currentEntry, bounds))
+    add(SpriteMoveForwardFactory(currentEntry))
+  }
 
   val explosion = addClass("Взрыв")
 
@@ -238,10 +237,10 @@ fun asteroids() {
         , SpriteDirectToFactory(currentEntry, sprite1Entry)
         , SpriteTurnFactory(currentEntry, RandomDoubleValue(150.0, 210.0))
         , SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(3.0, 5.0))
-        , VariableAddFactory("score", 100)))
+        , VariableAddFactory("очки", 100)))
 
     , IfStateFactory(sprite2Entry, medium
-      , VariableAddFactory("score", 200))
+      , VariableAddFactory("очки", 200))
 
     , IfStateFactory(sprite2Entry, mutableListOf(big, medium)
       , SpriteCreateFactory(sprite2Entry, explosion
@@ -265,7 +264,7 @@ fun asteroids() {
     , IfStateFactory(sprite2Entry, small
       , SpriteCreateFactory(sprite2Entry, explosion
         , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0))
-        , VariableAddFactory("score", 300)))
+        , VariableAddFactory("очки", 300)))
 
     , SpriteRemoveFactory(sprite1Entry)
 
@@ -278,14 +277,14 @@ fun asteroids() {
       , SpriteCreateFactory(sprite1Entry, explosion
         , SpriteSetSizeFactory(currentEntry, DoubleValue(2.5)))
       , SpriteHideFactory(sprite1Entry)
-      , SpriteHideFactory(SpriteEntry("flame", flame))
+      , SpriteHideFactory(SpriteEntry("пламя", flame))
       , SpriteDeactivateFactory(sprite1Entry)
       , SpriteSetStateFactory(sprite1Entry, destroyed)
-      , SpriteShowFactory(SpriteEntry("space", spaceDisplay))
-      , VariableIfEqualFactory("lives", IntValue(0), mutableListOf(
-          SpriteHideFactory(SpriteEntry("", spaceDisplay))
-        , SpriteShowFactory(SpriteEntry("", gameOverDisplay))
-        , SpriteSetStateFactory(SpriteEntry("", playerSprite), gameOver)
+      , SpriteShowFactory(SpriteEntry("пробел", spaceDisplay))
+      , VariableIfEqualFactory("жизни", IntValue(0), mutableListOf(
+          SpriteHideFactory(SpriteEntry("пробел", spaceDisplay))
+        , SpriteShowFactory(SpriteEntry("игра окончена", gameOverDisplay))
+        , SpriteSetStateFactory(SpriteEntry("игрок", playerSprite), gameOver)
       ))
     )
   )

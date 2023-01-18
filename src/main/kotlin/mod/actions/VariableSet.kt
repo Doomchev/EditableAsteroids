@@ -23,15 +23,15 @@ object VariableSetSerializer: Serializer {
     return VariableSet(node.getString("variable"), node.getInt("increment"))
   }
 
-  override fun toString(): String = "Прибавить"
+  override fun toString(): String = "Установить"
 }
 
 class VariableSetFactory(private var varName: String, private var value: Int): ActionFactory() {
-  override fun create(): SpriteAction {
+  override fun create(): Action {
     return VariableSet(varName, value)
   }
 
-  override fun toString(): String = "Прибавить"
+  override fun toString(): String = "Установить"
   override fun fullText(): String = "$varName = $value"
 
   override fun toNode(node: Node) {
@@ -40,7 +40,7 @@ class VariableSetFactory(private var varName: String, private var value: Int): A
   }
 }
 
-class VariableSet(private var varName: String, private var value: Int): SpriteAction(nullSprite) {
+class VariableSet(private var varName: String, private var value: Int): Action {
   override fun execute() {
     findVariable(varName).set(value)
   }
