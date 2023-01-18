@@ -1,21 +1,13 @@
 package mod.actions
 
 import Action
-import FactoryBlock
 import Formula
 import Node
 import Serializer
-import Sprite
-import SpriteAction
 import ActionFactory
-import SpriteEntry
-import blocks
 import delayedActions
 import fpsk
-import indent
 import mod.dragging.enterDouble
-import nullSprite
-import selectSprite
 
 object delaySerializer: Serializer {
   override fun newFactory(): ActionFactory {
@@ -53,7 +45,7 @@ class DelayFactory(private var time: Formula, private var factories: MutableList
   }
 
   override fun addChildBlocks() {
-    addChildBlocks(factories)
+    addChildFactoryBlocks(factories)
   }
 
   override fun toString(): String = "Запустить через $time сек"

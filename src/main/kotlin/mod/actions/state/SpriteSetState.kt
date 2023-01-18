@@ -1,4 +1,4 @@
-package state
+package mod.actions.state
 
 import Action
 import Node
@@ -16,11 +16,11 @@ object spriteSetStateSerializer: Serializer {
   }
 
   override fun factoryFromNode(node: Node): ActionFactory {
-    return SpriteSetStateFactory(node.getField("spriteentry") as SpriteEntry, findState(node.getString("state")))
+    return SpriteSetStateFactory(node.getField("spriteentry") as SpriteEntry, findState(node.getString("mod/actions/state")))
   }
 
   override fun actionFromNode(node: Node): Action {
-    return SpriteSetState(node.getField("sprite") as Sprite, findState(node.getString("state")))
+    return SpriteSetState(node.getField("sprite") as Sprite, findState(node.getString("mod/actions/state")))
   }
 
   override fun toString(): String = "Изменить состояние"
@@ -34,7 +34,7 @@ class SpriteSetStateFactory(spriteEntry: SpriteEntry, private var state: State):
   override fun toString(): String = "Изменить состояние $spriteEntry на $state"
 
   override fun toNode(node: Node) {
-    node.setString("state", state.name)
+    node.setString("mod/actions/state", state.name)
   }
 }
 
@@ -47,6 +47,6 @@ class SpriteSetState(sprite: Sprite, private var state: State): SpriteAction(spr
 
   override fun toNode(node: Node) {
     node.setField("sprite", sprite)
-    node.setString("state", state.name)
+    node.setString("mod/actions/state", state.name)
   }
 }

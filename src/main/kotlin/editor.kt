@@ -40,7 +40,7 @@ fun editor() {
     onClickActions.add(selectSprite)
   }
 
-  MouseButton(MouseEvent.BUTTON1, user, world).onClickActions.add(object: Action {
+  MouseButton(MouseEvent.BUTTON1, ide, properties).onClickActions.add(object: Action {
     override fun execute() {
       if(selectedBlock == null) return
       selectedBlock!!.editElement()

@@ -14,7 +14,7 @@ class Label(private var variable: Formula?, centerX: Double, centerY: Double, wi
     g.color = Color.white
     g.font = defaultFont
 
-    var text = prefix + if(variable == null) "" else variable!!.toString()
+    val text = toString()
 
     val metrics = g.getFontMetrics(defaultFont)
     val stringWidth = metrics.stringWidth(text)
@@ -29,5 +29,9 @@ class Label(private var variable: Formula?, centerX: Double, centerY: Double, wi
     g.drawString(text, xx, yy)
     //g.drawRect((xx - 2).toInt(), (yy - 2).toInt(), 5, 5)
     //drawSelection(g)
+  }
+
+  override fun toString(): String {
+    return prefix + if(variable == null) "" else variable!!.toString()
   }
 }

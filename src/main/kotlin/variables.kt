@@ -8,7 +8,7 @@ interface Variable {
 
 val variables = mutableListOf<Variable>()
 
-class IntVariable(override var name: String, value: Int): IntValue(value), Variable {
+class IntVariable(override var name: String, value: Int, format: String = ""): IntValue(value, format), Variable {
   init {variables.add(this)}
 
   override fun change() {

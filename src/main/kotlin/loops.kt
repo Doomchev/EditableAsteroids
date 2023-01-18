@@ -26,7 +26,7 @@ class RepeatFactory(private var quantity: Formula, var actions: MutableList<Acti
   }
 
   override fun addChildBlocks() {
-    addChildBlocks(actions)
+    addChildFactoryBlocks(actions)
   }
 
   override fun toString(): String = "Повторить $quantity раз"

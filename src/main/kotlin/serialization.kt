@@ -2,8 +2,8 @@ import mod.Element
 import mod.actions.delaySerializer
 import mod.actions.soundPlaySerializer
 import mod.actions.sprite.*
-import state.ifStateSerializer
-import state.spriteSetStateSerializer
+import mod.actions.state.ifStateSerializer
+import mod.actions.state.spriteSetStateSerializer
 import javax.swing.JOptionPane
 
 interface Serializer {

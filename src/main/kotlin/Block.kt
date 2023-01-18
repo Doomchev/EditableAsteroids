@@ -89,7 +89,7 @@ val blocks = mutableListOf<Block>()
 fun updateActions() {
   blocks.clear()
   for(variable in variables) {
-    blocks.add(VariableBlock(variable, "  ${variable.name} = $variable"))
+    blocks.add(VariableBlock(variable, "  ${variable.name} = ${variable}"))
   }
 
   for(button in buttons) {
@@ -123,8 +123,9 @@ fun showButtonActions(actions: MutableList<Action>, message: String, discrete: B
   if(actions.isEmpty()) return
   blocks.add(ButtonBlock(actions, message, discrete))
   indent += "  "
-  for(entry in actions) {
-    blocks.add(ActionBlock(entry, actions,"$indent$entry", discrete))
+  for(action in actions) {
+    blocks.add(ActionBlock(action, actions,"$indent$action", discrete))
+    action.addChildBlocks()
   }
   indent = indent.substring(2)
 }

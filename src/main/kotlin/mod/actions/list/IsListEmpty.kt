@@ -7,7 +7,6 @@ import SpriteAction
 import ActionFactory
 import SpriteClass
 import nullSprite
-import nullSpriteEntry
 import selectClass
 
 object isListEmptySerializer: Serializer {
@@ -36,10 +35,10 @@ class IsListEmptyFactory(private var spriteClass: SpriteClass, var actions: Muta
   }
 
   override fun addChildBlocks() {
-    addChildBlocks(actions)
+    addChildFactoryBlocks(actions)
   }
 
-  override fun toString(): String = "Если $caption "
+  override fun toString(): String = "Если $caption пуст"
 
   override fun toNode(node: Node) {
     node.setField("actions", actions)
@@ -54,5 +53,5 @@ class IsListEmpty(private var spriteClass: SpriteClass, private var actions: Mut
     }
   }
 
-  override fun toString(): String = "Если нет $spriteClass"
+  override fun toString(): String = "Если $spriteClass пуст"
 }

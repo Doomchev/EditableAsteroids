@@ -1,15 +1,12 @@
-package mod.actions
+package mod.actions.variables
 
 import Action
 import Formula
 import Node
 import Serializer
-import SpriteAction
 import ActionFactory
 import mod.dragging.enterDouble
 import mod.dragging.enterString
-import nullSprite
-import nullSpriteEntry
 
 object variableIfEqualSerializer: Serializer {
   override fun newFactory(): ActionFactory {
@@ -41,7 +38,7 @@ class VariableIfEqualFactory(private var varName: String, private var value: For
   }
 
   override fun addChildBlocks() {
-    addChildBlocks(factories)
+    addChildFactoryBlocks(factories)
   }
 
   override fun toString(): String = "Если $varName == $value"

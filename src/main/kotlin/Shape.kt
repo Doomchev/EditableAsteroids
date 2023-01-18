@@ -62,10 +62,6 @@ abstract class Shape(var centerX: Double = 0.0, var centerY: Double = 0.0,  widt
     drawDashedRectangle(g, leftX, topY, width, height, 4f)
   }
 
-  override fun toString(): String {
-    return "${format(centerX)}, ${format(centerY)}, ${format(width)} x ${format(height)}"
-  }
-
   fun collidesWidth(shape2: Shape): Boolean {
     val dx = centerX - shape2.centerX
     val dy = centerY - shape2.centerY

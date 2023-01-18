@@ -1,4 +1,4 @@
-package mod.actions
+package mod.actions.variables
 
 import Action
 import Formula
@@ -7,11 +7,12 @@ import Node
 import Serializer
 import SpriteAction
 import ActionFactory
+import Variable
 import mod.dragging.enterString
 import nullSprite
-import nullSpriteEntry
 import zero
 import mod.dragging.enterInt
+import variables
 
 object VariableAddSerializer: Serializer {
   override fun newFactory(): ActionFactory {
@@ -56,17 +57,9 @@ class VariableAdd(private var varName: String, private var increment: Int): Spri
   }
 }
 
-fun selectVariable(): Formula {
-  return zero
-}
-
-val varMap = mutableMapOf<String, Formula>()
-
 fun findVariable(name: String): Formula {
-  var variable = varMap[name]
-  if(variable == null) {
-    variable = IntValue(0)
-    varMap[name] = variable
+  for(variable in variables) {
+    if(variable.name == name) return variable as Formula
   }
-  return variable
+  throw Error()
 }

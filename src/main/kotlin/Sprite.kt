@@ -1,5 +1,5 @@
 import mod.*
-import state.nullState
+import mod.actions.state.nullState
 import java.awt.Graphics2D
 import javax.swing.JOptionPane
 import kotlin.math.PI
@@ -64,7 +64,7 @@ open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0
     for(entry in objectsList) {
       if(entry.sprite == this) return entry.caption
     }
-    return super.toString() + image.texture.fileName
+    return "sprite"
   }
 }
 

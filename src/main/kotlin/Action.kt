@@ -1,22 +1,30 @@
 import mod.Element
 import mod.actions.DelayedAction
 import mod.currentEntry
-import java.util.*
 
 interface Action: Element {
   fun conditions(): Boolean = true
   fun execute() {}
   override fun toNode(node: Node) {}
 
-  /*fun addChildBlocks(actions: MutableList<Action>) {
+  fun addChildActionBlocks(actions: MutableList<Action>) {
     indent += "  "
     for(action in actions) {
       blocks.add(ActionBlock(action, actions,"$indent$action", true))
-      //action.addChildBlocks()
+      action.addChildBlocks()
     }
-  }*/
+    indent = indent.substring(2)
+  }
 
-  open fun addChildBlocks() {}
+  fun addChildBlocks() {}
+  fun addChildFactoryBlocks(factories: MutableList<ActionFactory>) {
+    indent += "  "
+    for(factory in factories) {
+      blocks.add(FactoryBlock(factory, factories,"$indent${factory.fullText()}", true))
+      factory.addChildBlocks()
+    }
+    indent = indent.substring(2)
+  }
 }
 
 abstract class ActionFactory: Element, Action {
@@ -29,15 +37,6 @@ abstract class ActionFactory: Element, Action {
   }
 
   open fun fullText(): String = toString()
-
-  fun addChildBlocks(actions: MutableList<ActionFactory>) {
-    indent += "  "
-    for(factory in actions) {
-      blocks.add(FactoryBlock(factory, actions,"$indent${factory.fullText()}", true))
-      factory.addChildBlocks()
-    }
-    indent = indent.substring(2)
-  }
 
   val caption get() = entryCaption(" ")
   val forCaption get() = entryCaption("для ")

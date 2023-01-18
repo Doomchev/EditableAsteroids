@@ -1,13 +1,10 @@
-package mod.actions
+package mod.actions.variables
 
 import Action
 import Node
 import Serializer
-import SpriteAction
 import ActionFactory
 import mod.dragging.enterString
-import nullSprite
-import nullSpriteEntry
 import mod.dragging.enterInt
 
 object VariableSetSerializer: Serializer {

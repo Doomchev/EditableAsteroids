@@ -1,7 +1,6 @@
-package state
+package mod.actions.state
 
 import Action
-import FactoryBlock
 import Node
 import Serializer
 import Sprite
@@ -9,8 +8,6 @@ import SpriteAction
 import ActionFactory
 import SpriteActionFactory
 import SpriteEntry
-import blocks
-import indent
 import selectSprite
 
 object ifStateSerializer: Serializer {
@@ -21,13 +18,13 @@ object ifStateSerializer: Serializer {
   override fun factoryFromNode(node: Node): ActionFactory {
     val actions = mutableListOf<ActionFactory>()
     node.getField("actions", actions)
-    return IfStateFactory(node.getField("spriteentry") as SpriteEntry, findStates(node.getString("state")), actions)
+    return IfStateFactory(node.getField("spriteentry") as SpriteEntry, findStates(node.getString("mod/actions/state")), actions)
   }
 
   override fun actionFromNode(node: Node): Action {
     val actions = mutableListOf<Action>()
     node.getField("actions", actions)
-    return IfState(node.getField("sprite") as Sprite, findStates(node.getString("state")), actions)
+    return IfState(node.getField("sprite") as Sprite, findStates(node.getString("mod/actions/state")), actions)
   }
 
   override fun toString(): String = "При состоянии"
@@ -52,7 +49,7 @@ class IfStateFactory(spriteEntry: SpriteEntry, private var values: MutableList<S
   }
 
   override fun addChildBlocks() {
-    addChildBlocks(factories)
+    addChildFactoryBlocks(factories)
   }
 
   override fun toString(): String = "Если $caption == $values"
@@ -71,6 +68,10 @@ class IfState(sprite: Sprite, private var states: MutableList<State>, private va
       }
       return
     }
+  }
+
+  override fun addChildBlocks() {
+    addChildActionBlocks(actions)
   }
 
   override fun toString(): String = "Если $sprite == $states"

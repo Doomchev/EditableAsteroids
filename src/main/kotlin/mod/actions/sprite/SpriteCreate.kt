@@ -39,7 +39,7 @@ class SpriteCreateFactory(spriteEntry: SpriteEntry, private var spriteClass: Spr
   }
 
   override fun addChildBlocks() {
-    addChildBlocks(actions)
+    addChildFactoryBlocks(actions)
   }
 
   override fun toString(): String = "Создать"

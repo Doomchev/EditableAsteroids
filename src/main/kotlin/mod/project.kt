@@ -11,7 +11,7 @@ import actions
 import buttons
 import imageArrays
 import objectsList
-import state.State
+import mod.actions.state.State
 import toRemove
 import user
 import java.awt.Color
@@ -94,7 +94,7 @@ object project: SceneElement() {
     node.getField("objects", objectsList)
     node.getField("images", imageArrays)
     node.getField("classes", classes)
-    node.getField("buttons", mutableListOf<Pushable>())
+    node.getField("buttons", buttons)
     node.getField("actions", actions)
     node.getChildren(elements)
   }

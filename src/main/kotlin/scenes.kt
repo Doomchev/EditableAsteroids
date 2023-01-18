@@ -3,7 +3,8 @@ import mod.actions.*
 import mod.actions.list.ClearList
 import mod.actions.list.IsListEmpty
 import mod.actions.sprite.*
-import state.*
+import mod.actions.state.*
+import mod.actions.variables.*
 import kotlin.math.*
 
 fun tilemap() {
@@ -93,12 +94,9 @@ fun asteroids() {
 
   // HUD
 
-  val score = IntValue(0)
-  varMap["очки"] = score
-  val lives = IntValue(startingLives.getInt(), "d")
-  varMap["жизни"] = lives
-  val level = IntValue(0)
-  varMap["уровень"] = level
+  val score = IntVariable("очки", 0)
+  val lives = IntVariable("жизни", startingLives.getInt(), "d")
+  val level = IntVariable("уровень", 0)
 
   val scoreDisplay = Label(score, 0.0, world.topY + 0.5, world.width - 1.0, 1.0, HorizontalAlign.left)
   val levelDisplay = Label(level, 0.0, world.topY + 0.5, world.width - 1.0, 1.0, HorizontalAlign.center, VerticalAlign.center, "УРОВЕНЬ ", false)
@@ -122,6 +120,7 @@ fun asteroids() {
   playerSprite.state = alive
 
   val flame = Sprite(flameImage.images[0], -1.0, 0.0, 1.0, 1.0, -90.0)
+  playerSprite.setName("пламя")
   flame.visible = false
   addConstraint(flame, playerSprite)
   actions.add(SpriteAnimation(flame, flameImage, 16.0, 0.0))
@@ -186,7 +185,8 @@ fun asteroids() {
     ))
   }
   space.onClickActions.apply {
-    add(IfState(playerSprite, mutableListOf(gameOver), mutableListOf(
+    add(
+      IfState(playerSprite, mutableListOf(gameOver), mutableListOf(
         SpriteHide(gameOverDisplay)
       , VariableSet("жизни", startingLives.getInt())
       , VariableSet("уровень", 0)
@@ -195,14 +195,16 @@ fun asteroids() {
       , SpriteShow(playerSprite)
       , SpriteActivate(playerSprite)
     )))
-    add(IfState(playerSprite, mutableListOf(destroyed), mutableListOf(
+    add(
+      IfState(playerSprite, mutableListOf(destroyed), mutableListOf(
         SpritePositionAs(playerSprite, start)
       , SpriteSetState(playerSprite, alive)
       , SpriteHide(spaceDisplay)
       , SpriteShow(playerSprite)
       , SpriteActivate(playerSprite)
       , VariableAdd("жизни", -1)
-    )))
+    ))
+    )
   }
 
   asteroid.always.apply {
@@ -237,10 +239,12 @@ fun asteroids() {
         , SpriteDirectToFactory(currentEntry, sprite1Entry)
         , SpriteTurnFactory(currentEntry, RandomDoubleValue(150.0, 210.0))
         , SpriteSetSpeedFactory(currentEntry, RandomDoubleValue(3.0, 5.0))
-        , VariableAddFactory("очки", 100)))
+        , VariableAddFactory("очки", 100)
+      ))
 
     , IfStateFactory(sprite2Entry, medium
-      , VariableAddFactory("очки", 200))
+      , VariableAddFactory("очки", 200)
+    )
 
     , IfStateFactory(sprite2Entry, mutableListOf(big, medium)
       , SpriteCreateFactory(sprite2Entry, explosion
@@ -264,7 +268,8 @@ fun asteroids() {
     , IfStateFactory(sprite2Entry, small
       , SpriteCreateFactory(sprite2Entry, explosion
         , SpriteSetSizeFactory(currentEntry, DoubleValue(1.0))
-        , VariableAddFactory("очки", 300)))
+        , VariableAddFactory("очки", 300)
+      ))
 
     , SpriteRemoveFactory(sprite1Entry)
 
