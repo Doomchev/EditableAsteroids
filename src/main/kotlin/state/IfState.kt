@@ -52,12 +52,7 @@ class IfStateFactory(spriteEntry: SpriteEntry, private var values: MutableList<S
   }
 
   override fun addChildBlocks() {
-    indent += "  "
-    for(factory in factories) {
-      blocks.add(FactoryBlock(factory, factories,"$indent${factory.fullText()}", true))
-      factory.addChildBlocks()
-    }
-    indent = indent.substring(2)
+    addChildBlocks(factories)
   }
 
   override fun toString(): String = "Если $caption == $values"
@@ -70,12 +65,11 @@ class IfStateFactory(spriteEntry: SpriteEntry, private var values: MutableList<S
 class IfState(sprite: Sprite, private var states: MutableList<State>, private var actions: MutableList<Action>): SpriteAction(sprite) {
   override fun execute() {
     for(state in states) {
-      if(sprite.state == state) {
-        for(action in actions) {
-          action.execute()
-        }
-        return
+      if(sprite.state != state) continue
+      for(action in actions) {
+        action.execute()
       }
+      return
     }
   }
 

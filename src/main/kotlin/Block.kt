@@ -3,6 +3,7 @@ import mod.project
 var indent: String = ""
 
 abstract class Block(var message:String) {
+  open fun editElement() {}
   abstract fun addElement()
   abstract fun removeElement()
 }
@@ -47,9 +48,7 @@ class ButtonBlock(private var entries: MutableList<ActionEntry>, message: String
 
 class ActionBlock(private var entry: ActionEntry, private var entries: MutableList<ActionEntry>, message: String, private val discrete: Boolean) : Block(message) {
   override fun addElement() {
-    entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectSerializer(
-      discrete
-    ).create(selectSprite().resolve())))
+    entries.add(entries.indexOf(entry) + 1, ActionEntry(world, selectSerializer(discrete).create(selectSprite().resolve())))
     updateActions()
   }
 
@@ -71,9 +70,27 @@ class CollisionBlock(private val entry: CollisionEntry, message: String) : Block
   }
 }
 
+class VariableBlock(private var variable: Variable, message: String) : Block(message) {
+  override fun addElement() {
+    TODO("Not yet implemented")
+  }
+
+  override fun removeElement() {
+    TODO("Not yet implemented")
+  }
+
+  override fun editElement() {
+    variable.change()
+    updateActions()
+  }
+}
+
 val blocks = mutableListOf<Block>()
 fun updateActions() {
   blocks.clear()
+  for(variable in variables) {
+    blocks.add(VariableBlock(variable, "  ${variable.name} = $variable"))
+  }
 
   for(button in buttons) {
     if(button.project != user) continue

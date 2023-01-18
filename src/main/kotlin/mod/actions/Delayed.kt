@@ -53,12 +53,7 @@ class DelayFactory(private var time: Formula, private var factories: MutableList
   }
 
   override fun addChildBlocks() {
-    indent += "  "
-    for(factory in factories) {
-      blocks.add(FactoryBlock(factory, factories,"$indent${factory.fullText()}", true))
-      factory.addChildBlocks()
-    }
-    indent = indent.substring(2)
+    addChildBlocks(factories)
   }
 
   override fun toString(): String = "Запустить через $time сек"

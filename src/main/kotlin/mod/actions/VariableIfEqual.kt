@@ -40,6 +40,10 @@ class VariableIfEqualFactory(private var varName: String, private var value: For
     return VariableIfEqual(varName, value.getInt(), actions)
   }
 
+  override fun addChildBlocks() {
+    addChildBlocks(factories)
+  }
+
   override fun toString(): String = "Если $varName == $value"
 
   override fun toNode(node: Node) {

@@ -43,7 +43,9 @@ val ide = Project()
 val user = Project()
 
 fun addClassImage(filename: String): ImageArray {
-  return ImageArray(Array(1) { Image(Texture(filename)) }, filename)
+  val array = ImageArray(Array(1) { Image(Texture(filename)) }, filename)
+  imageArrays.add(array)
+  return array
 }
 
 fun main() {
@@ -58,7 +60,7 @@ fun main() {
   imageArrays.add(0, ImageArray(Array(1) {blankImage}, "Пустое"))
   currentImageArray = imageArrays[0]
 
-    editor()
+  editor()
 
   /// GUI
 
@@ -91,6 +93,7 @@ fun main() {
     blankImage = imageArrays[0].images[0]
   } else {
     asteroids()
+    //snow()
     val node = Node("root")
     project.toNode(node)
     val writer = FileWriter("test.xml")

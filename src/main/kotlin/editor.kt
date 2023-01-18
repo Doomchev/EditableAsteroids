@@ -38,6 +38,12 @@ fun editor() {
     add(world, moveSprites)
     add(world, selectSprites)
     addOnClick(world, selectSprite)
+    addOnClick(properties, object: Action {
+      override fun execute() {
+        if(selectedBlock == null) return
+        selectedBlock!!.editElement()
+      }
+    })
   }
 
   val button2 = MouseButton(MouseEvent.BUTTON3, ide).apply {

@@ -13,22 +13,44 @@ fun tilemap() {
 
 fun snow() {
   val flake = addClass("Снежинка")
+  val flakeImage = addClassImage("snowflake.png")
 
   val area = SpriteEntry("snow gen", Sprite(blankImage, 0.0, -10.0, 10.0, 2.0))
   flake.onCreate.apply {
     add(SpritePositionInAreaFactory(currentEntry, area))
     add(SpriteSetSizeFactory(currentEntry, RandomDoubleValue(0.25, 1.0)))
-    add(SpriteSetImageFactory(currentEntry, imageArrays[4].images[0]))
+    add(SpriteSetImageFactory(currentEntry, flakeImage.images[0]))
     add(SpriteSetMovingVectorFactory(currentEntry, zero, RandomDoubleValue(1.0, 5.0)))
   }
   flake.always.add(SpriteMoveForwardFactory(currentEntry))
 
-  project.add(area.sprite!!)
-  actions.add(SpriteDelayedCreate(nullSprite, flake, 0.1))
+  val bounds = SpriteEntry("границы поля", Sprite(blankImage, world.centerX, world.centerY, world.width + 3.0,world.height + 3.0))
+
+  flake.always.add(SpriteSetBoundsFactory(currentEntry, bounds))
+
+  project.add(flake)
+  actions.add(SpriteDelayedCreate(nullSprite, flake, 0.05))
 }
 
 fun starfield() {
+  val star = addClass("Звезда")
+  val flakeImage = addClassImage("snowflake.png")
 
+  val area = SpriteEntry("snow gen", Sprite(blankImage, 0.0, -10.0, 10.0, 2.0))
+  star.onCreate.apply {
+    add(SpritePositionInAreaFactory(currentEntry, area))
+    add(SpriteSetSizeFactory(currentEntry, RandomDoubleValue(0.25, 1.0)))
+    add(SpriteSetImageFactory(currentEntry, flakeImage.images[0]))
+    add(SpriteSetMovingVectorFactory(currentEntry, zero, RandomDoubleValue(1.0, 5.0)))
+  }
+  star.always.add(SpriteMoveForwardFactory(currentEntry))
+
+  val bounds = SpriteEntry("границы поля", Sprite(blankImage, world.centerX, world.centerY, world.width + 3.0,world.height + 3.0))
+
+  star.always.add(SpriteSetBoundsFactory(currentEntry, bounds))
+
+  project.add(star)
+  actions.add(SpriteDelayedCreate(nullSprite, star, 0.05))
 }
 
 fun asteroids() {
@@ -58,13 +80,22 @@ fun asteroids() {
 
   // global variables
 
-  val startingLives = IntValue(3)
+  val startingLives = IntVariable("startingLives", 3)
+
+  val acceleration = DoubleVariable("acceleration",25.0)
+  val accelerationLimit = DoubleVariable("acceleration limit",7.5)
+  val deceleration = DoubleVariable("deceleration", 15.0)
+  val maxSpeed = DoubleVariable("max speed", 3.0)
+  val rotationSpeed = DoubleVariable("rotation speed", 1.5)
+
+  val bulletSpeed = DoubleVariable("bullet speed",15.0)
+  val bulletDelay = DoubleVariable("bullet delay", 0.15)
 
   // HUD
 
-  val score = IntValue(100)
+  val score = IntValue(0)
   varMap["score"] = score
-  val lives = IntValue(3, "d")
+  val lives = IntValue(startingLives.getInt(), "d")
   varMap["lives"] = lives
   val level = IntValue(0)
   varMap["level"] = level
@@ -99,11 +130,11 @@ fun asteroids() {
   val gunEntry = SpriteEntry("дуло", gun)
   addConstraint(gun, playerSprite)
 
-  Key(97, user).onPressActions.add(ActionEntry(world, SpriteRotation(playerSprite, -1.5 * PI)))
-  Key(100, user).onPressActions.add(ActionEntry(world, SpriteRotation(playerSprite, 1.5 * PI)))
+  Key(97, user).onPressActions.add(ActionEntry(world, SpriteRotation(playerSprite, -rotationSpeed.getDouble() * PI)))
+  Key(100, user).onPressActions.add(ActionEntry(world, SpriteRotation(playerSprite, rotationSpeed.getDouble() * PI)))
   val forward: Key = Key(119, user)
   forward.onPressActions.apply {
-    add(ActionEntry(world, SpriteAcceleration(playerSprite, 25.0, 7.5)))
+    add(ActionEntry(world, SpriteAcceleration(playerSprite, acceleration.getDouble(), accelerationLimit.getDouble())))
     add(ActionEntry(world, IfState(playerSprite, mutableListOf(alive), mutableListOf(SpriteShow(flame)))))
   }
   forward.onUnpressActions.add(ActionEntry(world, SpriteHide(flame)))
@@ -117,7 +148,7 @@ fun asteroids() {
   val asteroidArea = SpriteEntry("зона появления астероидов", Sprite(blankImage, world.centerX, world.topY - 1.5, world.width + 3.0,0.01))
 
   actions.apply {
-    add(SpriteAcceleration(playerSprite, -15.0, 100.0))
+    add(SpriteAcceleration(playerSprite, -deceleration.getDouble(), 100.0))
     add(SpriteLoopArea(playerSprite, bounds.sprite!!))
     add(SpriteMoveForward(playerSprite))
     add(IsListEmpty(asteroid, mutableListOf(
@@ -140,7 +171,7 @@ fun asteroids() {
     add(SpritePositionAsFactory(currentEntry, gunEntry))
     add(SpriteDirectAsFactory(currentEntry, parentEntry))
     add(SpriteSetSizeFactory(currentEntry, DoubleValue(0.15)))
-    add(SpriteSetSpeedFactory(currentEntry, DoubleValue(15.0)))
+    add(SpriteSetSpeedFactory(currentEntry, bulletSpeed))
   }
   bullet.always.apply {
     add(SpriteMoveForwardFactory(currentEntry))
@@ -150,15 +181,15 @@ fun asteroids() {
 
   val space = Key(32, user)
   space.onPressActions.add(ActionEntry(world
-      , IfState(playerSprite, mutableListOf(alive)
-        , mutableListOf(SpriteDelayedCreate(playerSprite, bullet, 0.2))
-      )
-    ))
+    , IfState(playerSprite, mutableListOf(alive), mutableListOf(
+      SpriteDelayedCreate(playerSprite, bullet, bulletDelay.getDouble()))
+    )
+  ))
   space.onClickActions.apply {
     add(ActionEntry(world
       , IfState(playerSprite, mutableListOf(gameOver), mutableListOf(
-        SpriteHide(gameOverDisplay)
-        , VariableSet("lives", 3)
+          SpriteHide(gameOverDisplay)
+        , VariableSet("lives", startingLives.getInt())
         , VariableSet("level", 0)
         , ClearList(asteroid)
         , SpriteSetState(playerSprite, alive)
@@ -252,7 +283,7 @@ fun asteroids() {
       , SpriteSetStateFactory(sprite1Entry, destroyed)
       , SpriteShowFactory(SpriteEntry("space", spaceDisplay))
       , VariableIfEqualFactory("lives", IntValue(0), mutableListOf(
-        SpriteHideFactory(SpriteEntry("", spaceDisplay))
+          SpriteHideFactory(SpriteEntry("", spaceDisplay))
         , SpriteShowFactory(SpriteEntry("", gameOverDisplay))
         , SpriteSetStateFactory(SpriteEntry("", playerSprite), gameOver)
       ))

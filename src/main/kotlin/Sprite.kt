@@ -16,40 +16,6 @@ object spriteSerializer: ElementSerializer {
   }
 }
 
-abstract class SpriteActionFactory(var spriteEntry: SpriteEntry): ActionFactory() {
-  private fun entryCaption(prefix: String): String = if(spriteEntry == currentEntry) "" else " $prefix$spriteEntry"
-}
-
-abstract class ActionFactory: Element, Action {
-  abstract fun create(): Action
-
-  fun create(sprite: Sprite): SpriteAction {
-    val action: SpriteAction = create() as SpriteAction
-    action.sprite = sprite
-    return action
-  }
-
-  open fun fullText(): String = toString()
-
-  open fun addChildBlocks() {}
-
-  fun addChildBlocks(actions: MutableList<ActionFactory>) {
-    indent += "  "
-    for(factory in actions) {
-      blocks.add(FactoryBlock(factory, actions,"$indent${factory.fullText()}", true))
-    }
-    indent = indent.substring(2)
-  }
-
-  val caption get() = entryCaption("")
-  val forCaption get() = entryCaption("для ")
-  private fun entryCaption(prefix: String): String = ""
-
-  open fun execute(sprite: Sprite) {
-    create(sprite).execute()
-  }
-}
-
 open class Sprite(var image: Image, centerX: Double = 0.0, centerY: Double = 0.0, width: Double = 1.0, height: Double = 1.0, angleInDegrees: Double = 0.0, var dx: Double = 1.0, var dy: Double = 0.0, var active: Boolean = true): Shape(centerX, centerY, width, height) {
   var state= nullState
   var angle = angleInDegrees * PI / 180.0

@@ -36,7 +36,7 @@ fun doubleToFormula(string: String): Formula {
   return DoubleValue(string.toDouble())
 }
 
-class IntValue(private var value: Int, private var format: String = ""): Formula() {
+open class IntValue(var value: Int, private var format: String = ""): Formula() {
   override fun getInt(): Int = value
 
   override fun getDouble(): Double = value.toDouble()
@@ -68,7 +68,7 @@ class IntValue(private var value: Int, private var format: String = ""): Formula
   }
 }
 
-class DoubleValue(private var value: Double): Formula() {
+open class DoubleValue(var value: Double): Formula() {
   override fun getInt(): Int = value.toInt()
 
   override fun getDouble(): Double = value
